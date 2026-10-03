@@ -101,8 +101,10 @@ class Studio:
         ):
             raise DomainError("studio_busy", "已有创作或测试进行中，请等待完成", 409)
 
-    def submit(self, owner, kind, prompt="", world_id=None, story_id=None, story_prompt="", rules_mode="none", living_world=False, avatar_id=None, custom_states=False, content_language=None, creation_preset=None, expected_revision=None, request_id=None, check_engine=None):
+    def submit(self, owner, kind, prompt="", world_id=None, story_id=None, story_prompt="", rules_mode="none", living_world=False, avatar_id=None, custom_states=False, content_language=None, creation_preset=None, expected_revision=None, request_id=None, check_engine=None, action_modules=None):
         metadata = {}
+        selections = [value.model_dump(mode='json') if hasattr(value, 'model_dump') else deepcopy(value)
+                      for value in (action_modules or [])]
         if check_engine is not None:
             check_engine = check_engine.model_dump() if hasattr(check_engine, 'model_dump') else deepcopy(check_engine)
         if request_id is not None:
@@ -112,6 +114,7 @@ class Studio:
                 "avatar_id": avatar_id, "custom_states": custom_states, "content_language": content_language,
                 "creation_preset": creation_preset, "expected_revision": expected_revision,
                 **({'check_engine': check_engine} if check_engine is not None else {}),
+                **({'action_modules': selections} if selections else {}),
             })
             existing = receipt(self.store.jobs, key, owner, fingerprint)
             if existing is not None:
@@ -119,6 +122,10 @@ class Studio:
             metadata = {"id": key, "request_hash": fingerprint, "request_id": request_id}
         if check_engine is not None:
             self.store.check_registry.verify(check_engine)
+        if selections:
+            if kind != 'world':
+                raise DomainError('invalid_action_modules', 'Choose action modules when creating a world', 422)
+            self.store.action_registry.selections(selections)
         self.require_capacity(owner)
         avatar = self.store.studio_get("avatars", avatar_id, owner) if avatar_id else None
         world = self.store.studio_get("worlds", world_id, owner) if world_id else None
@@ -153,6 +160,7 @@ class Studio:
             "error": None,
             **metadata,
             **({'check_engine': check_engine} if check_engine is not None else {}),
+            **({'action_modules': selections} if selections else {}),
         }
         if kind in {"test", "repair"} and story:
             # Starting a new review invalidates the old certificate, atomically
@@ -246,6 +254,8 @@ class Studio:
                     if job.get('check_engine'):
                         from .checks import CheckBinding
                         world.check_engine = CheckBinding.model_validate(job['check_engine'])
+                    if job.get('action_modules'):
+                        world.action_modules = [self.store.action_registry.bind(value) for value in job['action_modules']]
                     if job.get("avatar_id"):
                         world.characters[0].avatar_id = job["avatar_id"]
                         world.characters[0].location = 0
@@ -343,6 +353,7 @@ class Studio:
                 )
                 self.update(jid, status="testing")
                 self.store.check_registry.validate_template(template)
+                self.store.action_registry.validate_template(template)
                 review_world = WorldBlueprint.model_validate(story_record["world_content"])
                 review_content = StoryBlueprint.model_validate(story_record["content"])
                 cached_review = story_record.get("semantic_review") or {}
@@ -383,7 +394,7 @@ class Studio:
                     self.update(jid, checks=checks, steps=steps or [])
 
                 report = await playtest(template, self.gateway, self.sandbox_root / jid / uid("run"), progress,
-                                        check_registry=self.store.check_registry)
+                                        check_registry=self.store.check_registry, action_registry=self.store.action_registry)
                 if story_record.get("semantic_review"):
                     review = story_record["semantic_review"]
                     report["checks"].append({"name": "内容与机制一致性审核", "status": "passed",

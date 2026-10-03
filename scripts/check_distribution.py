@@ -31,10 +31,15 @@ def main():
     parser.add_argument("--secrets-root", type=Path)
     parser.add_argument("--sdk-live", action="store_true", help="Use SDK creation/play/restart acceptance for the real-provider check")
     parser.add_argument('--checks-live', action='store_true', help='Generate, play, share and restart with a native dice-pool engine')
+    parser.add_argument('--modules-live', action='store_true', help='Generate, play, share and restart with an external action module')
     parser.add_argument('--memory-live', action='store_true', help='Compare actual embeddings and verify model-backed recall')
     parser.add_argument('--embedding-url')
     parser.add_argument('--embedding-model')
     args = parser.parse_args()
+    if sum((args.sdk_live, args.checks_live, args.memory_live, args.modules_live)) > 1:
+        parser.error('Select one live acceptance workflow per run')
+    if args.modules_live and not args.live_models_config:
+        parser.error('--modules-live requires --live-models-config')
     if args.sdk_live and not args.live_models_config:
         parser.error("--sdk-live requires --live-models-config")
     if args.checks_live and (not args.live_models_config or args.sdk_live):
@@ -136,7 +141,7 @@ def main():
         run("console-entry", [str(target / "bin/narraloom"), "--version"])
         # Research tools use only the installed package and the host's optional
         # research dependency, with no backend process or game storage.
-        for example in ('make_evaluation_cases', 'evaluation_adapter', 'check_engine', 'playtest_adapter'):
+        for example in ('make_evaluation_cases', 'evaluation_adapter', 'check_engine', 'playtest_adapter', 'action_module'):
             shutil.copyfile(ROOT / f'examples/{example}.py', workspace / f'{example}.py')
         run('evaluation-cases', [sys.executable, str(workspace / 'make_evaluation_cases.py'),
                                  '--output', str(workspace / 'cases.jsonl')])
@@ -149,6 +154,8 @@ def main():
                                       '--output', str(workspace / 'check-engine.json')])
         run('playtest-resume', [sys.executable, str(workspace / 'playtest_adapter.py'),
                                '--output', str(workspace / 'playtest')])
+        run('action-module-contract', [sys.executable, str(workspace / 'action_module.py'),
+                                       '--output', str(workspace / 'action-module')])
         cli = [sys.executable, "-m", "roleplay_world", "serve", "--workspace", str(workspace)]
         with server("cli-start", cli) as (client, _):
             connect(client)
@@ -196,7 +203,7 @@ def main():
         assert (workspace / "data/journal.jsonl").read_bytes() == journal
         assert list((workspace / "outputs/model-traces").glob("*.json")) == traces
         report["checks"].append("process-restart-replay-and-idempotency-without-model")
-        if args.live_models_config and not args.checks_live and not args.memory_live:
+        if args.live_models_config and not args.checks_live and not args.memory_live and not args.modules_live:
             live_args = [*cli, "--data-root", "live-data", "--output-root", "live-output",
                          "--models-config", str(args.live_models_config.resolve())]
             if args.secrets_root:
@@ -232,6 +239,21 @@ def main():
                 run('check-engine-recovery', [*script, '--url', restarted,
                                               '--output', str(folder / 'check-engine-live-sdk'), '--resume'])
             report['live_mode'] = 'real-provider-with-native-check-engine'
+        if args.modules_live:
+            module_workspace = workspace / 'action-module-live'
+            env['NARRALOOM_MODULE_WORKSPACE'] = str(module_workspace)
+            env['NARRALOOM_MODULE_MODELS_CONFIG'] = str(args.live_models_config.resolve())
+            if args.secrets_root:
+                env['NARRALOOM_MODULE_SECRETS_ROOT'] = str(args.secrets_root.resolve())
+            module_args = [sys.executable, '-m', 'uvicorn', 'action_module:create', '--factory', '--app-dir', str(workspace)]
+            script = [sys.executable, str(ROOT / 'scripts/check_action_module.py')]
+            with server('action-module-live', module_args) as (_, url):
+                run('action-module-live-sdk', [*script, '--url', url, '--output', str(folder / 'action-module-live-sdk')])
+            clean_cli = [sys.executable, '-m', 'roleplay_world', 'serve', '--workspace', str(module_workspace)]
+            with server('action-module-restart', clean_cli, httpx.URL(url).port) as (_, restarted):
+                run('action-module-recovery', [*script, '--url', restarted,
+                                               '--output', str(folder / 'action-module-live-sdk'), '--resume'])
+            report['live_mode'] = 'real-provider-with-external-action-module'
         if args.memory_live:
             run('memory-live', [sys.executable, str(ROOT / 'scripts/check_semantic_memory.py'),
                                 '--models-config', str(args.live_models_config.resolve()),

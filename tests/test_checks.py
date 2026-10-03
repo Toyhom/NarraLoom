@@ -331,7 +331,7 @@ def test_package_preserves_engine_dependency_and_recipient_can_install_then_rete
         raw = client.get(f'/api/community/{package["id"]}/download').content
     parsed = read_package(raw)
     assert parsed['payload']['world']['check_engine'] == CUSTOM
-    assert parsed['manifest']['engine_minimum'] == '0.16.0'
+    assert parsed['manifest']['engine_minimum'] == '0.19.0'  # World snapshot includes the action_modules field.
     assert 'check_engine' in parsed['manifest']['capabilities']
     class CountingFixture(SceneFixture):
         def __init__(self):

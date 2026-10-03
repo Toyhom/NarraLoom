@@ -5,6 +5,7 @@ import logging
 from copy import deepcopy
 
 from . import prompts
+from .action_modules import planning_mechanics
 from .content_preferences import content_language, content_text, language_prompt
 from .contracts import DomainError, Narration, TurnPlan
 from .memory import note_event
@@ -70,6 +71,8 @@ class Runtime:
                     return
                 state = deepcopy(self.store.branches[a["branch_id"]]["state"])
                 self.store.check_registry.validate_template(state['template'])
+                if 'prepared' not in a:
+                    self.store.action_registry.validate_template(state['template'])
                 command = a["command"]
                 player = command_player(state, command)
                 audience = heard_by(state, command)  # Validate private targets before any model call or early commit.
@@ -110,7 +113,7 @@ class Runtime:
                     else:
                         context = {"player_input": command["text"], "mode": command["mode"],
                                    "player_view": model_view(state, player, query=command["text"]), "locations": list(state["locations"].values()),
-                                   "mechanics": state["template"]["mechanics"],
+                                   "mechanics": planning_mechanics(state),
                                    "story_outline": state["template"].get("outline", []),
                                    "clocks": list(state["clocks"].values()),
                                    "item_holders": {k: v["holder_id"] for k, v in state["items"].items()},
@@ -134,7 +137,8 @@ class Runtime:
                     observed_effects, observed_roll = [], None
                     if not any(op.kind in {"give", "recruit"} for op in plan.operations):
                         preview_events, observed_effects, observed_roll = resolve(
-                            state, command, plan, {}, a["seed"], check_registry=self.store.check_registry)
+                            state, command, plan, {}, a["seed"], check_registry=self.store.check_registry,
+                            action_registry=self.store.action_registry)
                         npc_state = apply_events(state, preview_events, state["version"])
                     for op in plan.operations:
                         if op.kind == "move":
@@ -161,7 +165,8 @@ class Runtime:
                         context['view']['memories'] = await recalled_context(
                             self.gateway, npc_state, actor, command['text'], aid, budget, scope=a['branch_id'])
                         context["current_observed_effects"] = observed_effects
-                        if state["template"]["mechanics"].get("state_rules") or len(human_players(state)) > 1:
+                        if (state["template"]["mechanics"].get("state_rules") or state.get("action_modules")
+                                or len(human_players(state)) > 1):
                             # The player's effect text may contain player-only variable values.
                             # NPCs receive their own projected candidate state and addressed notices.
                             context["current_observed_effects"] = [e["payload"]["text"] for e in preview_events
@@ -177,7 +182,8 @@ class Runtime:
                         replies[actor] = await self.gateway.generate("character_actor", prompts.NPC + language_prompt(content_language(state)), context,
                                                                     actor_schema(npc_state, actor, offers, consent), aid, budget)
                     events, effects, roll = resolve(state, command, plan, replies, a["seed"],
-                                                    check_registry=self.store.check_registry)
+                                                    check_registry=self.store.check_registry,
+                                                    action_registry=self.store.action_registry)
                     segments = []
                     if command["mode"] == "say" and (len(human_players(state)) > 1 or command.get("whisper_to")):
                         events.extend([
@@ -229,7 +235,7 @@ class Runtime:
                                 "segments": segments, "view": model_view(candidate, player, query=command["text"]),
                                 "narration_required": bool(plan.operations) or bool(world_effects)
                                 or any(e["type"] == "fact.updated" for e in events)
-                                or bool(effects) and any(e["type"].startswith("state.") for e in events)}
+                                or bool(effects) and any(e["type"].startswith(("state.", "module.")) for e in events)}
                     self.store.update(aid, prepared=prepared)
                 self.store.update(aid, status="narrating")
                 if human_exchange:

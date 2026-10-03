@@ -30,6 +30,7 @@ Use the Python backend on its own, embed it in an application, or explore it thr
 - **Characters with perspectives.** NPCs and players receive their own knowledge and visible history. Multiplayer rooms support separate characters, private conversations and explicit trades.
 - **Reusable content.** Export native world/story packages, share through a self-hosted shelf, and install editable copies. Recipients test with their own models. Basic character-card and world-book import is also available.
 - **Replaceable engines.** Bind each generation module independently. Optional System One/Jev decision adapters support evaluated fast paths. Deterministic rules handle arithmetic, ownership and event commits.
+- **Python gameplay modules.** Add typed actions and private/shared state with automatic tests, portable saves and versioned bindings.
 - **Optional animated NPCs.** Bind portable 2D portrait assets to important characters; committed dialogue drives expressions, motion and silent subtitles.
 - **Three interface languages.** English, Simplified Chinese and Japanese. Authors choose the language of their worlds separately.
 

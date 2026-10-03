@@ -63,6 +63,13 @@ python scripts/check_distribution.py --output outputs/validation/check-engine-li
 
 The example host installs [a dice-pool engine](../examples/check_engine.py). Unit coverage also checks legacy d20/d100 results, invalid callbacks, pinned versions, prepared-result retries and tampered backup receipts.
 
+The [action-module example](../examples/action_module.py) supplies survey/rest mechanics and host-authored test routes. The distribution suite runs its standalone contracts and plugin-free replay. This real-provider check adds automatic creation, English/Japanese/Chinese action requests, story continuation, content-package exchange and process restart:
+
+```bash
+python scripts/check_distribution.py --output outputs/validation/action-module-live \
+  --modules-live --live-models-config configs/models.local.json --secrets-root secrets
+```
+
 Each authored story revision runs structural/reference checks, rule routes and selected actual-model playtests in isolated state. Custom-state routes cover the declared actions/triggers. Opening/mechanics review reports source locations and claims. Failed checks remain attached to the job so a creator can revise and retest.
 
 Contract fixtures validate software behavior independently of model intelligence. Actual-model suites assess the chosen configuration on exercised tasks. Human playthroughs add coverage of prose, player agency and alternate routes.

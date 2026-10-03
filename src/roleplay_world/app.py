@@ -75,7 +75,7 @@ from .world import project
 
 
 def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None, model_config=None,
-               registry=None, avatar_factory=None, check_registry=None):
+               registry=None, avatar_factory=None, check_registry=None, action_registry=None):
     """Create an ASGI app. Explicit config does not inherit RPW environment paths.
 
     registry extends the normal gateway; gateway replaces it entirely. Optional
@@ -95,7 +95,7 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
     @asynccontextmanager
     async def lifespan(app):
         async with AsyncExitStack() as resources:
-            store = Store(config.data_root, check_registry=check_registry)
+            store = Store(config.data_root, check_registry=check_registry, action_registry=action_registry)
             resources.callback(store.close)
             settings = Settings(config.data_root / "provider-settings", model_config)
             model = gateway if gateway is not None else ModelGateway(
@@ -428,6 +428,10 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
                  "world_version": app.state.store.branches[c["main_branch"]]["state"]["version"]}
                 for c in app.state.store.campaigns.values() if c["owner"] == user]
 
+    @app.get('/api/action-modules')
+    async def action_modules():
+        return app.state.store.action_registry.describe()
+
     @app.get('/api/check-engines')
     async def check_engines():
         return app.state.store.check_registry.describe()
@@ -570,7 +574,7 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
                                                      living_world=payload.living_world, avatar_id=payload.avatar_id,
                                                      custom_states=payload.custom_states, content_language=payload.content_language,
                                                      creation_preset=payload.creation_preset, request_id=payload.request_id,
-                                                     check_engine=payload.check_engine))
+                                                     check_engine=payload.check_engine, action_modules=payload.action_modules))
 
     @app.post("/api/studio/worlds/{wid}/stories", status_code=202)
     async def create_story(request: Request, wid: str, payload: CreateStory):

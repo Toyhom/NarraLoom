@@ -3,6 +3,7 @@
 import logging
 from collections import deque
 
+from .action_modules import ActionRegistry, audit_modules, schema_check, test_view
 from .checks import builtin_checks
 from .content_preferences import content_text
 from .contracts import ActionCommand, ActorReply, TurnPlan
@@ -31,13 +32,13 @@ def route(template, start, target):
     raise ValueError("目标地点不可达")
 
 
-def audit_template(template, *, check_registry=None):
+def audit_template(template, *, check_registry=None, action_registry=None):
     """Every clue/goal/route checked from this generated content, no Fogharbor IDs."""
     state = initial_state(template, "自动检查旅人")
     registry = check_registry or builtin_checks()
     registry.validate_template(template)
     registry.verify(template['mechanics'].get('checks'))
-    checks = []
+    checks = audit_modules(template, action_registry or ActionRegistry())
 
     def ok(name, detail):
         checks.append({"name": name, "status": "passed", "detail": detail})
@@ -173,24 +174,26 @@ def audit_rules(template, *, check_registry=None):
              "detail": f"{len(cfg.items)} 件道具引用、{traded} 项独立交易/装备/消耗检查、{len(cfg.enemies)} 个敌人的单轮战斗、同行拒绝；使用隔离前提，不代表全战役平衡"}]
 
 
-async def playtest(template, gateway, root, progress, *, check_registry=None):
+async def playtest(template, gateway, root, progress, *, check_registry=None, action_registry=None):
     mode = getattr(gateway, "verification_mode", "live_models")
-    checks = audit_template(template, check_registry=check_registry)
+    checks = audit_template(template, check_registry=check_registry, action_registry=action_registry)
     language = template.get("content_language", "zh-CN")
     def text(zh, en):
         return content_text(language, zh, en)
     await progress(checks)
-    store = Store(root, check_registry=check_registry)
+    store = Store(root, check_registry=check_registry, action_registry=action_registry)
     runtime = Runtime(store, gateway)
     c = store.create_campaign("autotest", template, text("自动试跑旅人", "Playtest traveler"))
     cid, bid = c["id"], c["main_branch"]
     live_steps = []
 
-    async def turn(text, mode="act", assertion=None, selected_operation=None):
+    async def turn(text, mode="act", assertion=None, selected_operation=None, seed=None):
         state = store.branches[bid]["state"]
         command = ActionCommand(action_id=uid("qa"), expected_world_version=state["version"], mode=mode, text=text,
                                 selected_operation=selected_operation)
         a, _ = store.accept(cid, bid, "autotest", command)
+        if seed is not None:
+            store.update(a['id'], seed=seed)
         await runtime.run(a["id"])
         a = store.actions[a["id"]]
         if a["status"] != "committed":
@@ -262,6 +265,17 @@ async def playtest(template, gateway, root, progress, *, check_registry=None):
             assert all(evaluate(store.branches[bid]["state"], c) for c in scenario["expect"]), "真实状态路线没有达到作者声明结果"
             checks.append({"name": "自定义状态真实模型路线", "status": "passed",
                            "detail": f"真实模型执行首条声明路线「{scenario['name']}」，其余路线由确定性规则检查覆盖"})
+        for binding in template['mechanics'].get('action_modules', []):
+            branch = store.fork(cid, c['main_branch'], 'autotest', 0, 'Module test: ' + binding['id'])
+            bid = branch['id']
+            scenario = store.action_registry.test_cases(binding)[0]
+            for step in scenario.steps:
+                await turn(scenario.name, selected_operation={
+                    'kind': 'module', 'target_id': binding['id'],
+                    'action_id': step.action_id, 'parameters': step.parameters}, seed=scenario.seed)
+            schema_check(scenario.expect, test_view(store.branches[bid]['state'], binding['id']))
+            checks.append({'name': 'Action module model route: ' + binding['id'], 'status': 'passed',
+                           'detail': 'First host route executed through runtime, narration and idempotent receipts'})
         checks.append(
             {
                 "name": "真实模型端到端",

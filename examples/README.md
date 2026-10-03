@@ -13,3 +13,5 @@ See the [developer guide](../guides/developers.md) and [research guide](../guide
 
 - [make_playtest_plan.py](make_playtest_plan.py): generate an editable long-dialogue plan from a native story export.
 - [playtest_adapter.py](playtest_adapter.py): run, checkpoint and resume a campaign with a native fixture adapter.
+
+- [action_module.py](action_module.py): register survey/rest actions with typed parameters, personal and shared state, automatic test routes and plugin-free replay.

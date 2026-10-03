@@ -36,9 +36,25 @@ def initial_state(template, player_name):
         from .state_rules import initial_rules
 
         state["state_rules"] = initial_rules(t["mechanics"]["state_rules"])
+    if t['mechanics'].get('action_modules'):
+        from .action_modules import validate_bindings
+
+        values = validate_bindings(t['mechanics']['action_modules'], state['actors'])
+        state['action_modules'] = {value.id: value.initial.model_dump(mode='json') for value in values}
     if t.get("continuity_state"):
         state.update(deepcopy(t["continuity_state"]))
         state["actors"][player]["name"] = player_name
+        if t['mechanics'].get('action_modules') or state.get('action_modules'):
+            from .action_modules import ModuleState, schema_check
+
+            declared = {value['id']: value for value in t['mechanics'].get('action_modules', [])}
+            if set(state.get('action_modules', {})) != set(declared):
+                raise DomainError('invalid_action_modules', 'Continuation module state differs from its bindings', 422)
+            for key, value in state['action_modules'].items():
+                parsed = ModuleState.model_validate(value)
+                if set(parsed.actors) - set(state['actors']):
+                    raise DomainError('invalid_module_actor', 'Continuation references an unknown actor', 422)
+                schema_check(declared[key]['state_schema'], parsed.model_dump(mode='json'))
     return state
 
 
@@ -118,6 +134,10 @@ def project(state, actor_id=None):
         from .state_rules import project_rules
 
         result["custom_state"] = project_rules(state, actor_id)
+    if state.get('action_modules'):
+        from .action_modules import project_modules
+
+        result['action_modules'] = project_modules(state, actor_id)
     result["notes"] = [{k: deepcopy(n[k]) for k in ("id", "text", "kind", "status", "source_event_ids")}
                        for n in state.get("notes", {}).values() if n["actor_id"] == actor_id]
     result["map"] = [{"id": p["id"], "name": p["name"], "exits": [e["to"] for e in p["exits"]]}
@@ -186,6 +206,10 @@ def apply_events(state, events, new_version):
             from .trades import reduce_trade
 
             reduce_trade(state, event)
+        elif kind == 'module.resolved':
+            from .action_modules import reduce_module
+
+            reduce_module(state, event)
         elif kind == "player.joined":
             from .players import join_player
 

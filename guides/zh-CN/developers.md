@@ -43,6 +43,12 @@ app = create_app(config=AppConfig(
 
 查询 `GET /api/check-engines` 后，可设置 `CreateWorld.check_engine`，或编辑 `WorldBlueprint.check_engine`。内容自动测试会验证所选实现，提交记录保存骰面和结果，供重放、分支及恢复使用。[检定引擎文档](../../docs/CHECK_ENGINES.md) 说明注册接口、随机数、版本固定和内容包依赖。
 
+## 添加玩法行动
+
+在 `ActionRegistry` 中注册 `ActionModule`，通过 `create_app(action_registry=...)` 注入后端。模块声明参数类型、公开／角色私有／宿主私有状态、使用固定种子的规则和验收路线。创建世界时设置 `CreateWorld.action_modules`，其故事会继承对应绑定；自然语言规划和 SDK 直接选择行动都经过同一提交流程。
+
+[探索模块示例](../../examples/action_module.py) 展示调查与休息玩法，可直接作为外部插件安装。内容自动测试会运行模块路线；提交后的结果支持回放、分支和备份恢复，读取旧记录时无需安装插件。[行动模块文档](../../docs/ACTION_MODULES.md) 说明回调、角色视角、内容包依赖及自定义前端接入。
+
 ## 扩展记忆检索
 
 将 `memory_embedding` 绑定到 `openai_embedding` 本地服务或 API，也可以注册能力为 `embed` 的 Python `Engine`。设置 `memory_policy.mode=hybrid` 后，规划和 NPC 上下文会使用语义召回。自定义前端可调用 `client.recall(...)`，获取保留来源的记忆记录。[记忆接口文档](../../docs/MEMORY.md) 说明向量契约、角色视角、预算、缓存及可运行的 Transformers 适配器。

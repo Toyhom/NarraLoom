@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "JsonValue": {},
+    "ModuleState": {
+      "additionalProperties": false,
+      "properties": {
+        "public": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Public",
+          "type": "object"
+        },
+        "actors": {
+          "patternProperties": {
+            "^[a-zA-Z0-9_-]{1,80}$": {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            }
+          },
+          "title": "Actors",
+          "type": "object"
+        },
+        "private": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Private",
+          "type": "object"
+        }
+      },
+      "title": "ModuleState",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "state": {
+      "$ref": "#/$defs/ModuleState"
+    },
+    "resource_deltas": {
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]{1,80}$": {
+          "maximum": 10000,
+          "minimum": -10000,
+          "type": "integer"
+        }
+      },
+      "title": "Resource Deltas",
+      "type": "object"
+    },
+    "messages": {
+      "items": {
+        "maxLength": 600,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 6,
+      "title": "Messages",
+      "type": "array"
+    },
+    "time_cost_s": {
+      "default": 60,
+      "maximum": 1800,
+      "minimum": 1,
+      "title": "Time Cost S",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "state"
+  ],
+  "title": "ModuleResult",
+  "type": "object"
+}

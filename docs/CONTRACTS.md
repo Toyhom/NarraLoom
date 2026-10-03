@@ -4,7 +4,7 @@ The authoritative Python types live in `content.py`, `contracts.py`, `state_rule
 
 ## Content identity
 
-- `WorldBlueprint` contains shared locations, characters and optional rules/state/simulation.
+- `WorldBlueprint` contains shared locations, characters and optional rules/state/simulation/action-module bindings.
 - `StoryBlueprint` contains opening text, player role, clues, goals and story mechanics. It pins its world revision and snapshot.
 - Campaigns retain a compiled template. Existing saves remain stable across author edits.
 - Test certification refers to an exact story revision and is cleared when that revision changes.
@@ -30,6 +30,8 @@ Cancellation before commit leaves the world unchanged. A committed result remain
 World truth, NPC knowledge, individual player knowledge and visible narrative have separate projections. Knowing that someone said a claim does not make the claim a canonical world fact. Players control their own decisions. Private conversations and trades are filtered per participant.
 
 NPC reply schemas include facts observed through the current action's deterministic effects. Transfers of newly observed facts follow the clock or authored events that establish the NPC's knowledge. Facts outside that resulting perspective remain invalid disclosures.
+
+Action modules partition their state into public, actor-private and host-private data. Stored outcomes are validated against pinned schemas and can replay without module code. See [action modules](ACTION_MODULES.md).
 
 Player notes contain visible history. Creator exports, native content packages and full backups contain authored secrets and are intended for creators or restoration. See [package format](COMMUNITY_PACKAGES.md).
 

@@ -1,0 +1,36 @@
+{
+  "$defs": {
+    "JsonValue": {}
+  },
+  "additionalProperties": false,
+  "properties": {
+    "public": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Public",
+      "type": "object"
+    },
+    "actors": {
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]{1,80}$": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "type": "object"
+        }
+      },
+      "title": "Actors",
+      "type": "object"
+    },
+    "private": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Private",
+      "type": "object"
+    }
+  },
+  "title": "ModuleState",
+  "type": "object"
+}

@@ -5,6 +5,7 @@ import time
 import uuid
 from copy import deepcopy
 
+from .action_modules import ActionRegistry
 from .checks import builtin_checks
 from .contracts import ActionCommand, DomainError
 from .journal import Journal, digest
@@ -17,8 +18,9 @@ def uid(prefix):
 
 
 class Store:
-    def __init__(self, root, *, check_registry=None):
+    def __init__(self, root, *, check_registry=None, action_registry=None):
         self.check_registry = (check_registry or builtin_checks()).copy()
+        self.action_registry = (action_registry or ActionRegistry()).copy()
         self.journal = Journal(root)
         self.campaigns, self.branches, self.actions = {}, {}, {}
         self.worlds, self.stories, self.jobs, self.imports = {}, {}, {}, {}
@@ -118,6 +120,7 @@ class Store:
                 return existing
             c["request_hash"] = request_hash
         self.check_registry.validate_template(template)
+        self.action_registry.validate_template(template)
         self.record({"kind": "campaign.created", "campaign": c})
         return c
 

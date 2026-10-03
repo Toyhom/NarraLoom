@@ -1,5 +1,6 @@
 {
   "$defs": {
+    "JsonValue": {},
     "NoteRecord": {
       "additionalProperties": false,
       "properties": {
@@ -73,7 +74,8 @@
             "recover",
             "recruit",
             "dismiss",
-            "state_action"
+            "state_action",
+            "module"
           ],
           "title": "Kind",
           "type": "string"
@@ -112,6 +114,34 @@
           "minimum": 1,
           "title": "Quantity",
           "type": "integer"
+        },
+        "action_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Action Id"
+        },
+        "parameters": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parameters"
         }
       },
       "required": [

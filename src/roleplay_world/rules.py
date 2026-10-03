@@ -13,7 +13,7 @@ from .state_rules import advance_triggers, resolve_action
 from .world import apply_events, fact_text, present
 
 
-def resolve(state, command, plan, replies, seed, *, check_registry=None):
+def resolve(state, command, plan, replies, seed, *, check_registry=None, action_registry=None):
     state = deepcopy(state)
     player = command_player(state, command)
     events, effects = [], []
@@ -84,7 +84,12 @@ def resolve(state, command, plan, replies, seed, *, check_registry=None):
             if (op.when == "success") != roll["passed"]:
                 continue
         own = state["actor_states"][player]
-        if op.kind == "state_action":
+        if op.kind == 'module':
+            from .action_modules import resolve_module
+
+            messages, time_cost = resolve_module(state, op, player, seed, action_registry, emit)
+            effects.extend(messages)
+        elif op.kind == "state_action":
             batch, custom_effects, time_cost = resolve_action(state, op, command["action_id"], player)
             state = apply_events(state, batch, state["version"])
             events.extend(batch)

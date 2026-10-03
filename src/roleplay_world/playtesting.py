@@ -111,7 +111,7 @@ def metrics(report, trace_root):
 
 
 async def playtest(template, plan, *, config, output, secrets_root=None, registry=None, check_registry=None,
-                   resume=False, retry_failed=False, max_steps=None):
+                   resume=False, retry_failed=False, max_steps=None, action_registry=None):
     """Run a frozen trajectory in its own Store; model expectations never enter prompts.
 
     Resume recovers committed actions. Failed/interrupted execution additionally
@@ -154,7 +154,7 @@ async def playtest(template, plan, *, config, output, secrets_root=None, registr
             _save(path, report)
 
         save('running')
-        store = Store(output / 'data', check_registry=check_registry)
+        store = Store(output / 'data', check_registry=check_registry, action_registry=action_registry)
         runtime = Runtime(store, gateway)
         try:
             campaign = store.create_campaign('playtest', template, plan.player_name, request_key='playtest_campaign',
@@ -226,7 +226,7 @@ async def playtest(template, plan, *, config, output, secrets_root=None, registr
             expected = digest(store.branches[bid]['state'])
             await runtime.close()
             store.close()
-            store = Store(output / 'data', check_registry=check_registry)
+            store = Store(output / 'data', check_registry=check_registry, action_registry=action_registry)
             if digest(store.branches[bid]['state']) != expected:
                 raise ValueError('Restart replay differs from the committed state')
             report['replay'] = {'status': 'passed', 'world_version': store.branches[bid]['state']['version'],

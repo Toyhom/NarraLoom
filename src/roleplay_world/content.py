@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, create_model
 
+from .action_modules import ModuleBinding, ModuleSelection, validate_bindings
 from .checks import CheckBinding
 from .content_preferences import PRESETS, CreationPreset, LanguageChoice, LanguageTag, content_text
 from .contracts import Contract, DomainError, Identifier
@@ -47,6 +48,7 @@ class WorldBlueprint(Contract):
     simulation: SimulationConfig | None = None
     state_rules: StateRules | None = None
     check_engine: CheckBinding | None = None
+    action_modules: Annotated[list[ModuleBinding], Field(max_length=8)] = Field(default_factory=list)
 
 
 class Clue(Contract):
@@ -98,6 +100,7 @@ class CreateWorld(Contract):
     custom_states: bool = False
     avatar_id: Identifier | None = None
     check_engine: CheckBinding | None = None
+    action_modules: Annotated[list[ModuleSelection], Field(max_length=8)] = Field(default_factory=list)
 
 
 class CreateStory(Contract):
@@ -167,7 +170,7 @@ def world_generation_schema(preset="adventure", language="auto"):
         content_language=(LanguageTag, ...) if language == "auto" else (Literal[language], language),
         creation_preset=(Literal[preset], preset),
         rules=(type(None), None), simulation=(type(None), None), state_rules=(type(None), None),
-        check_engine=(type(None), None),
+        check_engine=(type(None), None), action_modules=(list[dict], Field(default_factory=list, max_length=0)),
         locations=(list[place], Field(min_length=size["locations"], max_length=size["locations"])),
         characters=(list[character], Field(min_length=size["characters"], max_length=size["characters"])),
     )
@@ -361,6 +364,9 @@ def compile_story(world, story, story_id, revision=1, origin=None):
     if world.check_engine:
         template['mechanics']['checks'] = world.check_engine.model_dump()
     attach_rules(template, world.rules)
+    if world.action_modules:
+        template['mechanics']['action_modules'] = [value.model_dump(mode='json') for value in validate_bindings(
+            world.action_modules, [actor['id'] for actor in template['actors']])]
     if world.state_rules or story.state_rules:
         cfg = compile_packs(world.state_rules, story.state_rules)
         validate_pack(cfg, template)

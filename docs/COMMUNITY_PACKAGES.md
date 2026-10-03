@@ -29,6 +29,8 @@ A downloaded file can be previewed and installed through **Import a package file
 
 Worlds using a [check engine](CHECK_ENGINES.md) retain its pinned ID, version and options. Package preview reports that dependency. The recipient's host registers the matching implementation before automatic testing and play. If it is missing, the imported content remains available for editing and the test job reports `check_engine_unavailable`; install the implementation and retry that job. Packages containing the `check_engine` world field require NarraLoom 0.16.0 or newer.
 
+Worlds with [action modules](ACTION_MODULES.md) retain their schemas, initial state and pinned implementation IDs. Package previews list these dependencies. The recipient registers them before testing; missing implementations report `action_module_unavailable`. Snapshots containing the `action_modules` world field require NarraLoom 0.19.0 or newer.
+
 Up to eight jobs from one package count as one creation batch for admission, and the existing single-model-job semaphore still runs them serially. A failed story does not stop other selected stories from being tested. Retry/continue remains per story. Existing single-story native exports, character cards, PNG, CHARX and world books retain their prior APIs.
 
 ## Portable 2D assets

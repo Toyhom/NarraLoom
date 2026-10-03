@@ -338,6 +338,129 @@
       "title": "Gear",
       "type": "object"
     },
+    "JsonValue": {},
+    "ModuleAction": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "parameters_schema": {
+          "additionalProperties": true,
+          "title": "Parameters Schema",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "parameters_schema"
+      ],
+      "title": "ModuleAction",
+      "type": "object"
+    },
+    "ModuleBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "engine": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Engine",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Version",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Options",
+          "type": "object"
+        },
+        "initial": {
+          "$ref": "#/$defs/ModuleState"
+        },
+        "state_schema": {
+          "additionalProperties": true,
+          "title": "State Schema",
+          "type": "object"
+        },
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/ModuleAction"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Actions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "engine",
+        "version",
+        "initial",
+        "state_schema",
+        "actions"
+      ],
+      "title": "ModuleBinding",
+      "type": "object"
+    },
+    "ModuleState": {
+      "additionalProperties": false,
+      "properties": {
+        "public": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Public",
+          "type": "object"
+        },
+        "actors": {
+          "patternProperties": {
+            "^[a-zA-Z0-9_-]{1,80}$": {
+              "additionalProperties": {
+                "$ref": "#/$defs/JsonValue"
+              },
+              "type": "object"
+            }
+          },
+          "title": "Actors",
+          "type": "object"
+        },
+        "private": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "title": "Private",
+          "type": "object"
+        }
+      },
+      "title": "ModuleState",
+      "type": "object"
+    },
     "Place": {
       "additionalProperties": false,
       "properties": {
@@ -1281,6 +1404,14 @@
             }
           ],
           "default": null
+        },
+        "action_modules": {
+          "items": {
+            "$ref": "#/$defs/ModuleBinding"
+          },
+          "maxItems": 8,
+          "title": "Action Modules",
+          "type": "array"
         }
       },
       "required": [

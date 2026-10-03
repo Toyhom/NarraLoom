@@ -15,6 +15,8 @@ def carry_world(template, source, source_campaign, expected_version):
         raise DomainError('stale_continuity','来源存档已变化，请刷新后重新选择',409)
     if not template.get('world_ref') or template['world_ref'] != old['template'].get('world_ref'):
         raise DomainError('incompatible_world','只可继承同一世界修订的存档；请使用匹配的世界版本',422)
+    if template['mechanics'].get('action_modules', []) != old['template']['mechanics'].get('action_modules', []):
+        raise DomainError('incompatible_modules', 'Story continuation requires identical action module bindings', 422)
     target = deepcopy(template)
     # A continuation starts at this story's opening location, carrying the established party and resources.
     fresh = initial_state(target,source_campaign['player_name'])
@@ -30,7 +32,7 @@ def carry_world(template, source, source_campaign, expected_version):
         fresh['items'].setdefault(item['id'],item)
     fresh['relations'] = deepcopy(old['relations'])
     fresh['game_time_s'] = old['game_time_s']
-    for key in ('party','companion_leaders','shops','simulation','notes'):
+    for key in ('party','companion_leaders','shops','simulation','notes','action_modules'):
         if key in old:
             fresh[key] = deepcopy(old[key])
     if 'state_rules' in fresh and 'state_rules' in old:

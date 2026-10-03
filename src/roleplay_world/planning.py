@@ -1,11 +1,13 @@
 """Narrow the model's operation vocabulary to legal choices in this scene."""
 
 import re
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import Field, create_model
+from pydantic import AfterValidator, Field, WithJsonSchema, create_model
 
+from .action_modules import module_choices, parameter_schema, schema_check, validate_operation
 from .contracts import ActorReply, Check, DomainError, Operation, TurnPlan
+from .json_schema import inline_schema
 from .players import command_player, followers, player_for
 from .rulepacks import EXTRA_KINDS, extra_choices, rules_config, validate_extra
 from .state_rules import action_choices
@@ -89,6 +91,7 @@ def choices(state, mode, actor_id=None, whisper_to=None):
     ]
     operations.extend(extra_choices(state, player))
     operations.extend(action_choices(state, player))
+    operations.extend(module_choices(state))
     speakers = [a for a in speakers if not (state["actors"][a].get("combatant")
                                           and state["actor_states"][a]["resources"]["hp"] <= 0)]
     return operations, speakers
@@ -103,6 +106,23 @@ def plan_schema(state, command):
         fields["quantity"] = (int, Field(default=1, ge=1, le=99 if op["kind"] in {"buy", "sell", "take", "give"} else 1))
         if "item_id" not in fields:
             fields["item_id"] = (type(None), None)
+        if op['kind'] == 'module':
+            schema = parameter_schema(state, op['target_id'], op['action_id'])
+            def checker(schema):
+                def check(value):
+                    try:
+                        schema_check(schema, value)
+                    except DomainError as exc:
+                        # Union alternatives must remain independently testable.
+                        raise ValueError(exc.message) from exc
+                    return value
+                return check
+            fields['parameters'] = (Annotated[dict, WithJsonSchema(inline_schema(schema)),
+                                   AfterValidator(checker(schema))], ...)
+            fields['when'] = (Literal['always'], 'always')
+        else:
+            fields['action_id'] = (type(None), None)
+            fields['parameters'] = (type(None), None)
         variants.append(create_model(f"SceneOperation{i}", __base__=Operation, **fields))
     item_type = variants[0] if variants else Operation
     for variant in variants[1:]:
@@ -147,6 +167,11 @@ def validate_plan(state, command, plan):
         raise DomainError("invalid_plan", "移动必须单独执行，且 when=always", 422)
     for op in plan.operations:
         value = {"kind": op.kind, "target_id": op.target_id}
+        if op.kind == 'module':
+            value['action_id'] = op.action_id
+            if plan.check:
+                raise DomainError('invalid_module_action', 'Action modules resolve their own checks', 422)
+        validate_operation(state, op)
         if op.item_id is not None:
             value["item_id"] = op.item_id
         if value not in allowed:

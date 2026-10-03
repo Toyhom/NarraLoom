@@ -8,7 +8,7 @@ NarraLoom is a modular Python application with an independent HTTP API. A single
 | Authoring | `content`, `studio`, `content_review`, `quality` | Worlds, stories, revisions, generation, review and isolated playtests |
 | Model calls | `gateway`, `engines`, `prompts`, `decisions`, `routing` | Per-role configuration, contracts, budgets, repair and traces |
 | Turn execution | `runtime`, `planning`, `rules`, `world` | Plans, NPC reactions, deterministic outcomes and narrative commits |
-| Gameplay | `checks`, `rulepacks`, `state_rules`, `simulation`, `continuity` | Versioned numerical checks, equipment, authored mechanics, world activity and story carry-over |
+| Gameplay | `action_modules`, `checks`, `rulepacks`, `state_rules`, `simulation`, `continuity` | Versioned numerical checks, equipment, authored mechanics, world activity and story carry-over |
 | Perspectives | `memory`, `semantic_memory`, `players`, `rooms`, `trades` | Visible history, optional embedding recall, independent players and confirmed transfers |
 | Persistence | `store`, `journal`, `idempotency` | Durable records, writer lock, receipts and recovery |
 | Portability | `packages`, `catalog`, `imports`, `backups`, `avatars` | Native content, starter copies, conversion, saves and presentation assets |
@@ -17,7 +17,7 @@ NarraLoom is a modular Python application with an independent HTTP API. A single
 
 A world stores reusable setting and character definitions. A story pins its world revision and content snapshot. A campaign pins the compiled story template. Creation jobs checkpoint generated drafts and their test stages; a successful report certifies only the tested revision. Editing produces a new revision and test job. Late test results cannot certify a newer edit.
 
-Structure checks and declared-rule routes run in isolated state. Model reviewers compare narrative claims with the compiled opening and mechanics. Model playtests exercise a selected story route and the first custom-state route. Recipients of shared packages repeat validation with their own models.
+Structure checks and declared-rule routes run in isolated state. Model reviewers compare narrative claims with the compiled opening and mechanics. Model playtests exercise a selected story route, the first custom-state route and the first host test route of each action module. Recipients of shared packages repeat validation with their own models.
 
 ## Turn lifecycle
 
@@ -32,9 +32,9 @@ Only the engine's validated commit changes canonical state. Model summaries and 
 
 ## Extension boundaries
 
-`create_app` accepts `AppConfig`, an in-memory `model_config`, a model `registry` or complete `gateway`, a `check_registry` and an `avatar_factory`. Generation and decision transports declare capabilities. Deterministic check engines pin their ID/version in each world and share the existing commit pipeline. A host can embed the backend in ASGI or build any frontend on the API.
+`create_app` accepts `AppConfig`, an in-memory `model_config`, a model `registry` or complete `gateway`, a `check_registry`, an `action_registry` and an `avatar_factory`. Generation and decision transports declare capabilities. Deterministic check engines pin their ID/version in each world and share the existing commit pipeline. A host can embed the backend in ASGI or build any frontend on the API.
 
-Action/event handlers and persistence internals are versioned core code. Extending these requires contract, ownership, replay and recovery tests. See [check engines](CHECK_ENGINES.md), [contracts](CONTRACTS.md), [model engines](ENGINES.md), [SDK](CLIENT.md) and the [developer guide](../guides/developers.md).
+Host-registered action modules supply typed parameters and portable state through the existing event pipeline. New event types and persistence internals are versioned core code, with ownership, replay and recovery contracts. See [action modules](ACTION_MODULES.md). See [check engines](CHECK_ENGINES.md), [contracts](CONTRACTS.md), [model engines](ENGINES.md), [SDK](CLIENT.md) and the [developer guide](../guides/developers.md).
 
 ## Hosting
 

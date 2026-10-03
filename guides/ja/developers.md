@@ -43,6 +43,12 @@ app = create_app(config=AppConfig(
 
 `GET /api/check-engines` で実装を確認し、`CreateWorld.check_engine` または `WorldBlueprint.check_engine` を設定します。コンテンツの自動テストで実装を検証し、確定記録にダイスと結果を保存するため、リプレイ・分岐・復元にも対応します。[判定エンジンのリファレンス](../../docs/CHECK_ENGINES.md) に登録、乱数、バージョン固定、パッケージ依存関係をまとめています。
 
+## ゲームの行動を追加する
+
+`ActionRegistry` に `ActionModule` を登録し、`create_app(action_registry=...)` に渡します。モジュールは型付きの引数、公開・キャラクター別・ホスト専用の状態、シード付き乱数を使うルール、検証用の手順を定義します。世界の作成時に `CreateWorld.action_modules` で選択すると、その世界のストーリーに引き継がれます。自然言語による計画と SDK からの行動指定は、同じコミット処理を使います。
+
+[探索モジュールの例](../../examples/action_module.py) は調査と休息を外部プラグインとして実装しています。コンテンツの自動テストで動作を検証し、保存済みの結果はプラグインなしでも再生・分岐・復元できます。[行動モジュール](../../docs/ACTION_MODULES.md) にコールバック、視点、パッケージ依存関係、独自フロントエンドからの利用方法をまとめています。
+
 ## 記憶検索を拡張する
 
 `memory_embedding` を `openai_embedding` のローカルサービスや API に接続するか、`embed` 能力を持つ Python `Engine` を登録します。`memory_policy.mode=hybrid` に設定すると、プランナーと NPC のコンテキストが意味検索を使用します。カスタムフロントエンドでは `client.recall(...)` で出典付きの記録を取得できます。[記憶 API](../../docs/MEMORY.md) にベクトル契約、視点、予算、キャッシュ、Transformers アダプターの例をまとめています。

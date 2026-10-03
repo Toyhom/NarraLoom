@@ -43,6 +43,12 @@ Pass a `CheckRegistry` as `create_app(check_registry=...)` to register determini
 
 Inspect `GET /api/check-engines`, then set `CreateWorld.check_engine` or edit `WorldBlueprint.check_engine`. Automatic content tests exercise the selected implementation. Receipts retain dice and outcomes for replay, branch history and recovery. The [check-engine reference](../docs/CHECK_ENGINES.md) covers registration, randomness, versioning and native-package dependencies.
 
+## Add gameplay actions
+
+Register an `ActionModule` in an `ActionRegistry` and pass it as `create_app(action_registry=...)`. Modules declare typed parameters, public/personal/private state, seeded rules and host-authored test routes. Select bindings in `CreateWorld.action_modules`; every story in that world inherits them. Natural-language planning and direct SDK actions share the normal commit pipeline.
+
+[The exploration example](../examples/action_module.py) implements surveys and rest without core edits. Automatic content tests exercise the module, while saved outcomes support replay, branching and restoration after reopening without the plugin. See [action modules](../docs/ACTION_MODULES.md) for callbacks, projections, package dependencies and custom frontend integration.
+
 ## Extend memory retrieval
 
 Bind `memory_embedding` to an API/local service with backend `openai_embedding`, or register an `Engine` with capability `embed`. Enable `memory_policy.mode=hybrid` to supply semantic recall to planning and NPC contexts. `client.recall(...)` exposes the same source-preserving retrieval to custom frontends. See [memory contracts](../docs/MEMORY.md) for vector schemas, visibility, budgets, caching and the runnable Transformers adapter.

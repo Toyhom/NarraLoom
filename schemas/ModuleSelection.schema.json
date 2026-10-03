@@ -1,0 +1,37 @@
+{
+  "$defs": {
+    "JsonValue": {}
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "engine": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Engine",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Version",
+      "type": "string"
+    },
+    "options": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Options",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "engine",
+    "version"
+  ],
+  "title": "ModuleSelection",
+  "type": "object"
+}

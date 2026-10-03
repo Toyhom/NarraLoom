@@ -1,7 +1,7 @@
 """Frozen, resumable module evaluations through the normal model gateway.
 
-Requires the optional research extra. Evaluation expectations stay outside model
-prompts and schema repair. Results and raw traces belong to the caller's workspace.
+Evaluation expectations stay outside model prompts and schema repair.
+Results and raw traces belong to the caller's workspace.
 """
 
 import asyncio
@@ -16,7 +16,6 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Annotated, Literal
-from urllib.parse import unquote
 
 from pydantic import Field, model_validator
 
@@ -24,6 +23,7 @@ from . import __version__
 from .contracts import Contract, DomainError, Identifier
 from .decisions import DecisionRequest
 from .gateway import ModelGateway
+from .json_schema import validator
 from .settings import DECISION_ROLES, ROLES
 
 
@@ -33,67 +33,6 @@ def canonical(value):
 
 def fingerprint(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
-
-
-def validator(schema):
-    try:
-        from jsonschema import Draft202012Validator
-        from referencing import Registry
-        from referencing.exceptions import NoSuchResource
-    except ImportError as exc:
-        raise ValueError('Install the research extra from the checkout: python -m pip install ".[research]"') from exc
-
-    # Visit schema positions only: a literal in const/enum/examples can contain
-    # any key, including $ref, without becoming a schema reference.
-    maps = {'$defs', 'definitions', 'properties', 'patternProperties', 'dependentSchemas'}
-    single = {'additionalProperties', 'unevaluatedProperties', 'propertyNames', 'items',
-              'additionalItems', 'unevaluatedItems', 'contains', 'not', 'if', 'then', 'else'}
-    arrays = {'allOf', 'anyOf', 'oneOf', 'prefixItems'}
-    visited = set()
-
-    def references(value, root=False):
-        if isinstance(value, dict):
-            if id(value) in visited:
-                return
-            visited.add(id(value))
-            if not root and '$id' in value:
-                raise ValueError('Evaluation schemas use one document; nested $id is unsupported')
-            if '$schema' in value and value['$schema'] != 'https://json-schema.org/draft/2020-12/schema':
-                raise ValueError('Evaluation schemas use JSON Schema Draft 2020-12')
-            for key, child in value.items():
-                if key in {'$ref', '$dynamicRef'}:
-                    if not isinstance(child, str) or (child != '#' and not child.startswith('#/')):
-                        raise ValueError('Evaluation schemas support document-local JSON Pointer references only')
-                    target = schema
-                    try:
-                        for token in unquote(child[2:]).split('/') if child != '#' else []:
-                            token = token.replace('~1', '/').replace('~0', '~')
-                            target = target[int(token)] if isinstance(target, list) else target[token]
-                    except (KeyError, IndexError, ValueError, TypeError) as exc:
-                        raise ValueError('Evaluation schema has an unresolved local reference') from exc
-                    try:
-                        Draft202012Validator.check_schema(target)
-                    except Exception as exc:
-                        raise ValueError('Evaluation reference does not point to a schema') from exc
-                    references(target, root=target is schema)
-                elif key in maps and isinstance(child, dict):
-                    for subschema in child.values():
-                        references(subschema)
-                elif key in single:
-                    references(child)
-                elif key in arrays and isinstance(child, list):
-                    for subschema in child:
-                        references(subschema)
-
-    references(schema, root=True)
-    try:
-        Draft202012Validator.check_schema(schema)
-    except Exception as exc:
-        raise ValueError('Invalid evaluation JSON Schema') from exc
-    def no_remote(uri):
-        raise NoSuchResource(ref=uri)
-
-    return Draft202012Validator(schema, registry=Registry(retrieve=no_remote))
 
 
 class EvaluationCase(Contract):

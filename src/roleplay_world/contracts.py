@@ -2,7 +2,7 @@
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, field_validator
 
 Identifier = Annotated[str, Field(pattern=r"^[a-zA-Z0-9_-]{1,80}$")]
 ShortText = Annotated[str, Field(min_length=1, max_length=1800)]
@@ -68,11 +68,22 @@ class Operation(Contract):
     """Small interpreted vocabulary. Each variant is validated again against world state."""
 
     kind: Literal["move", "give", "reveal", "repair", "escape", "challenge",
-                  "take", "use", "equip", "unequip", "buy", "sell", "attack", "rest", "recover", "recruit", "dismiss", "state_action"]
+                  "take", "use", "equip", "unequip", "buy", "sell", "attack", "rest", "recover", "recruit", "dismiss", "state_action", "module"]
     target_id: Identifier
     item_id: Identifier | None = None
     when: Literal["always", "success", "failure"] = "always"
     quantity: Annotated[int, Field(ge=1, le=99)] = 1
+    action_id: Identifier | None = None
+    parameters: dict[str, JsonValue] | None = None
+
+    @field_validator('parameters')
+    @classmethod
+    def bounded_parameters(cls, value):
+        import json
+
+        if len(json.dumps(value, allow_nan=False, ensure_ascii=False)) > 16000:
+            raise ValueError('Action parameters exceed 16000 characters')
+        return value
 
 
 class Check(Contract):

@@ -2,7 +2,7 @@ import { uiText, useLocale } from './i18n';
 import { useState } from 'react';
 import { Swords, Heart, Coins, Users } from 'lucide-react';
 
-export type RuleAction={kind:string;target_id:string;item_id?:string;quantity?:number};
+export type RuleAction={kind:string;target_id:string;item_id?:string;quantity?:number;action_id?:string;parameters?:Record<string,unknown>};
 export type GameView={rule_system?:string;resources:Record<string,number>;resource_limits?:Record<string,number>;
   rule_actions?:RuleAction[];inventory:{id:string;name:string;quantity:number}[];equipment?:Record<string,string|null>;
   present_actors:{id:string;name:string}[];ground_items?:{id:string;name:string;quantity:number}[];
