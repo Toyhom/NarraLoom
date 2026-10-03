@@ -22,6 +22,8 @@ Variables are public-to-all-actors, player-only or GM-only. Public values are au
 
 An action applies declared effects, advances game time and built-in clocks, then evaluates triggers. Triggers scan in declaration order for at most three rounds; each runs at most once per player action. Longer chains continue on the next game action. One-time flags, usage counts and last-run times are recorded in events. Repeating triggers require at least one second of game cooldown.
 
+NPCs can relay facts they observe during these effects. A fact first supplied to an NPC by a trigger is shared after the trigger pass. Conditions depending on that newly shared knowledge are evaluated on the next action.
+
 Each rule has at most six effects; automatic triggers have a 96-event limit per action. Exceeding a limit rejects the whole action. Resource payments validate in order; insufficient funds make the action/trigger unavailable without partial payment. Out-of-character discussion, notes and the simulation pause switch do not execute these triggers.
 
 Custom state participates in the canonical journal, idempotency, cancellation, branches and replay. Rule edits create new content revisions and leave existing campaigns pinned.

@@ -51,3 +51,7 @@ python scripts/check_distribution.py --output outputs/validation/sdk-model-check
 The live installed-package check creates a world and two stories, runs their automatic tests, plays a turn, restores a backup and verifies request recovery after restart. `scripts/check_longrun.py` exercises longer action sequences; inspect its arguments for the scenario and output directory.
 
 Deterministic replay checks event/persistence behavior. Contract fixtures isolate software boundaries. Actual-model checks measure the chosen model on the exercised tasks. Combine them with human evaluations when assessing dialogue, agency and story quality. [Testing](../docs/TESTING.md) lists focused suites; [engine contracts](../docs/ENGINES.md) describes traces and adapters.
+
+## Resumable campaign tests
+
+Use `narraloom playtest --source story.json --plan plan.json --models-config models.local.json --output outputs/playtests/run` to exercise a complete campaign trajectory. Plans define actions, private scoring assertions and actor-specific memory probes. Checkpoint with `--max-steps`, recover committed actions with `--resume`, and explicitly retry failed execution with `--retry-failed`. See [campaign playtesting](../docs/PLAYTESTING.md) for plan schemas, native adapters and reported usage.

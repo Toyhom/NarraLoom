@@ -55,6 +55,8 @@ A decision case sets `kind: "decide"`, `role: "action_router"` and a `decision` 
 
 Frozen evaluation validates JSON structure and authored assertions. Domain checks that depend on live world transitions remain in the runtime and its playtests. For prose, record human ratings of knowledge consistency, voice, agency and usefulness alongside case IDs.
 
+For complete action sequences, use [`narraloom playtest`](PLAYTESTING.md). It executes the runtime against a native world/story export, checks projected results and recalled sources, and resumes from durable campaign receipts.
+
 ## Python engines
 
 ```python

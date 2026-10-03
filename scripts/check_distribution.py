@@ -136,7 +136,7 @@ def main():
         run("console-entry", [str(target / "bin/narraloom"), "--version"])
         # Research tools use only the installed package and the host's optional
         # research dependency, with no backend process or game storage.
-        for example in ('make_evaluation_cases', 'evaluation_adapter', 'check_engine'):
+        for example in ('make_evaluation_cases', 'evaluation_adapter', 'check_engine', 'playtest_adapter'):
             shutil.copyfile(ROOT / f'examples/{example}.py', workspace / f'{example}.py')
         run('evaluation-cases', [sys.executable, str(workspace / 'make_evaluation_cases.py'),
                                  '--output', str(workspace / 'cases.jsonl')])
@@ -147,6 +147,8 @@ def main():
                                    '--output', str(workspace / 'comparison.json')])
         run('check-engine-contract', [sys.executable, str(workspace / 'check_engine.py'),
                                       '--output', str(workspace / 'check-engine.json')])
+        run('playtest-resume', [sys.executable, str(workspace / 'playtest_adapter.py'),
+                               '--output', str(workspace / 'playtest')])
         cli = [sys.executable, "-m", "roleplay_world", "serve", "--workspace", str(workspace)]
         with server("cli-start", cli) as (client, _):
             connect(client)

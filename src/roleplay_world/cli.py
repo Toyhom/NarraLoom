@@ -36,7 +36,30 @@ def main(argv=None):
     compare.add_argument("baseline", type=Path)
     compare.add_argument("candidate", type=Path)
     compare.add_argument("--output", type=Path, required=True)
+    playtest = commands.add_parser('playtest', help='Run a resumable campaign trajectory (research extra)')
+    playtest.add_argument('--source', type=Path, required=True, help='Native world/story JSON export')
+    playtest.add_argument('--plan', type=Path, required=True)
+    playtest.add_argument('--models-config', type=Path, required=True)
+    playtest.add_argument('--secrets-root', type=Path, default=Path.cwd() / 'secrets')
+    playtest.add_argument('--output', type=Path, required=True)
+    playtest.add_argument('--resume', action='store_true')
+    playtest.add_argument('--retry-failed', action='store_true')
+    playtest.add_argument('--max-steps', type=int)
     args = parser.parse_args(argv)
+    if args.command == 'playtest':
+        from . import playtesting
+        try:
+            config = json.loads(args.models_config.read_text())
+            if not isinstance(config, dict):
+                raise TypeError('Model configuration must be an object')
+            result = asyncio.run(playtesting.playtest(
+                playtesting.load_source(args.source), playtesting.load_plan(args.plan), config=config,
+                output=args.output, secrets_root=args.secrets_root, resume=args.resume,
+                retry_failed=args.retry_failed, max_steps=args.max_steps))
+            print(json.dumps({'status': result['status'], **result['metrics']}, ensure_ascii=False, indent=2))
+            parser.exit(0 if result['status'] in {'completed', 'checkpointed'} else 1)
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            parser.error(str(exc))
     if args.command in {"evaluate", "compare"}:
         from . import evaluation
         try:

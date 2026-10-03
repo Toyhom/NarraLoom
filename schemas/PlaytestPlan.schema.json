@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "MemoryProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Query",
+          "type": "string"
+        },
+        "actor_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Actor Id"
+        },
+        "world_version": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "World Version"
+        },
+        "limit": {
+          "default": 8,
+          "maximum": 20,
+          "minimum": 1,
+          "title": "Limit",
+          "type": "integer"
+        },
+        "expect": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expect"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "title": "MemoryProbe",
+      "type": "object"
+    },
+    "PlaytestStep": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "command": {
+          "additionalProperties": true,
+          "title": "Command",
+          "type": "object"
+        },
+        "expect": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expect"
+        },
+        "recalls": {
+          "items": {
+            "$ref": "#/$defs/MemoryProbe"
+          },
+          "maxItems": 8,
+          "title": "Recalls",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "command"
+      ],
+      "title": "PlaytestStep",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "narraloom.playtest-1",
+      "default": "narraloom.playtest-1",
+      "title": "Format",
+      "type": "string"
+    },
+    "player_name": {
+      "default": "Playtester",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Player Name",
+      "type": "string"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/PlaytestStep"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Steps",
+      "type": "array"
+    }
+  },
+  "required": [
+    "steps"
+  ],
+  "title": "PlaytestPlan",
+  "type": "object"
+}

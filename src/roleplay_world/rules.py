@@ -228,13 +228,18 @@ def resolve(state, command, plan, replies, seed, *, check_registry=None):
                 fail("你还没有找到这条路线")
             emit("quest.updated", {"quest_id": "hook_departure", "status": "completed"}, route["ending"])
 
+    deferred_disclosures = []
     for actor, reply in replies.items():
         if actor not in present(state, player):
             continue
         for fact_id in reply.reveal_fact_ids:
             if fact_id not in state["knowledge"][actor]:
-                fail("NPC 不能透露自己不知道的事实")
-            know(player, fact_id, state["beliefs"][actor][fact_id])
+                # The runtime's NPC preview includes this turn's clock and
+                # authored effects. Transfer newly observed facts after their
+                # source events have actually established the NPC's knowledge.
+                deferred_disclosures.append((actor, fact_id))
+            else:
+                know(player, fact_id, state["beliefs"][actor][fact_id])
 
     before_time = state["game_time_s"]
     emit("time.advanced", {"before_s": before_time, "after_s": before_time + time_cost})
@@ -266,4 +271,8 @@ def resolve(state, command, plan, replies, seed, *, check_registry=None):
     effects.extend(triggered_effects)
     if triggered:
         thresholds()
+    for actor, fact_id in deferred_disclosures:
+        if fact_id not in state["knowledge"][actor]:
+            fail("NPC 不能透露自己不知道的事实")
+        know(player, fact_id, state["beliefs"][actor][fact_id])
     return events, effects, roll

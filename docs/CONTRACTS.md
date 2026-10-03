@@ -29,6 +29,8 @@ Cancellation before commit leaves the world unchanged. A committed result remain
 
 World truth, NPC knowledge, individual player knowledge and visible narrative have separate projections. Knowing that someone said a claim does not make the claim a canonical world fact. Players control their own decisions. Private conversations and trades are filtered per participant.
 
+NPC reply schemas include facts observed through the current action's deterministic effects. Transfers of newly observed facts follow the clock or authored events that establish the NPC's knowledge. Facts outside that resulting perspective remain invalid disclosures.
+
 Player notes contain visible history. Creator exports, native content packages and full backups contain authored secrets and are intended for creators or restoration. See [package format](COMMUNITY_PACKAGES.md).
 
 ## Model responses

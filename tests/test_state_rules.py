@@ -66,6 +66,32 @@ def compile_authored(authored):
     return compile_story(*authored, "state_story")
 
 
+def test_npc_can_share_fact_learned_by_this_turns_authored_trigger(authored):
+    from roleplay_world.planning import actor_schema
+    from roleplay_world.state_rules import StateTrigger
+
+    world, _ = authored
+    fact = 'fact_secret_1'
+    world.state_rules.triggers.append(StateTrigger.model_validate({
+        'id': 'letter', 'name': 'A letter arrives', 'on': 'say',
+        'effects': [{'kind': 'reveal', 'target': fact, 'actor_id': 'npc_0'}]}))
+    state = initial_state(compile_authored(authored), 'Player')
+    assert fact not in state['knowledge']['npc_0'] and fact not in state['knowledge'][state['player']]
+    command = {'action_id': 'read_letter', 'mode': 'say', 'text': 'What news arrived?'}
+    plan = TurnPlan(intent='Talk', time_cost_s=30)
+    preview, _, _ = resolve(state, command, plan, {}, 1)
+    observed = apply_events(state, preview, 1)
+    reply = actor_schema(observed, 'npc_0', []).model_validate(
+        {'text': 'Let me share the news.', 'reaction': 'none', 'reveal_fact_ids': [fact]})
+    events, _, _ = resolve(state, command, plan, {'npc_0': reply}, 1)
+    final = apply_events(state, events, 1)
+    assert fact in final['knowledge'][state['player']]
+    learned = [e['payload']['actor_id'] for e in events
+               if e['type'] == 'knowledge.learned' and e['payload']['fact_id'] == fact]
+    assert learned.index('npc_0') < learned.index(state['player'])
+    assert len({e['event_id'] for e in events}) == len(events)
+
+
 def act(state, target="study", mode="act", seconds=10):
     command = ActionCommand(action_id=f"act_{state['version']}_{target}", expected_world_version=state["version"],
         mode=mode, text="执行已选行动", selected_operation={"kind": "state_action", "target_id": target} if mode == "act" else None)

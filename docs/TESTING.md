@@ -42,6 +42,8 @@ These flags extend `scripts/verify.py`; individual `check_*` scripts expose thei
 
 ## Memory retrieval
 
+The installed [`narraloom playtest`](PLAYTESTING.md) command runs creator-authored trajectories with durable checkpoint/retry, per-step assertions and actor/historical-memory probes. `examples/make_playtest_plan.py` supplies a 100-turn starting point. Distribution checks exercise the Python runner outside the checkout with a native adapter, inventory assertions and restart recovery.
+
 `tests/test_semantic_memory.py` checks vector protocols, actor/branch isolation, caching, limits and cancellation. The [memory guide](MEMORY.md) includes a local service and a fixed multilingual recall comparison. To run that comparison, actual-model dialogue and restart recovery from an independently installed wheel:
 
 ```bash

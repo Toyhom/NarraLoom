@@ -10,3 +10,6 @@
 - [transformer_embedding.py](transformer_embedding.py): serve a local embedding model through an OpenAI-compatible endpoint or register its native `embed` adapter. See [memory retrieval](../docs/MEMORY.md).
 
 See the [developer guide](../guides/developers.md) and [research guide](../guides/research.md) for configuration and evaluation.
+
+- [make_playtest_plan.py](make_playtest_plan.py): generate an editable long-dialogue plan from a native story export.
+- [playtest_adapter.py](playtest_adapter.py): run, checkpoint and resume a campaign with a native fixture adapter.

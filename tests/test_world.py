@@ -58,6 +58,27 @@ def test_unknown_npc_cannot_reveal_secret(state):
                 {"npc_captain": ActorReply(text="我知道", reveal_fact_ids=["fact_smuggler_route"])}, 1)
 
 
+def test_npc_can_share_clock_fact_from_its_current_turn_preview(state):
+    from roleplay_world.planning import actor_schema
+
+    fact = 'fact_tide_rising'
+    for actor in [state['player'], 'npc_captain']:
+        state['knowledge'][actor].remove(fact)
+        state['beliefs'][actor].pop(fact)
+    state['clocks']['clock_tide']['value'] = 3
+    state['game_time_s'] = 590
+    plan = TurnPlan(intent='Talk while the tide changes', time_cost_s=30)
+    command = {**cmd(), 'mode': 'say'}
+    preview, _, _ = resolve(state, command, plan, {}, 1)
+    observed = apply_events(state, preview, 1)
+    reply = actor_schema(observed, 'npc_captain', []).model_validate(
+        {'text': 'The tide is high now.', 'reaction': 'none', 'reveal_fact_ids': [fact]})
+    events, _, _ = resolve(state, command, plan, {'npc_captain': reply}, 1)
+    final = apply_events(state, events, 1)
+    assert final['beliefs'][state['player']][fact]['value'] == 'high_tide'
+    assert digest(final) == digest(observed)
+
+
 def test_movement_and_tide_are_persistent(state):
     plan = TurnPlan(intent="去灯塔", operations=[{"kind": "move", "target_id": "loc_lighthouse"}])
     events, _, _ = resolve(state, cmd(), plan, {}, 1)
