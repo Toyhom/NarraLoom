@@ -12,6 +12,7 @@ from .planning import actor_schema, choices, explicit_goal_plan, normalize_plan,
 from .players import command_player, heard_by, human_players
 from .routing import route_action
 from .rules import resolve
+from .semantic_memory import recalled_context
 from .simulation import advance_world, control_event
 from .world import apply_events, model_view, npc_context, visible
 
@@ -116,6 +117,8 @@ class Runtime:
                                    "facts": list(state["facts"].values()),
                                    "actor_locations": {k: v["location_id"] for k, v in state["actor_states"].items()}}
                         context["allowed_operations"] = choices(state, command["mode"], player, command.get("whisper_to"))[0]
+                        context['player_view']['memories'] = await recalled_context(
+                            self.gateway, state, player, command['text'], aid, budget, scope=a['branch_id'])
                         if command.get("whisper_to"):
                             context["private_recipient"] = command["whisper_to"]
                         check_guidance = self.store.check_registry.guidance(state['template']['mechanics'].get('checks'))
@@ -155,6 +158,8 @@ class Runtime:
                                   for op in plan.operations if op.kind == "give" and op.target_id == actor
                                   and op.item_id in state["items"]]
                         context = npc_context(npc_state, actor, command["text"], offers, player)
+                        context['view']['memories'] = await recalled_context(
+                            self.gateway, npc_state, actor, command['text'], aid, budget, scope=a['branch_id'])
                         context["current_observed_effects"] = observed_effects
                         if state["template"]["mechanics"].get("state_rules") or len(human_players(state)) > 1:
                             # The player's effect text may contain player-only variable values.
@@ -214,6 +219,7 @@ class Runtime:
                     autonomous, world_effects = await advance_world(
                         state, candidate, command, list(replies), self.gateway, budget,
                         a.get("autonomous"), lambda proposal: self.store.update(aid, autonomous=proposal),
+                        memory_scope=a['branch_id'],
                     )
                     events.extend(autonomous)
                     effects.extend(world_effects)

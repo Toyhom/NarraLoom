@@ -31,11 +31,17 @@ def main():
     parser.add_argument("--secrets-root", type=Path)
     parser.add_argument("--sdk-live", action="store_true", help="Use SDK creation/play/restart acceptance for the real-provider check")
     parser.add_argument('--checks-live', action='store_true', help='Generate, play, share and restart with a native dice-pool engine')
+    parser.add_argument('--memory-live', action='store_true', help='Compare actual embeddings and verify model-backed recall')
+    parser.add_argument('--embedding-url')
+    parser.add_argument('--embedding-model')
     args = parser.parse_args()
     if args.sdk_live and not args.live_models_config:
         parser.error("--sdk-live requires --live-models-config")
     if args.checks_live and (not args.live_models_config or args.sdk_live):
         parser.error('--checks-live requires --live-models-config and runs separately from --sdk-live')
+    if args.memory_live and (not args.live_models_config or not args.embedding_url or not args.embedding_model or not args.secrets_root
+                             or args.sdk_live or args.checks_live):
+        parser.error('--memory-live requires model configuration, embedding URL/model, and runs separately from other live checks')
     folder = (ROOT / args.output).resolve()
     if not folder.is_relative_to(ROOT / "outputs/validation"):
         parser.error("Reports must be inside outputs/validation")
@@ -188,7 +194,7 @@ def main():
         assert (workspace / "data/journal.jsonl").read_bytes() == journal
         assert list((workspace / "outputs/model-traces").glob("*.json")) == traces
         report["checks"].append("process-restart-replay-and-idempotency-without-model")
-        if args.live_models_config and not args.checks_live:
+        if args.live_models_config and not args.checks_live and not args.memory_live:
             live_args = [*cli, "--data-root", "live-data", "--output-root", "live-output",
                          "--models-config", str(args.live_models_config.resolve())]
             if args.secrets_root:
@@ -224,6 +230,13 @@ def main():
                 run('check-engine-recovery', [*script, '--url', restarted,
                                               '--output', str(folder / 'check-engine-live-sdk'), '--resume'])
             report['live_mode'] = 'real-provider-with-native-check-engine'
+        if args.memory_live:
+            run('memory-live', [sys.executable, str(ROOT / 'scripts/check_semantic_memory.py'),
+                                '--models-config', str(args.live_models_config.resolve()),
+                                '--secrets-root', str(args.secrets_root.resolve()),
+                                '--embedding-url', args.embedding_url, '--embedding-model', args.embedding_model,
+                                '--output', str(folder / 'memory-live')])
+            report['live_mode'] = 'real-provider-with-embedding-recall'
         report["status"] = "passed"
     except BaseException as exc:
         report.update(status="failed", error_type=type(exc).__name__)

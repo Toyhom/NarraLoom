@@ -39,7 +39,7 @@ class EngineRegistry:
         self.engines = {}
 
     def register(self, engine: Engine):
-        if engine.name in self.engines or not engine.capabilities or engine.capabilities - {"generate", "decide"}:
+        if engine.name in self.engines or not engine.capabilities or engine.capabilities - {"generate", "decide", "embed"}:
             raise ValueError("duplicate engine or invalid capabilities")
         self.engines[engine.name] = engine
 
@@ -96,7 +96,29 @@ def builtin_engines():
     registry = EngineRegistry()
     registry.register(Engine("openai", frozenset({"generate"}), openai_generate, openai_probe))
     registry.register(Engine("systemone", frozenset({"decide"}), systemone_decide))
+    registry.register(Engine("openai_embedding", frozenset({"embed"}), openai_embed, openai_probe))
     return registry
+
+
+async def openai_embed(config, payload, headers):
+    async with (
+        httpx.AsyncClient(trust_env=False, timeout=httpx.Timeout(config.get('timeout_s', 30), connect=5)) as client,
+        client.stream('POST', config['url'].rstrip('/') + '/embeddings', json=payload, headers=headers) as response,
+    ):
+        response.raise_for_status()
+        content = bytearray()
+        async for chunk in response.aiter_bytes():
+            content.extend(chunk)
+            if len(content) > 24 * 1024 * 1024:
+                raise DomainError('embedding_output_limit', 'Embedding response exceeds 24 MiB', 502)
+    raw = json.loads(content)
+    rows = raw['data']
+    if (not isinstance(rows, list) or len(rows) != len(payload['input'])
+            or any(type(row.get('index')) is not int for row in rows)
+            or sorted(row['index'] for row in rows) != list(range(len(rows)))):
+        raise ValueError('Embedding response indices must match every input exactly once')
+    return {'model': raw.get('model') or config['model'], 'usage': raw.get('usage'),
+            'vectors': [row['embedding'] for row in sorted(rows, key=lambda row: row['index'])]}
 
 
 async def openai_probe(config, headers):

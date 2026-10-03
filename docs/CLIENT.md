@@ -79,6 +79,8 @@ other APIs: models, rooms, decisions and native packages. `json` accepts models
 or dictionaries, `raw=True` returns bytes. Paths must be server-relative.
 Redirects and automatic write retries are disabled. Other languages can use the same HTTP API and generated schemas.
 
+`await client.recall(campaign_id, branch_id, query, limit=8)` retrieves source records using the configured memory policy. It returns the snapshot's `world_version`, records and diagnostics. Hybrid mode may call an embedding service; it leaves the campaign unchanged. See [memory retrieval](MEMORY.md).
+
 ```bash
 python examples/headless.py --world 'A small reading room' --preset scene --language en
 python examples/headless.py --resume

@@ -17,6 +17,7 @@ from pydantic import ValidationError
 from .config import default_workspace
 from .contracts import DomainError
 from .decisions import DecisionRequest, validate_response
+from .embeddings import validate_embeddings
 from .engines import builtin_engines, sse_events
 
 __all__ = ["ModelGateway", "sse_events"]
@@ -31,6 +32,8 @@ class ModelGateway:
         self.secrets_root = Path(secrets_root or default_workspace() / "secrets").resolve()
         self.trace_root = trace_root
         self.trace_root.mkdir(parents=True, exist_ok=True)
+        from .semantic_memory import SemanticMemory
+        self.memory = SemanticMemory(self)
 
     def effective_config(self):
         return self.settings.effective(MODEL_OWNER.get()) if self.settings else self.config
@@ -47,8 +50,8 @@ class ModelGateway:
             return {**{k: overrides[k] for k in ("max_tokens", "output_chars") if k in overrides},
                     **provider, **binding, "api_key_env": provider.get("api_key_env", "RPW_NO_INHERITED_KEY")}
         default = config.get("default", {})
-        if role == "action_router":
-            return {}  # No implicit decision calls to a generation provider.
+        if role in {"action_router", "memory_embedding"}:
+            return {}  # Auxiliary modules use an explicit provider binding.
         merged = {**default, **overrides}
         if overrides.get("url", "").rstrip("/") and overrides["url"].rstrip("/") != default.get("url", "").rstrip("/"):
             for key in ("api_key", "api_key_file", "api_key_env"):
@@ -75,7 +78,46 @@ class ModelGateway:
     def configured(self, role):
         config = self.role_config(role)
         backend = config.get("backend", "systemone" if role == "action_router" else "openai")
-        return bool(config.get("model") and (config.get("url") or backend not in {"openai", "systemone"}))
+        return bool(config.get("model") and (config.get("url") or backend not in {"openai", "systemone", "openai_embedding"}))
+
+    async def embed(self, role, texts, action_id, budget, *, configuration=None):
+        config = self.role_config(role) if configuration is None else configuration
+        if not config.get('model'):
+            raise DomainError('embedding_unconfigured', 'Configure an embedding provider for this module', 503)
+        engine = self.registry.require(config.get('backend', 'openai_embedding'), 'embed')
+        if (not isinstance(texts, list) or not 1 <= len(texts) <= 128
+                or any(not isinstance(text, str) or not text or len(text) > 16000 for text in texts)):
+            raise DomainError('embedding_input', 'Embedding input requires 1–128 bounded nonempty texts', 422)
+        payload = {'model': config['model'], 'input': texts, 'encoding_format': 'float'}
+        if len(json.dumps(payload, ensure_ascii=False)) > config.get('context_chars', 120000):
+            raise DomainError('context_limit', 'Embedding input exceeds the provider context budget', 422)
+        if budget['calls'] >= budget.get('max_calls', 12):
+            raise DomainError('embedding_budget', 'Embedding call budget exhausted', 502)
+        budget['calls'] += 1
+        trace = {'role': role, 'model': config['model'], 'response_model': None,
+                 'provider': config.get('provider', 'default'), 'backend': engine.name,
+                 'revision': config.get('revision', ''), 'call': budget['calls'],
+                 'usage': None, 'context': {'input': texts}, 'status': 'failed'}
+        started = time.monotonic()
+        try:
+            async with asyncio.timeout(config.get('timeout_s', 30)):
+                raw = await engine.invoke(config, payload, self.auth_headers(config))
+            result = validate_embeddings(raw, len(texts))
+            trace.update(status='ok', response_model=result['model'], usage=result['usage'],
+                         dimensions=len(result['vectors'][0]), input_count=len(texts))
+            return result
+        except asyncio.CancelledError:
+            trace['status'] = 'cancelled'
+            raise
+        except (httpx.HTTPError, TimeoutError) as exc:
+            trace['error'] = 'embedding_unavailable'
+            raise DomainError('embedding_unavailable', 'Embedding service is unavailable', 503) from exc
+        except (ValueError, TypeError, KeyError, AttributeError) as exc:
+            trace.update(status='invalid_output', error='invalid_embedding_output')
+            raise DomainError('invalid_embedding_output', 'Embedding service returned invalid vectors', 502) from exc
+        finally:
+            trace['duration_s'] = round(time.monotonic() - started, 4)
+            self.record_trace(action_id, budget, trace)
 
     async def decide(self, role, request: DecisionRequest, action_id, budget):
         config = self.role_config(role)

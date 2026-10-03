@@ -1,0 +1,34 @@
+{
+  "default": {
+    "backend": "openai",
+    "url": "https://api.deepseek.com/v1",
+    "model": "deepseek-flash",
+    "api_key_env": "RPW_API_KEY",
+    "json_object": true
+  },
+  "providers": {
+    "memory": {
+      "backend": "openai_embedding",
+      "url": "http://127.0.0.1:18112/v1",
+      "api_key_env": "NARRALOOM_EMBEDDING_API_KEY",
+      "context_chars": 120000,
+      "timeout_s": 30,
+      "query_prefix": "",
+      "document_prefix": ""
+    }
+  },
+  "bindings": {
+    "memory_embedding": {
+      "provider": "memory",
+      "model": "BAAI/bge-m3",
+      "revision": "set-your-deployed-revision"
+    }
+  },
+  "memory_policy": {
+    "mode": "hybrid",
+    "failure": "lexical",
+    "max_calls": 12,
+    "max_chunks": 1024,
+    "min_similarity": 0.2
+  }
+}

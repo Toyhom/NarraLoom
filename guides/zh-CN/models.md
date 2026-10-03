@@ -12,6 +12,7 @@
 | `character_actor`、`narrator` | 以内容语言呈现的角色语气、对话和散文 |
 | `world_actor` | 尊重 NPC 知识和可用行动的有界提议 |
 | `action_router` | System One 决策协议；在你的行动分布上测量准确率 |
+| `memory_embedding` | BGE-M3 等适合内容语言的文本向量模型；支持本地服务、API 和 Python `embed` 适配器。[记忆配置](../../docs/MEMORY.md) |
 | 确定性规则 | 引擎代码处理骰子、算术、所有权和持久化 |
 | Avatar 呈现 | 单独的图像/绑定创建或导入现成资产；参见 [Avatar](../../docs/AVATARS.md) |
 

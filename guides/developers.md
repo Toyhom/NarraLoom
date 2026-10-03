@@ -43,6 +43,10 @@ Pass a `CheckRegistry` as `create_app(check_registry=...)` to register determini
 
 Inspect `GET /api/check-engines`, then set `CreateWorld.check_engine` or edit `WorldBlueprint.check_engine`. Automatic content tests exercise the selected implementation. Receipts retain dice and outcomes for replay, branch history and recovery. The [check-engine reference](../docs/CHECK_ENGINES.md) covers registration, randomness, versioning and native-package dependencies.
 
+## Extend memory retrieval
+
+Bind `memory_embedding` to an API/local service with backend `openai_embedding`, or register an `Engine` with capability `embed`. Enable `memory_policy.mode=hybrid` to supply semantic recall to planning and NPC contexts. `client.recall(...)` exposes the same source-preserving retrieval to custom frontends. See [memory contracts](../docs/MEMORY.md) for vector schemas, visibility, budgets, caching and the runnable Transformers adapter.
+
 ## Work on the reference frontend
 
 ```bash

@@ -12,6 +12,7 @@ The simplest setup uses one strong instruction model through an OpenAI-compatibl
 | `character_actor`, `narrator` | Character voice, dialogue and prose in the content language |
 | `world_actor` | Bounded proposals that respect NPC knowledge and available actions |
 | `action_router` | System One decision protocol; measured accuracy on your action distribution |
+| `memory_embedding` | Multilingual text embeddings such as BGE-M3; local/API or native Python `embed` adapters. [Memory setup](../docs/MEMORY.md) |
 | Deterministic rules | Engine code handles dice, arithmetic, ownership and persistence |
 | Avatar presentation | Separate image/rig creation or imported ready assets; see [Avatar](../docs/AVATARS.md) |
 

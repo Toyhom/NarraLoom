@@ -212,7 +212,9 @@ def test_routed_runtime_idempotency_replay_and_decision_endpoint_ownership(tmp_p
         assert client.get('/api/engines').status_code == 401
         client.headers['X-CSRF-Token'] = client.post('/api/session').json()['csrf_token']
         modules = client.get('/api/engines').json()['modules']
-        assert len(modules) == 12
+        assert len(modules) == 13
+        embedding = next(module for module in modules if module['id'] == 'memory_embedding')
+        assert embedding['capability'] == 'embed' and not embedding['configured']
         main = next(m for m in modules if m['id'] == 'game_master')
         assert main['backend'] == 'openai' and main['provider'] == 'default'
         assert client.post('/api/decisions/not_a_module', json=move_request('Go', [{'id': 'one', 'name': 'One'}]).model_dump()).status_code == 404

@@ -960,5 +960,18 @@
   "community.local": "このサーバー",
   "community.intro": "クリエイターが共有した世界とストーリーを発見しましょう。ポータブルパッケージをダウンロードするか、自分のライブラリにインストールして編集およびプレイできます。",
   "community.empty": "一致するパッケージがありません。世界を作成し、パッケージをビルドしてこのサーバーの棚に公開しましょう。",
-  "community.shared": "共有パッケージ"
+  "community.shared": "共有パッケージ",
+  "engine.memory_embedding": "記憶の埋め込み",
+  "engine.memory_embedding.hint": "コンテンツの言語に対応するテキスト埋め込みモデルを選びます。ローカルサービスまたは API を設定し、ハイブリッド検索を有効にします。",
+  "engine.openai_embedding": "OpenAI 互換の埋め込み API",
+  "memory.query_prefix": "クエリの接頭辞",
+  "memory.document_prefix": "文書の接頭辞",
+  "memory.policy": "記憶検索",
+  "memory.policy.hint": "ハイブリッド検索は意味ベクトルとキーワードを組み合わせ、記録の出典を保持します。埋め込み呼び出しには独立した上限があり、診断で確認できます。",
+  "memory.mode": "検索方式",
+  "memory.lexical": "キーワード",
+  "memory.hybrid": "キーワード + 意味ベクトル",
+  "memory.failure": "埋め込みサービスが失敗した場合",
+  "memory.fallback": "キーワードを使い、切り替えを記録",
+  "memory.error": "エラーを報告"
 }

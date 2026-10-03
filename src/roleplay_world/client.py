@@ -267,6 +267,12 @@ class NarraLoomClient:
         cid, bid = IDENTIFIER.validate_python(campaign_id), IDENTIFIER.validate_python(branch_id)
         return await self.request("GET", f"/api/campaigns/{cid}/branches/{bid}/view")
 
+    async def recall(self, campaign_id, branch_id, query, *, limit=8):
+        from .semantic_memory import RecallRequest
+        cid, bid = IDENTIFIER.validate_python(campaign_id), IDENTIFIER.validate_python(branch_id)
+        payload = RecallRequest(query=query, limit=limit)
+        return await self.request('POST', f'/api/campaigns/{cid}/branches/{bid}/recall', json=payload.model_dump())
+
     async def job(self, job_id):
         return await self.request("GET", f"/api/studio/jobs/{IDENTIFIER.validate_python(job_id)}")
 

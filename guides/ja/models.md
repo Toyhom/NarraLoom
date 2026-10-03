@@ -12,6 +12,7 @@
 | `character_actor`、`narrator` | コンテンツ言語におけるキャラクターの声、対話、散文 |
 | `world_actor` | NPC の知識と利用可能な行動を尊重する範囲内の提案 |
 | `action_router` | System One 意思決定プロトコル。あなたの行動分布における測定済み精度 |
+| `memory_embedding` | BGE-M3 など、コンテンツの言語に対応する埋め込みモデル。ローカル/API と Python `embed` アダプターに対応。[記憶の設定](../../docs/MEMORY.md) |
 | 決定論的ルール | エンジンコードがダイス、算術、所有権、永続化を処理 |
 | アバター表示 | 別途の画像/リグ作成、またはインポート済みの既製アセット。[Avatar](../../docs/AVATARS.md) を参照 |
 

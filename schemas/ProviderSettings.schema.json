@@ -31,6 +31,52 @@
       "title": "DecisionPolicy",
       "type": "object"
     },
+    "MemoryPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "default": "lexical",
+          "enum": [
+            "lexical",
+            "hybrid"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "failure": {
+          "default": "lexical",
+          "enum": [
+            "lexical",
+            "error"
+          ],
+          "title": "Failure",
+          "type": "string"
+        },
+        "max_calls": {
+          "default": 12,
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Max Calls",
+          "type": "integer"
+        },
+        "max_chunks": {
+          "default": 1024,
+          "maximum": 4096,
+          "minimum": 1,
+          "title": "Max Chunks",
+          "type": "integer"
+        },
+        "min_similarity": {
+          "default": 0.2,
+          "maximum": 1,
+          "minimum": -1,
+          "title": "Min Similarity",
+          "type": "number"
+        }
+      },
+      "title": "MemoryPolicy",
+      "type": "object"
+    },
     "NamedProvider": {
       "additionalProperties": false,
       "properties": {
@@ -85,6 +131,18 @@
           "minimum": 1,
           "title": "Timeout S",
           "type": "number"
+        },
+        "query_prefix": {
+          "default": "",
+          "maxLength": 600,
+          "title": "Query Prefix",
+          "type": "string"
+        },
+        "document_prefix": {
+          "default": "",
+          "maxLength": 600,
+          "title": "Document Prefix",
+          "type": "string"
         }
       },
       "required": [
@@ -215,6 +273,9 @@
     },
     "decision_policy": {
       "$ref": "#/$defs/DecisionPolicy"
+    },
+    "memory_policy": {
+      "$ref": "#/$defs/MemoryPolicy"
     }
   },
   "required": [

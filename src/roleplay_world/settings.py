@@ -15,6 +15,19 @@ from .contracts import Contract, DomainError, Identifier
 MODEL_OWNER = contextvars.ContextVar('rpw_model_owner', default=None)
 ROLES = ('world_builder','story_builder','rules_builder','simulation_builder','state_builder','content_reviewer','import_builder','game_master','character_actor','narrator','world_actor')
 DECISION_ROLES = ('action_router',)
+EMBEDDING_ROLES = ('memory_embedding',)
+
+
+def capability(role):
+    return 'embed' if role in EMBEDDING_ROLES else 'decide' if role in DECISION_ROLES else 'generate'
+
+
+class MemoryPolicy(Contract):
+    mode: Literal['lexical', 'hybrid'] = 'lexical'
+    failure: Literal['lexical', 'error'] = 'lexical'
+    max_calls: Annotated[int, Field(strict=True, ge=1, le=32)] = 12
+    max_chunks: Annotated[int, Field(strict=True, ge=1, le=4096)] = 1024
+    min_similarity: Annotated[float, Field(ge=-1, le=1, allow_inf_nan=False)] = 0.2
 
 
 def validate_url(value):
@@ -33,6 +46,8 @@ class NamedProvider(Contract):
     thinking_disabled: bool = False
     context_chars: Annotated[int, Field(ge=1000, le=1000000)] = 120000
     timeout_s: Annotated[float, Field(ge=1, le=120, allow_inf_nan=False)] = 90
+    query_prefix: Annotated[str, Field(max_length=600)] = ''
+    document_prefix: Annotated[str, Field(max_length=600)] = ''
 
     @model_validator(mode='after')
     def check(self):
@@ -56,6 +71,7 @@ def provider_config(value):
     return {'backend': value.get('backend', 'openai'), 'url': value['url'].rstrip('/'),
             'api_key': value.get('api_key', ''), 'api_key_env': 'RPW_NO_INHERITED_KEY',
             'context_chars': value.get('context_chars', 120000), 'timeout_s': value.get('timeout_s', 90),
+            'query_prefix': value.get('query_prefix', ''), 'document_prefix': value.get('document_prefix', ''),
             'json_object': value.get('json_mode') == 'object', 'json_schema': value.get('json_mode') == 'schema',
             'extra_body': {'thinking': {'type': 'disabled'}} if value.get('thinking_disabled') else {}}
 
@@ -73,22 +89,25 @@ class ProviderSettings(Contract):
     providers: Annotated[dict[Identifier, NamedProvider], Field(max_length=16)] = Field(default_factory=dict)
     bindings: dict[str, TaskBinding] = Field(default_factory=dict)
     decision_policy: DecisionPolicy = Field(default_factory=DecisionPolicy)
+    memory_policy: MemoryPolicy = Field(default_factory=MemoryPolicy)
 
     @model_validator(mode='after')
     def check(self):
         validate_url(self.url)
         if set(self.roles)-set(ROLES):raise ValueError('未知模型角色')
-        if set(self.bindings) - set(ROLES + DECISION_ROLES):
+        if set(self.bindings) - set(ROLES + DECISION_ROLES + EMBEDDING_ROLES):
             raise ValueError('未知模块绑定')
         for role, binding in self.bindings.items():
             provider = self.providers.get(binding.provider)
             if provider is None:
                 raise ValueError('模块引用的服务商不存在')
-            if (provider.backend == 'systemone' and role in ROLES
-                    or provider.backend == 'openai' and role in DECISION_ROLES):
-                raise ValueError('生成模块需要生成后端，决策模块需要决策后端')
+            supported = {'openai': 'generate', 'systemone': 'decide', 'openai_embedding': 'embed'}
+            if provider.backend in supported and supported[provider.backend] != capability(role):
+                raise ValueError('Provider capability must match the bound module')
         if self.decision_policy.mode != 'off' and 'action_router' not in self.bindings:
             raise ValueError('请先为行动路由绑定决策模型')
+        if self.memory_policy.mode == 'hybrid' and 'memory_embedding' not in self.bindings:
+            raise ValueError('Hybrid memory requires an explicit embedding binding')
         return self
 
 class Settings:
@@ -118,12 +137,14 @@ class Settings:
         cfg['providers'] = {name: provider_config(provider) for name, provider in value.get('providers', {}).items()}
         cfg['bindings'] = deepcopy(value.get('bindings', {}))
         cfg['decision_policy'] = deepcopy(value.get('decision_policy', {'mode': 'off'}))
+        cfg['memory_policy'] = deepcopy(value.get('memory_policy', {'mode': 'lexical'}))
         return cfg
 
     def public(self,owner):
         value=self.values.get(owner)
         if value:
-            return {**{k:v for k,v in value.items() if k not in {'api_key', 'providers'}},
+            return {'memory_policy': MemoryPolicy().model_dump(),
+                    **{k:v for k,v in value.items() if k not in {'api_key', 'providers'}},
                     'providers': {name: {**{k: v for k, v in provider.items() if k != 'api_key'},
                                          'has_key': bool(provider.get('api_key'))}
                                   for name, provider in value.get('providers', {}).items()},
@@ -133,7 +154,8 @@ class Settings:
                 'json_mode':'object' if cfg.get('json_object') else 'schema' if cfg.get('json_schema') else 'prompt',
                 'thinking_disabled':bool(cfg.get('extra_body',{}).get('thinking')),'context_chars':cfg.get('context_chars',120000),
                 'roles':{},'using_default':True,'input_price':0,'output_price':0,'currency':'CNY',
-                'providers': {}, 'bindings': {}, 'decision_policy': DecisionPolicy().model_dump()}
+                'providers': {}, 'bindings': {}, 'decision_policy': DecisionPolicy().model_dump(),
+                'memory_policy': MemoryPolicy().model_dump()}
 
     def save(self,owner,payload):
         old=self.values.get(owner,{})

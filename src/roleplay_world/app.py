@@ -58,7 +58,17 @@ from .packages import (
 )
 from .rooms import RoomAction, RoomControl, RoomCreate, RoomJoin, Rooms
 from .runtime import Runtime
-from .settings import DECISION_ROLES, MODEL_OWNER, ROLES, ProviderSettings, Settings, require_idle
+from .semantic_memory import RecallRequest
+from .settings import (
+    DECISION_ROLES,
+    EMBEDDING_ROLES,
+    MODEL_OWNER,
+    ROLES,
+    ProviderSettings,
+    Settings,
+    capability,
+    require_idle,
+)
 from .store import Store, public_action, public_history
 from .studio import Studio, public_content
 from .world import project
@@ -184,7 +194,7 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
         user = owner(request); require_idle(app.state.store, user)
         for role, binding in payload.bindings.items():
             app.state.gateway.registry.require(payload.providers[binding.provider].backend,
-                                               'decide' if role in DECISION_ROLES else 'generate')
+                                               capability(role))
         return app.state.settings.save(user, payload)
 
     @app.delete("/api/settings/provider")
@@ -221,15 +231,16 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
         owner(request)
         gateway = app.state.gateway
         modules = []
-        for role in (*ROLES, *DECISION_ROLES):
+        for role in (*ROLES, *DECISION_ROLES, *EMBEDDING_ROLES):
             config = gateway.role_config(role)
-            modules.append({"id": role, "capability": "decide" if role in DECISION_ROLES else "generate",
+            modules.append({"id": role, "capability": capability(role),
                             **{k: config.get(k) for k in ("model", "revision")},
                             "provider": config.get("provider", "default"),
-                            "backend": config.get("backend", "systemone" if role in DECISION_ROLES else "openai"),
+                            "backend": config.get("backend", "openai_embedding" if role in EMBEDDING_ROLES else "systemone" if role in DECISION_ROLES else "openai"),
                             "configured": gateway.configured(role)})
         return {"schema_version": "1.0", "engines": gateway.registry.describe(), "modules": modules,
-                "decision_policy": gateway.effective_config().get("decision_policy", {"mode": "off"})}
+                "decision_policy": gateway.effective_config().get("decision_policy", {"mode": "off"}),
+                "memory_policy": gateway.effective_config().get('memory_policy', {'mode': 'lexical'})}
 
     @app.post("/api/engines/{role}/check")
     async def check_engine(role: str, request: Request):
@@ -237,6 +248,11 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
         gateway = app.state.gateway
         budget = {"calls": 0, "repairs": 0, "traces": [], "max_calls": 1, "max_repairs": 0}
         diagnostic_id = "engine_check_" + secrets.token_hex(10)
+        if role in EMBEDDING_ROLES:
+            result = await gateway.embed(role, ['The visitor returned the borrowed instrument.',
+                                               '客人归还了借来的乐器。'], diagnostic_id, budget)
+            return {'protocol_passed': True, 'sample': {'model': result['model'],
+                    'dimensions': len(result['vectors'][0]), 'inputs': len(result['vectors'])}, 'traces': budget['traces']}
         if role in DECISION_ROLES:
             result = await gateway.decide(role, DecisionRequest(state="The door is closed.", questions={
                 "closed": DecisionQuestion(type="noul", instructions="Is the door closed?")}), diagnostic_id, budget)
@@ -355,6 +371,30 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
         room = app.state.rooms.get(rid, user)
         state = app.state.store.branches[room["branch_id"]]["state"]
         return {"world_version": state["version"], "records": retrieve(state, app.state.rooms.character(room, user), q, 20, 12000)}
+
+    async def recall_snapshot(state, actor, payload, scope):
+        snapshot = deepcopy(state)
+        budget = {'calls': 0, 'traces': []}
+        service = getattr(app.state.gateway, 'memory', None)
+        try:
+            async with asyncio.timeout(180):
+                found = (await service.recall(snapshot, actor, payload.query, 'recall_' + secrets.token_hex(10),
+                                             budget, limit=payload.limit, char_budget=12000, scope=scope) if service else
+                         retrieve(snapshot, actor, payload.query, payload.limit, 12000))
+        except TimeoutError as exc:
+            raise DomainError('memory_timeout', 'Memory retrieval time budget exhausted', 504) from exc
+        return {'world_version': snapshot['version'], 'records': found, 'diagnostics': budget['traces']}
+
+    @app.post('/api/rooms/{rid}/recall')
+    async def room_recall(request: Request, rid: str, payload: RecallRequest):
+        user = owner(request)
+        room = app.state.rooms.get(rid, user)
+        actor = app.state.rooms.character(room, user)
+        token = MODEL_OWNER.set(room['owner'])
+        try:
+            return await recall_snapshot(app.state.store.branches[room['branch_id']]['state'], actor, payload, room['branch_id'])
+        finally:
+            MODEL_OWNER.reset(token)
 
     @app.get("/api/rooms/{rid}/avatars/{aid}")
     async def room_avatar_status(request: Request, rid: str, aid: str):
@@ -651,6 +691,11 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
         branch = app.state.store.branch(cid, bid, owner(request))
         state = branch["state"]
         return {"world_version": state["version"], "records": retrieve(state, state["player"], q, limit, 12000)}
+
+    @app.post('/api/campaigns/{cid}/branches/{bid}/recall')
+    async def recall(request: Request, cid: str, bid: str, payload: RecallRequest):
+        branch = app.state.store.branch(cid, bid, owner(request))
+        return await recall_snapshot(branch['state'], branch['state']['player'], payload, bid)
 
     @app.post("/api/campaigns/{cid}/branches/{bid}/actions", status_code=202)
     async def action(request: Request, cid: str, bid: str, payload: ActionCommand):

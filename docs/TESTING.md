@@ -40,6 +40,16 @@ These flags extend `scripts/verify.py`; individual `check_*` scripts expose thei
 
 `narraloom evaluate` runs authored JSONL tasks through the configured gateway. Reports include failed responses, schema repairs, assertion results, latency and incomplete usage accounting. `narraloom compare` pairs completed runs of the same workload. See [EVALUATION](EVALUATION.md) for the installed CLI and Python API. Distribution checks exercise native generation/decision adapters and report comparison outside the source import path.
 
+## Memory retrieval
+
+`tests/test_semantic_memory.py` checks vector protocols, actor/branch isolation, caching, limits and cancellation. The [memory guide](MEMORY.md) includes a local service and a fixed multilingual recall comparison. To run that comparison, actual-model dialogue and restart recovery from an independently installed wheel:
+
+```bash
+python scripts/check_distribution.py --output outputs/validation/memory-wheel \
+  --memory-live --live-models-config configs/models.local.json --secrets-root secrets \
+  --embedding-url http://127.0.0.1:18112/v1 --embedding-model BAAI/bge-m3
+```
+
 ## Content tests
 
 The installed check-engine acceptance uses a real provider to create a world and two stories, run a skill check and combat, exchange a native package, and verify restart recovery with the plugin absent:

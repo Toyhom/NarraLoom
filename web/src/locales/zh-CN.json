@@ -960,5 +960,18 @@
   "community.local": "当前服务器",
   "community.intro": "发现创作者分享的世界与故事，下载完整内容包，或安装到自己的创作库继续修改和游玩。",
   "community.empty": "暂无符合条件的公开分享包。创作世界后可制作分享包并发布到本站书架。",
-  "community.shared": "链接分享的作品"
+  "community.shared": "链接分享的作品",
+  "engine.memory_embedding": "记忆向量",
+  "engine.memory_embedding.hint": "选择适合内容语言的文本向量模型，用于语义召回。绑定本地向量服务或 API，再启用混合检索。",
+  "engine.openai_embedding": "OpenAI 兼容向量接口",
+  "memory.query_prefix": "查询前缀",
+  "memory.document_prefix": "文档前缀",
+  "memory.policy": "记忆检索",
+  "memory.policy.hint": "混合检索结合语义向量与关键词，保留记录来源。向量调用使用独立的有限预算，诊断中可查看调用和回退。",
+  "memory.mode": "检索方式",
+  "memory.lexical": "关键词",
+  "memory.hybrid": "关键词 + 语义向量",
+  "memory.failure": "向量服务失败时",
+  "memory.fallback": "使用关键词并记录回退",
+  "memory.error": "报告错误"
 }

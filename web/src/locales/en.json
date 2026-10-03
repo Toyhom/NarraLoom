@@ -960,5 +960,18 @@
   "community.local": "This server",
   "community.intro": "Discover worlds and stories shared by creators. Download a portable package or install it into your own library to edit and play.",
   "community.empty": "No listed packages match. Create a world, build a package and publish it to this server’s shelf.",
-  "community.shared": "Shared package"
+  "community.shared": "Shared package",
+  "engine.memory_embedding": "Memory embeddings",
+  "engine.memory_embedding.hint": "Use a multilingual text embedding model for semantic recall. Bind a local embedding service or API, then enable hybrid memory.",
+  "engine.openai_embedding": "OpenAI-compatible embeddings",
+  "memory.query_prefix": "Query prefix",
+  "memory.document_prefix": "Document prefix",
+  "memory.policy": "Memory retrieval",
+  "memory.policy.hint": "Hybrid recall combines source-preserving semantic and keyword retrieval. Embedding calls use a separate bounded budget and appear in diagnostics.",
+  "memory.mode": "Retrieval mode",
+  "memory.lexical": "Keywords",
+  "memory.hybrid": "Keywords + semantic vectors",
+  "memory.failure": "On embedding failure",
+  "memory.fallback": "Use keywords and record the fallback",
+  "memory.error": "Report the error"
 }

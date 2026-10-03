@@ -43,6 +43,10 @@ app = create_app(config=AppConfig(
 
 `GET /api/check-engines` で実装を確認し、`CreateWorld.check_engine` または `WorldBlueprint.check_engine` を設定します。コンテンツの自動テストで実装を検証し、確定記録にダイスと結果を保存するため、リプレイ・分岐・復元にも対応します。[判定エンジンのリファレンス](../../docs/CHECK_ENGINES.md) に登録、乱数、バージョン固定、パッケージ依存関係をまとめています。
 
+## 記憶検索を拡張する
+
+`memory_embedding` を `openai_embedding` のローカルサービスや API に接続するか、`embed` 能力を持つ Python `Engine` を登録します。`memory_policy.mode=hybrid` に設定すると、プランナーと NPC のコンテキストが意味検索を使用します。カスタムフロントエンドでは `client.recall(...)` で出典付きの記録を取得できます。[記憶 API](../../docs/MEMORY.md) にベクトル契約、視点、予算、キャッシュ、Transformers アダプターの例をまとめています。
+
 ## リファレンスフロントエンドで作業する
 
 ```bash

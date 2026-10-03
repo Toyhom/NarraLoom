@@ -67,7 +67,7 @@ WORLD_ACTOR_PROMPT = """你是世界中一位有自己目标的角色。根据�
 只输出JSON。"""
 
 
-async def advance_world(before, candidate, command, speakers, gateway, budget, cached=None, save=None):
+async def advance_world(before, candidate, command, speakers, gateway, budget, cached=None, save=None, *, memory_scope=None):
     from .world import apply_events, model_view, present
 
     cfg = candidate['template']['mechanics'].get('simulation')
@@ -144,6 +144,9 @@ async def advance_world(before, candidate, command, speakers, gateway, budget, c
                 data = {'character':{k:npc[k] for k in ('name','persona','goals','boundaries')},
                         'view':model_view(state,actor,' '.join(npc['goals'])),
                         'allowed_locations':[{'id':lid,'name':state['locations'][lid]['name']} for lid in locations]}
+                from .semantic_memory import recalled_context
+                data['view']['memories'] = await recalled_context(
+                    gateway, state, actor, ' '.join(npc['goals']), command['action_id'], budget, scope=memory_scope)
                 proposal = await gateway.generate('world_actor',WORLD_ACTOR_PROMPT + language_prompt(content_language(state)),data,schema,command['action_id'],budget)
                 if save:
                     save({'actor_id':actor,'proposal':proposal.model_dump()})

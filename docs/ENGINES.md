@@ -53,6 +53,10 @@ python scripts/serve_jev.py --source third_party/jev-style   --model-root /path/
 
 The runner validates the pinned Python source and runtime hashes. `--size 2B` selects the other pinned checkpoint; `--device cpu` is available. On shared GPU hosts, submit this command through the host's scheduler and preserve its assigned CUDA visibility. The runtime limit stops only this optional model service. [Research](../guides/research.md) covers evaluation and generation-model comparisons.
 
+## Memory embeddings
+
+The `embed` capability supplies vectors through a native Python adapter or the `openai_embedding` transport (`POST /embeddings`). An explicit `memory_embedding` binding selects the model. Hybrid recall uses only the current actor's branch records and retains source IDs. See [memory retrieval](MEMORY.md) for configuration, local Transformers inference, caching and read-only recall APIs.
+
 ## Diagnostics
 
 `GET /api/engines` describes registered capabilities and effective module metadata. `POST /api/engines/{module}/check` makes a typed test call. `POST /api/decisions/action_router` evaluates a decision without changing a world. Owner-scoped action diagnostics and usage expose model IDs, elapsed time, routing and reported token counts. Raw traces in the configured output directory may include prompts and authored secrets.
