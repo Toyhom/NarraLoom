@@ -156,8 +156,11 @@
       "$ref": "#/$defs/PackageMetadata"
     },
     "engine_minimum": {
-      "const": "0.12.0",
       "default": "0.12.0",
+      "enum": [
+        "0.12.0",
+        "0.16.0"
+      ],
       "title": "Engine Minimum",
       "type": "string"
     },
@@ -182,7 +185,7 @@
       "items": {
         "type": "string"
       },
-      "maxItems": 5,
+      "maxItems": 6,
       "minItems": 1,
       "title": "Capabilities",
       "type": "array"

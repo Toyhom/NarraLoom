@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from roleplay_world.avatars import AvatarCreate
+from roleplay_world.checks import CheckBinding, CheckInput, CheckResult
 from roleplay_world.content import (
     CreateStory,
     CreateWorld,
@@ -25,7 +26,7 @@ from roleplay_world.state_rules import StateRules
 
 root = Path(__file__).resolve().parents[1] / "schemas"
 root.mkdir(exist_ok=True)
-models = [EvaluationCase, PackageBuild, PackageInstall, PackageManifest, PackageVisibility, ConvertRequest, DecisionRequest, ActionCommand, ActorReply, ForkRequest, Narration, NewCampaign, TurnPlan,
+models = [CheckBinding, CheckInput, CheckResult, EvaluationCase, PackageBuild, PackageInstall, PackageManifest, PackageVisibility, ConvertRequest, DecisionRequest, ActionCommand, ActorReply, ForkRequest, Narration, NewCampaign, TurnPlan,
           CreateStory, CreateWorld, EditStory, EditWorld, RepairStory, StoryBlueprint, WorldBlueprint, AvatarCreate, ProviderSettings, RoomCreate, RoomJoin, RoomControl, RoomAction, RuleSet, SimulationConfig, StateRules]
 for model in models:
     (root / (model.__name__ + ".schema.json")).write_text(

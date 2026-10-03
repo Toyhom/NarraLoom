@@ -13,6 +13,8 @@ The engine owns coins, health, stamina, experience, item quantities, equipment s
 
 Buying, selling and picking up items support quantities. Equipped items must be unequipped before sale. Consumables require a relevant resource deficit.
 
+A world's optional `check_engine` binding replaces the numerical skill, attack and counterattack calculation. The built-in `sum_dice@1` supports configurable dice counts and sizes; hosts can register versioned Python implementations such as success-count dice pools. The surrounding rule pack still supplies modifiers, targets and consequences. See [check engines](CHECK_ENGINES.md) for configuration, registration and replay behavior.
+
 Content validation checks references, trade conservation, equipment, consumables, single-round enemy combat, replay and refusal to join. Isolated rule fixtures validate mechanics; actual-model story routes add planner/character coverage. Assess balance across your intended starting configurations and player choices.
 
 ```bash

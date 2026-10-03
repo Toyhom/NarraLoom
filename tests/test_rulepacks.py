@@ -15,6 +15,10 @@ from roleplay_world.world import apply_events, initial_state, project
 
 @pytest.fixture
 def game_template():
+    return build_game_template()
+
+
+def build_game_template():
     pack = load_catalog()["apartment-5c"]
     world = WorldBlueprint.model_validate(pack["world"])
     world.rules = RuleSet.model_validate({

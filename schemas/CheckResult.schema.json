@@ -1,0 +1,68 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "roll": {
+      "maximum": 1000000,
+      "minimum": -1000000,
+      "title": "Roll",
+      "type": "integer"
+    },
+    "modifier": {
+      "maximum": 1000,
+      "minimum": -1000,
+      "title": "Modifier",
+      "type": "integer"
+    },
+    "total": {
+      "maximum": 1001000,
+      "minimum": -1001000,
+      "title": "Total",
+      "type": "integer"
+    },
+    "difficulty": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Difficulty",
+      "type": "integer"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "dice": {
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Dice",
+      "type": "string"
+    },
+    "comparison": {
+      "enum": [
+        ">=",
+        "<="
+      ],
+      "title": "Comparison",
+      "type": "string"
+    },
+    "draws": {
+      "items": {
+        "maximum": 1000000,
+        "minimum": -1000000,
+        "type": "integer"
+      },
+      "maxItems": 100,
+      "title": "Draws",
+      "type": "array"
+    }
+  },
+  "required": [
+    "roll",
+    "modifier",
+    "total",
+    "difficulty",
+    "passed",
+    "dice",
+    "comparison"
+  ],
+  "title": "CheckResult",
+  "type": "object"
+}

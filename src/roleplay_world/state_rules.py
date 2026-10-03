@@ -514,7 +514,7 @@ def test_command(step, state, aid):
                          selected_operation=op)
 
 
-def audit_state_rules(template):
+def audit_state_rules(template, *, check_registry=None):
     from .contracts import TurnPlan
     from .journal import digest
     from .planning import explicit_goal_plan
@@ -532,7 +532,7 @@ def audit_state_rules(template):
             cmd = test_command(step, state, f"state_test_{i}_{j}").model_dump()
             try:
                 plan = explicit_goal_plan(state, cmd) or TurnPlan(intent=cmd["text"], time_cost_s=step["seconds"])
-                events, _, _ = resolve(state, cmd, plan, {}, 7)
+                events, _, _ = resolve(state, cmd, plan, {}, 7, check_registry=check_registry)
             except DomainError as exc:
                 invalid(f"状态路线「{test['name']}」第{j+1}步（{cmd['text']}）：{exc.message}")
             after = apply_events(state, events, state["version"]+1)

@@ -3,6 +3,7 @@
 import logging
 from collections import deque
 
+from .checks import builtin_checks
 from .content_preferences import content_text
 from .contracts import ActionCommand, ActorReply, TurnPlan
 from .journal import digest
@@ -30,13 +31,19 @@ def route(template, start, target):
     raise ValueError("目标地点不可达")
 
 
-def audit_template(template):
+def audit_template(template, *, check_registry=None):
     """Every clue/goal/route checked from this generated content, no Fogharbor IDs."""
     state = initial_state(template, "自动检查旅人")
+    registry = check_registry or builtin_checks()
+    registry.validate_template(template)
+    registry.verify(template['mechanics'].get('checks'))
     checks = []
 
     def ok(name, detail):
         checks.append({"name": name, "status": "passed", "detail": detail})
+
+    if template['mechanics'].get('checks'):
+        ok('检定引擎契约', '技能、攻击和反击的类型、算术与固定种子重复结果通过')
 
     start = state["actor_states"][state["player"]]["location_id"]
     for place in template["locations"]:
@@ -55,7 +62,7 @@ def audit_template(template):
         state["actor_states"][state["player"]]["location_id"] = place
         command = {"action_id": uid("probe"), "mode": "act", "text": "调查"}
         plan = TurnPlan(intent="调查", operations=[{"kind": "reveal", "target_id": fact["id"]}])
-        events, _, _ = resolve(state, command, plan, {}, 7)
+        events, _, _ = resolve(state, command, plan, {}, 7, check_registry=check_registry)
         version += 1
         state = apply_events(state, events, version)
         assert fact["id"] in state["knowledge"][state["player"]]
@@ -71,7 +78,7 @@ def audit_template(template):
         validate_plan(state, command, plan)
         # Seed enumeration is only for this isolated test, never a retry of a player's roll.
         for seed in range(100):
-            events, _, roll = resolve(state, command, plan, {}, seed)
+            events, _, roll = resolve(state, command, plan, {}, seed, check_registry=check_registry)
             if not roll or roll["passed"]:
                 break
         replay1 = apply_events(state, events, state["version"] + 1)
@@ -92,18 +99,19 @@ def audit_template(template):
             plan,
             {npc: ActorReply(reaction="refuse", text="请你留着。")},
             1,
+            check_registry=check_registry,
         )
         assert apply_events(initial, events, 1)["items"][item["id"]]["holder_id"] == initial["player"]
         ok("拒绝与物品归属", "拒绝后物品仍属于玩家")
     else:
         checks.append({"name": "拒绝与物品归属", "status": "skipped", "detail": "本故事没有可赠送的初始物品"})
     if template["mechanics"].get("rules"):
-        checks.extend(audit_rules(template))
-    checks.extend(audit_state_rules(template))
+        checks.extend(audit_rules(template, check_registry=check_registry))
+    checks.extend(audit_state_rules(template, check_registry=check_registry))
     return checks
 
 
-def audit_rules(template):
+def audit_rules(template, *, check_registry=None):
     """Exercise each authored catalog/foe in isolated preconditions, without charging an API."""
     cfg = RuleSet.model_validate(template["mechanics"]["rules"])
     npc_count = sum(a["id"].startswith("npc_") for a in template["actors"])
@@ -116,7 +124,7 @@ def audit_rules(template):
         plan = normalize_plan(state, command, TurnPlan(
             intent="自动检查", operations=[{"kind": kind, "target_id": target, "item_id": item}]))
         validate_plan(state, command, plan)
-        events, _, _ = resolve(state, command, plan, replies or {}, 3)
+        events, _, _ = resolve(state, command, plan, replies or {}, 3, check_registry=check_registry)
         after = apply_events(state, events, state["version"]+1)
         assert digest(after) == digest(apply_events(state, events, state["version"]+1))
         return after
@@ -165,14 +173,14 @@ def audit_rules(template):
              "detail": f"{len(cfg.items)} 件道具引用、{traded} 项独立交易/装备/消耗检查、{len(cfg.enemies)} 个敌人的单轮战斗、同行拒绝；使用隔离前提，不代表全战役平衡"}]
 
 
-async def playtest(template, gateway, root, progress):
+async def playtest(template, gateway, root, progress, *, check_registry=None):
     mode = getattr(gateway, "verification_mode", "live_models")
-    checks = audit_template(template)
+    checks = audit_template(template, check_registry=check_registry)
     language = template.get("content_language", "zh-CN")
     def text(zh, en):
         return content_text(language, zh, en)
     await progress(checks)
-    store = Store(root)
+    store = Store(root, check_registry=check_registry)
     runtime = Runtime(store, gateway)
     c = store.create_campaign("autotest", template, text("自动试跑旅人", "Playtest traveler"))
     cid, bid = c["id"], c["main_branch"]

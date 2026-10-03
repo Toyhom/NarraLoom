@@ -37,6 +37,12 @@ app = create_app(config=AppConfig(
 
 `gateway=` を使用してゲートウェイ全体を置き換えるか、`avatar_factory(store)` を使用してプレゼンテーションサービスを提供します。これらのフックは正規の状態コミットをフレームワーク内に残します。新しいイベントタイプと永続化の実装には、コアコントラクトへのバージョン付き変更とリプレイテストが必要です。
 
+## 数値判定を拡張する
+
+`create_app(check_registry=...)` に `CheckRegistry` を渡し、技能・攻撃・反撃の決定論的な判定処理を登録できます。世界にはエンジンID、バージョン、設定値を固定します。組み込み実装は複数のダイスの合計に対応し、[check_engine.py](../../examples/check_engine.py) は成功数を数えるダイスプールの例です。
+
+`GET /api/check-engines` で実装を確認し、`CreateWorld.check_engine` または `WorldBlueprint.check_engine` を設定します。コンテンツの自動テストで実装を検証し、確定記録にダイスと結果を保存するため、リプレイ・分岐・復元にも対応します。[判定エンジンのリファレンス](../../docs/CHECK_ENGINES.md) に登録、乱数、バージョン固定、パッケージ依存関係をまとめています。
+
 ## リファレンスフロントエンドで作業する
 
 ```bash

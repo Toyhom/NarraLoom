@@ -4,6 +4,7 @@ import hashlib
 import random
 from copy import deepcopy
 
+from .checks import CheckInput, resolve_check
 from .content_preferences import content_language, content_text
 from .contracts import DomainError
 from .players import command_player, followers, human_players
@@ -12,7 +13,7 @@ from .state_rules import advance_triggers, resolve_action
 from .world import apply_events, fact_text, present
 
 
-def resolve(state, command, plan, replies, seed):
+def resolve(state, command, plan, replies, seed, *, check_registry=None):
     state = deepcopy(state)
     player = command_player(state, command)
     events, effects = [], []
@@ -61,14 +62,15 @@ def resolve(state, command, plan, replies, seed):
         percentile = (rules_config(state) or {}).get("system") == "d100"
         if percentile:
             modifier = 0
-        value = random.Random(seed).randint(1, 100 if percentile else 20)
-        roll = {"skill": c.skill, "purpose": c.purpose, "roll": value, "modifier": modifier,
-                "total": value + modifier, "difficulty": c.difficulty,
-                "passed": value <= c.difficulty if percentile else value + modifier >= c.difficulty}
-        if percentile:
-            roll.update(dice="d100", comparison="<=")
+        roll = resolve_check(state, CheckInput(kind='ability', skill=c.skill, purpose=c.purpose,
+                             difficulty=c.difficulty, modifier=modifier, comparison='<=' if percentile else '>='),
+                             random.Random(seed), check_registry)
+        dice = roll['dice']
+        if not percentile and not state['template']['mechanics'].get('checks'):
+            roll.pop('dice')
+            roll.pop('comparison')
         emit("check.resolved", roll,
-             f'{c.purpose}：{"d100" if percentile else "d20"} {value} + {modifier} = {value + modifier}，目标 {c.difficulty}，'
+             f'{c.purpose}：{dice} {roll["roll"]} + {modifier} = {roll["total"]}，目标 {c.difficulty}，'
              + ("成功" if roll["passed"] else "未通过"))
 
     moving = [o for o in plan.operations if o.kind == "move"]
@@ -90,7 +92,7 @@ def resolve(state, command, plan, replies, seed):
         elif op.kind in EXTRA_KINDS:
             previous_count = len(events)
             witnesses = present(state, player)
-            result = resolve_extra(state, command, op, replies, seed, emit)
+            result = resolve_extra(state, command, op, replies, seed, emit, check_registry=check_registry)
             time_cost = result.get("time_cost", time_cost)
             roll = result.get("roll", roll)
             effects.extend(result.get("effects", []))

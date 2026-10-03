@@ -182,7 +182,7 @@ def repair_schema(story):
                         patches=(list[patch], Field(min_length=1, max_length=24)))
 
 
-def repair_text(world, story, repairs):
+def repair_text(world, story, repairs, *, check_registry=None):
     allowed = editable_texts(story)
     data = {"story": deepcopy(story.model_dump())}
     seen = set()
@@ -198,7 +198,7 @@ def repair_text(world, story, repairs):
         current[key] = patch.text
     candidate = StoryBlueprint.model_validate(data["story"])
     validate_story(world, candidate)
-    audit_state_rules(compile_story(world, candidate, "review_draft"))
+    audit_state_rules(compile_story(world, candidate, "review_draft"), check_registry=check_registry)
     return candidate
 
 
@@ -314,7 +314,7 @@ class ContentReviewFailure(DomainError):
         super().__init__("content_inconsistent", "内容与机制不一致，请调整相应描述后重测："+detail, 422)
 
 
-async def review_story(world, story, generate, jid, *, repair=False):
+async def review_story(world, story, generate, jid, *, repair=False, check_registry=None):
     found = []
     rejected = []
     changes = []
@@ -335,9 +335,10 @@ async def review_story(world, story, generate, jid, *, repair=False):
         repairs = await generate("state_builder", REPAIR_PROMPT + language_prompt(story.content_language or world.content_language),
             {"world": world.model_dump(), "story": story.model_dump(), "initial_scene": opening_scene(world, story),
              "issues": [issue.model_dump() for issue in review.issues], "allowed_texts": editable_texts(story)},
-            repair_schema(story), jid, lambda patches, current=story: repair_text(world, current, patches))
+            repair_schema(story), jid, lambda patches, current=story: repair_text(world, current, patches,
+                                                                              check_registry=check_registry))
         current_texts = editable_texts(story)
         changes.extend({"round": rounds+1, "path": patch.path, "before": current_texts[patch.path], "after": patch.text}
                        for patch in repairs.patches if patch.path in current_texts and current_texts[patch.path] != patch.text)
-        story = repair_text(world, story, repairs)
+        story = repair_text(world, story, repairs, check_registry=check_registry)
     raise AssertionError("Bounded review loop exhausted")

@@ -68,6 +68,7 @@ class Runtime:
                 if a["status"] == "cancelled":
                     return
                 state = deepcopy(self.store.branches[a["branch_id"]]["state"])
+                self.store.check_registry.validate_template(state['template'])
                 command = a["command"]
                 player = command_player(state, command)
                 audience = heard_by(state, command)  # Validate private targets before any model call or early commit.
@@ -117,6 +118,9 @@ class Runtime:
                         context["allowed_operations"] = choices(state, command["mode"], player, command.get("whisper_to"))[0]
                         if command.get("whisper_to"):
                             context["private_recipient"] = command["whisper_to"]
+                        check_guidance = self.store.check_registry.guidance(state['template']['mechanics'].get('checks'))
+                        if check_guidance:
+                            context['check_rules'] = check_guidance
                         plan = await self.gateway.generate("game_master", prompts.GM + language_prompt(content_language(state)), context,
                             plan_schema(state, command), aid, budget,
                             validate=lambda p: validate_plan(state, command, normalize_plan(state, command, p)))
@@ -126,7 +130,8 @@ class Runtime:
                     npc_state = deepcopy(state)
                     observed_effects, observed_roll = [], None
                     if not any(op.kind in {"give", "recruit"} for op in plan.operations):
-                        preview_events, observed_effects, observed_roll = resolve(state, command, plan, {}, a["seed"])
+                        preview_events, observed_effects, observed_roll = resolve(
+                            state, command, plan, {}, a["seed"], check_registry=self.store.check_registry)
                         npc_state = apply_events(state, preview_events, state["version"])
                     for op in plan.operations:
                         if op.kind == "move":
@@ -166,7 +171,8 @@ class Runtime:
                                                       for k, r in replies.items()]
                         replies[actor] = await self.gateway.generate("character_actor", prompts.NPC + language_prompt(content_language(state)), context,
                                                                     actor_schema(npc_state, actor, offers, consent), aid, budget)
-                    events, effects, roll = resolve(state, command, plan, replies, a["seed"])
+                    events, effects, roll = resolve(state, command, plan, replies, a["seed"],
+                                                    check_registry=self.store.check_registry)
                     segments = []
                     if command["mode"] == "say" and (len(human_players(state)) > 1 or command.get("whisper_to")):
                         events.extend([

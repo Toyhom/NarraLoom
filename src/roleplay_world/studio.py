@@ -101,19 +101,24 @@ class Studio:
         ):
             raise DomainError("studio_busy", "已有创作或测试进行中，请等待完成", 409)
 
-    def submit(self, owner, kind, prompt="", world_id=None, story_id=None, story_prompt="", rules_mode="none", living_world=False, avatar_id=None, custom_states=False, content_language=None, creation_preset=None, expected_revision=None, request_id=None):
+    def submit(self, owner, kind, prompt="", world_id=None, story_id=None, story_prompt="", rules_mode="none", living_world=False, avatar_id=None, custom_states=False, content_language=None, creation_preset=None, expected_revision=None, request_id=None, check_engine=None):
         metadata = {}
+        if check_engine is not None:
+            check_engine = check_engine.model_dump() if hasattr(check_engine, 'model_dump') else deepcopy(check_engine)
         if request_id is not None:
             key, fingerprint = identity("creation", owner, request_id, {
                 "kind": kind, "prompt": prompt, "world_id": world_id, "story_id": story_id,
                 "story_prompt": story_prompt, "rules_mode": rules_mode, "living_world": living_world,
                 "avatar_id": avatar_id, "custom_states": custom_states, "content_language": content_language,
                 "creation_preset": creation_preset, "expected_revision": expected_revision,
+                **({'check_engine': check_engine} if check_engine is not None else {}),
             })
             existing = receipt(self.store.jobs, key, owner, fingerprint)
             if existing is not None:
                 return existing
             metadata = {"id": key, "request_hash": fingerprint, "request_id": request_id}
+        if check_engine is not None:
+            self.store.check_registry.verify(check_engine)
         self.require_capacity(owner)
         avatar = self.store.studio_get("avatars", avatar_id, owner) if avatar_id else None
         world = self.store.studio_get("worlds", world_id, owner) if world_id else None
@@ -147,6 +152,7 @@ class Studio:
             "steps": [],
             "error": None,
             **metadata,
+            **({'check_engine': check_engine} if check_engine is not None else {}),
         }
         if kind in {"test", "repair"} and story:
             # Starting a new review invalidates the old certificate, atomically
@@ -237,6 +243,9 @@ class Studio:
                     )
                     connect_generated_world(world)
                     world = WorldBlueprint.model_validate(world.model_dump())
+                    if job.get('check_engine'):
+                        from .checks import CheckBinding
+                        world.check_engine = CheckBinding.model_validate(job['check_engine'])
                     if job.get("avatar_id"):
                         world.characters[0].avatar_id = job["avatar_id"]
                         world.characters[0].location = 0
@@ -247,7 +256,8 @@ class Studio:
                                 raise ValueError("规则系统必须与用户选择一致")
                         world.rules = await self.generate(
                             "rules_builder", RULES_PROMPT + language_prompt(world.content_language),
-                            {"world": world.model_dump(), "rules_mode": job["rules_mode"], "brief": job["prompt"]},
+                            {"world": world.model_dump(), "rules_mode": job["rules_mode"], "brief": job["prompt"],
+                             'check_engine': self.store.check_registry.guidance(world.check_engine)},
                             RuleSet, jid, validate_generated_rules,
                         )
                     if job.get("living_world"):
@@ -281,7 +291,8 @@ class Studio:
                         "story_builder",
                         STORY_PROMPT + language_prompt(language) + ("\n本世界使用d100，普通检定difficulty是成功百分比，建议50至75。"
                                         if world.rules and world.rules.system == "d100" else ""),
-                        {"world": world.model_dump(), "brief": brief, "creation_size": PRESETS[preset]},
+                        {"world": world.model_dump(), "brief": brief, "creation_size": PRESETS[preset],
+                         'check_engine': self.store.check_registry.guidance(world.check_engine)},
                         story_generation_schema(world, preset, language),
                         jid,
                         lambda s: validate_story(world, s),
@@ -293,7 +304,8 @@ class Studio:
                             if not pack.variables or not pack.actions or not pack.tests:
                                 raise ValueError("请提供实际变量、行动和验收路线")
                             story.state_rules = pack
-                            audit_state_rules(compile_story(world, story, "state_draft"))
+                            audit_state_rules(compile_story(world, story, "state_draft"),
+                                              check_registry=self.store.check_registry)
 
                         story.state_rules = await self.generate(
                             "state_builder", STATE_PROMPT + language_prompt(story.content_language or world.content_language),
@@ -330,18 +342,20 @@ class Studio:
                     story_record.get("origin"),
                 )
                 self.update(jid, status="testing")
+                self.store.check_registry.validate_template(template)
                 review_world = WorldBlueprint.model_validate(story_record["world_content"])
                 review_content = StoryBlueprint.model_validate(story_record["content"])
                 cached_review = story_record.get("semantic_review") or {}
                 if (cached_review.get("status") != "passed" or cached_review.get("job_id") != jid
                         or cached_review.get("fingerprint") != review_fingerprint(review_world, review_content)):
                     if template["mechanics"].get("state_rules"):
-                        audit_state_rules(template)
+                        audit_state_rules(template, check_registry=self.store.check_registry)
                     # Save the generated draft before paid semantic work, so a
                     # failed review can be retried or edited without regeneration.
                     original_content = review_content.model_dump(mode="json")
                     revised, review = await review_story(review_world, review_content, self.generate, jid,
-                        repair=job["kind"] in {"world", "story", "repair"} or job.get("generated_conversion", False))
+                        repair=job["kind"] in {"world", "story", "repair"} or job.get("generated_conversion", False),
+                        **({'check_registry': self.store.check_registry} if review_world.check_engine else {}))
                     if self.store.stories[story_record["id"]]["revision"] != story_record["revision"]:
                         raise DomainError("stale_revision", "故事在审核时被编辑，修订结果未写入新版本")
                     # A native restore retains the exact input payload, including
@@ -368,7 +382,8 @@ class Studio:
                 async def progress(checks, steps=None):
                     self.update(jid, checks=checks, steps=steps or [])
 
-                report = await playtest(template, self.gateway, self.sandbox_root / jid / uid("run"), progress)
+                report = await playtest(template, self.gateway, self.sandbox_root / jid / uid("run"), progress,
+                                        check_registry=self.store.check_registry)
                 if story_record.get("semantic_review"):
                     review = story_record["semantic_review"]
                     report["checks"].append({"name": "内容与机制一致性审核", "status": "passed",

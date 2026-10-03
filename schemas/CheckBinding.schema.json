@@ -1,0 +1,26 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "engine": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Engine",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Version",
+      "type": "string"
+    },
+    "options": {
+      "additionalProperties": true,
+      "title": "Options",
+      "type": "object"
+    }
+  },
+  "required": [
+    "engine",
+    "version"
+  ],
+  "title": "CheckBinding",
+  "type": "object"
+}

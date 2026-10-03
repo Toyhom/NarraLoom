@@ -8,7 +8,7 @@ NarraLoom is a modular Python application with an independent HTTP API. A single
 | Authoring | `content`, `studio`, `content_review`, `quality` | Worlds, stories, revisions, generation, review and isolated playtests |
 | Model calls | `gateway`, `engines`, `prompts`, `decisions`, `routing` | Per-role configuration, contracts, budgets, repair and traces |
 | Turn execution | `runtime`, `planning`, `rules`, `world` | Plans, NPC reactions, deterministic outcomes and narrative commits |
-| Gameplay | `rulepacks`, `state_rules`, `simulation`, `continuity` | Equipment/checks, authored mechanics, bounded world activity and story carry-over |
+| Gameplay | `checks`, `rulepacks`, `state_rules`, `simulation`, `continuity` | Versioned numerical checks, equipment, authored mechanics, world activity and story carry-over |
 | Perspectives | `memory`, `players`, `rooms`, `trades` | Visible history, independent players, cooperation and confirmed transfers |
 | Persistence | `store`, `journal`, `idempotency` | Durable records, writer lock, receipts and recovery |
 | Portability | `packages`, `catalog`, `imports`, `backups`, `avatars` | Native content, starter copies, conversion, saves and presentation assets |
@@ -32,9 +32,9 @@ Only the engine's validated commit changes canonical state. Model summaries and 
 
 ## Extension boundaries
 
-`create_app` accepts `AppConfig`, an in-memory `model_config`, a model `registry` or complete `gateway`, and an `avatar_factory`. Generation and decision transports declare capabilities. A host can embed the backend in ASGI or build any frontend on the API.
+`create_app` accepts `AppConfig`, an in-memory `model_config`, a model `registry` or complete `gateway`, a `check_registry` and an `avatar_factory`. Generation and decision transports declare capabilities. Deterministic check engines pin their ID/version in each world and share the existing commit pipeline. A host can embed the backend in ASGI or build any frontend on the API.
 
-Rule/event handlers and persistence internals are versioned core code. Extending these requires contract, ownership, replay and recovery tests. See [contracts](CONTRACTS.md), [engines](ENGINES.md), [SDK](CLIENT.md) and the [developer guide](../guides/developers.md).
+Action/event handlers and persistence internals are versioned core code. Extending these requires contract, ownership, replay and recovery tests. See [check engines](CHECK_ENGINES.md), [contracts](CONTRACTS.md), [model engines](ENGINES.md), [SDK](CLIENT.md) and the [developer guide](../guides/developers.md).
 
 ## Hosting
 

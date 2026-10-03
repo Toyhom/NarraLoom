@@ -37,6 +37,12 @@ Register an `Engine` in `builtin_engines()` and pass `registry=registry` to `cre
 
 Use `gateway=` to replace the whole gateway, or `avatar_factory(store)` to supply presentation services. These hooks leave canonical state commits in the framework. New event types and persistence implementations require versioned changes to the core contracts and replay tests.
 
+## Extend numerical rules
+
+Pass a `CheckRegistry` as `create_app(check_registry=...)` to register deterministic skill, attack and counterattack implementations. A world pins the engine ID, version and options. The backend includes configurable summed dice; [check_engine.py](../examples/check_engine.py) demonstrates a success-count dice pool.
+
+Inspect `GET /api/check-engines`, then set `CreateWorld.check_engine` or edit `WorldBlueprint.check_engine`. Automatic content tests exercise the selected implementation. Receipts retain dice and outcomes for replay, branch history and recovery. The [check-engine reference](../docs/CHECK_ENGINES.md) covers registration, randomness, versioning and native-package dependencies.
+
 ## Work on the reference frontend
 
 ```bash

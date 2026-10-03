@@ -1,0 +1,55 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "enum": [
+        "ability",
+        "attack",
+        "counterattack"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "skill": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Skill",
+      "type": "string"
+    },
+    "purpose": {
+      "maxLength": 240,
+      "minLength": 1,
+      "title": "Purpose",
+      "type": "string"
+    },
+    "difficulty": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Difficulty",
+      "type": "integer"
+    },
+    "modifier": {
+      "maximum": 1000,
+      "minimum": -1000,
+      "title": "Modifier",
+      "type": "integer"
+    },
+    "comparison": {
+      "default": ">=",
+      "enum": [
+        ">=",
+        "<="
+      ],
+      "title": "Comparison",
+      "type": "string"
+    }
+  },
+  "required": [
+    "kind",
+    "skill",
+    "purpose",
+    "difficulty",
+    "modifier"
+  ],
+  "title": "CheckInput",
+  "type": "object"
+}

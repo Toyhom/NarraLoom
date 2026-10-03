@@ -37,6 +37,12 @@ app = create_app(config=AppConfig(
 
 使用 `gateway=` 替换整个 gateway，或使用 `avatar_factory(store)` 提供展示服务。这些 hook 将规范状态提交保留在框架中。新的事件类型和持久化实现需要对核心 contract 和重放测试进行版本化更改。
 
+## 扩展数值检定
+
+通过 `create_app(check_registry=...)` 传入 `CheckRegistry`，注册技能、攻击和反击的确定性判定算法。世界会固定引擎 ID、版本和参数。后端内置可配置的多骰求和；[check_engine.py](../../examples/check_engine.py) 展示按成功骰数量判定的骰池插件。
+
+查询 `GET /api/check-engines` 后，可设置 `CreateWorld.check_engine`，或编辑 `WorldBlueprint.check_engine`。内容自动测试会验证所选实现，提交记录保存骰面和结果，供重放、分支及恢复使用。[检定引擎文档](../../docs/CHECK_ENGINES.md) 说明注册接口、随机数、版本固定和内容包依赖。
+
 ## 开发参考前端
 
 ```bash

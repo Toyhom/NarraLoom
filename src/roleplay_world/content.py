@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, create_model
 
+from .checks import CheckBinding
 from .content_preferences import PRESETS, CreationPreset, LanguageChoice, LanguageTag, content_text
 from .contracts import Contract, DomainError, Identifier
 from .rulepacks import RuleSet, attach_rules, validate_rules
@@ -45,6 +46,7 @@ class WorldBlueprint(Contract):
     rules: RuleSet | None = None
     simulation: SimulationConfig | None = None
     state_rules: StateRules | None = None
+    check_engine: CheckBinding | None = None
 
 
 class Clue(Contract):
@@ -95,6 +97,7 @@ class CreateWorld(Contract):
     living_world: bool = False
     custom_states: bool = False
     avatar_id: Identifier | None = None
+    check_engine: CheckBinding | None = None
 
 
 class CreateStory(Contract):
@@ -164,6 +167,7 @@ def world_generation_schema(preset="adventure", language="auto"):
         content_language=(LanguageTag, ...) if language == "auto" else (Literal[language], language),
         creation_preset=(Literal[preset], preset),
         rules=(type(None), None), simulation=(type(None), None), state_rules=(type(None), None),
+        check_engine=(type(None), None),
         locations=(list[place], Field(min_length=size["locations"], max_length=size["locations"])),
         characters=(list[character], Field(min_length=size["characters"], max_length=size["characters"])),
     )
@@ -354,6 +358,8 @@ def compile_story(world, story, story_id, revision=1, origin=None):
     }
     if world.simulation:
         template["mechanics"]["simulation"] = world.simulation.model_dump()
+    if world.check_engine:
+        template['mechanics']['checks'] = world.check_engine.model_dump()
     attach_rules(template, world.rules)
     if world.state_rules or story.state_rules:
         cfg = compile_packs(world.state_rules, story.state_rules)

@@ -26,7 +26,7 @@ MAX_PACKAGE = 32 * 1024 * 1024
 MAX_PAYLOAD = 2 * 1024 * 1024
 RENDER_FILES = ('puppet/rig.json', 'puppet/portrait.png', 'puppet/mouth-atlas.png')
 ACTIVE = {'queued', 'generating_world', 'generating_story', 'testing'}
-CAPABILITIES = {'structured_generation', 'state_rules', 'rules', 'simulation', 'webgl_2d'}
+CAPABILITIES = {'structured_generation', 'state_rules', 'rules', 'simulation', 'webgl_2d', 'check_engine'}
 
 
 class PackageMetadata(Contract):
@@ -85,10 +85,10 @@ class PackageManifest(Contract):
     format: Literal['narraloom.content-package'] = 'narraloom.content-package'
     schema_version: Literal['1.0.0'] = '1.0.0'
     metadata: PackageMetadata
-    engine_minimum: Literal['0.12.0'] = '0.12.0'
+    engine_minimum: Literal['0.12.0', '0.16.0'] = '0.12.0'
     files: Annotated[list[FileEntry], Field(min_length=1, max_length=13)]
     assets: Annotated[list[AssetEntry], Field(max_length=4)] = Field(default_factory=list)
-    capabilities: Annotated[list[str], Field(min_length=1, max_length=5)]
+    capabilities: Annotated[list[str], Field(min_length=1, max_length=6)]
     omissions: Annotated[list[str], Field(max_length=32)] = Field(default_factory=list)
 
 
@@ -117,6 +117,8 @@ def capabilities(world, stories, assets):
             result.append(name)
     if assets:
         result.append('webgl_2d')
+    if world.get('check_engine'):
+        result.append('check_engine')
     return sorted(result)
 
 
@@ -236,6 +238,8 @@ def read_package(raw):
             invalid('2D资源组摘要不符')
     if set(manifest['capabilities']) != set(capabilities(payload['world'], payload['stories'], asset_ids)):
         invalid('依赖能力与实际内容不符或未支持')
+    if 'check_engine' in payload['world'] and manifest['engine_minimum'] != '0.16.0':
+        invalid('检定引擎字段需要 NarraLoom 0.16.0 或更新版本')
     return {'manifest': manifest, 'payload': payload, 'files': files, 'sha256': hashlib.sha256(raw).hexdigest()}
 
 
@@ -279,6 +283,9 @@ def preview_package(parsed):
     world = payload['world']
     return {'sha256': parsed['sha256'], 'metadata': manifest['metadata'], 'assets': manifest['assets'],
             'capabilities': manifest['capabilities'], 'omissions': manifest['omissions'],
+            'engine_minimum': manifest['engine_minimum'],
+            'check_engine': ({key: world['check_engine'][key] for key in ('engine', 'version')}
+                             if world.get('check_engine') else None),
             'genre': world['genre'], 'locations': len(world['locations']), 'characters': len(world['characters']),
             'stories': [{'key': s['key'], 'title': s['content']['title'],
                          'language': s['content'].get('content_language') or world.get('content_language', 'zh-CN'),
@@ -330,6 +337,7 @@ def build_package(studio, avatars, owner, request):
     payload = {'world': world, 'world_origin': deepcopy(source_world.get('origin')), 'stories': stories}
     files['content.json'] = canonical(payload)
     manifest = PackageManifest(metadata=request.metadata,
+        engine_minimum='0.16.0' if 'check_engine' in world else '0.12.0',
         files=[FileEntry(path=name, sha256=hashlib.sha256(value).hexdigest(), bytes=len(value)) for name, value in sorted(files.items())],
         assets=assets, capabilities=capabilities(world, stories, assets), omissions=omissions).model_dump()
     output = io.BytesIO()

@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field
 
+from .checks import CheckInput, resolve_check
 from .contracts import Contract, DomainError, Identifier
 from .players import command_player, followers, human_players, player_for
 
@@ -212,7 +213,7 @@ def validate_extra(state, op, actor_id=None):
             raise DomainError("stock_or_coins", "购买数量超过库存或可用金币", 422)
 
 
-def resolve_extra(state, command, op, replies, seed, emit):
+def resolve_extra(state, command, op, replies, seed, emit, *, check_registry=None):
     """Resolve one atomic operation from its baseline; emit applies checked events in order."""
     pc = command_player(state, command)
     validate_extra(state, op, pc)
@@ -313,13 +314,12 @@ def resolve_extra(state, command, op, replies, seed, emit):
         weapon = state["items"].get(own["equipment"].get("weapon"), {})
         armor = state["items"].get(own["equipment"].get("armor"), {})
         percentile = cfg["system"] == "d100"
-        die = rng.randint(1, 100 if percentile else 20)
         modifier = 0 if percentile else cfg["attack_bonus"]
         target = cfg["percentile_skill"] if percentile else enemy["defense"]
-        passed = die <= target if percentile else die+modifier >= target
-        roll = {"skill": "attack", "purpose": "攻击"+enemy["name"], "roll": die, "modifier": modifier,
-                "total": die+modifier, "difficulty": target, "passed": passed,
-                "dice": "d100" if percentile else "d20", "comparison": "<=" if percentile else ">="}
+        roll = resolve_check(state, CheckInput(kind='attack', skill='attack', purpose='攻击'+enemy['name'],
+                             modifier=modifier, difficulty=target, comparison='<=' if percentile else '>='),
+                             rng, check_registry)
+        die, passed = roll['roll'], roll['passed']
         emit("check.resolved", roll, f"{roll['purpose']}：{roll['dice']} {die}+{modifier}，目标{target}，"+("命中" if passed else "未命中"))
         hp = state["actor_states"][op.target_id]["resources"]["hp"]
         if passed:
@@ -329,12 +329,16 @@ def resolve_extra(state, command, op, replies, seed, emit):
             resource(pc, "coins", own["resources"]["coins"]+enemy["reward_coins"], f"击败{enemy['name']}")
             resource(pc, "xp", own["resources"]["xp"]+enemy["reward_xp"], f"经验 +{enemy['reward_xp']}")
         else:
-            retaliation = rng.randint(1, 100 if percentile else 20)
             defense = cfg["defense"]+armor.get("power", 0)
-            hit = retaliation <= max(5, 55-armor.get("power", 0)*5) if percentile else retaliation+enemy["attack_bonus"] >= defense
-            receipt = {"purpose": enemy["name"]+"反击", "roll": retaliation, "passed": hit,
-                       "dice": roll["dice"], "target": max(5, 55-armor.get("power", 0)*5) if percentile else defense,
-                       "modifier": 0 if percentile else enemy["attack_bonus"]}
+            counter = resolve_check(state, CheckInput(kind='counterattack', skill='attack', purpose=enemy['name']+'反击',
+                                    modifier=0 if percentile else enemy['attack_bonus'],
+                                    difficulty=max(5, 55-armor.get('power', 0)*5) if percentile else defense,
+                                    comparison='<=' if percentile else '>='), rng, check_registry)
+            retaliation, hit = counter['roll'], counter['passed']
+            receipt = {key: counter[key] for key in ('purpose', 'roll', 'passed', 'dice', 'modifier')}
+            receipt['target'] = counter['difficulty']
+            if state['template']['mechanics'].get('checks'):
+                receipt.update(counter)
             emit("check.resolved", receipt, f"{enemy['name']}反击掷骰{retaliation}，"+("命中" if hit else "未命中"))
             roll["counterattack"] = receipt
             if hit:

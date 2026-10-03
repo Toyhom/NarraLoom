@@ -334,7 +334,10 @@ def apply_events(state, events, new_version):
             if p["actor_id"] not in state["actors"] or p["status"] not in {"open", "done", "archived"}:
                 raise DomainError("invalid_event", "手记记录无效")
             state.setdefault("notes", {})[p["id"]] = deepcopy(p)
-        elif kind in {"speech.recorded", "check.resolved", "action.observed"}:
+        elif kind == 'check.resolved':
+            from .checks import validate_receipt
+            validate_receipt(state, p)
+        elif kind in {"speech.recorded", "action.observed"}:
             pass
         else:
             raise DomainError("unknown_event", "不支持的事件类型")

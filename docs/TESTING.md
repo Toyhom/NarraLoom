@@ -42,6 +42,15 @@ These flags extend `scripts/verify.py`; individual `check_*` scripts expose thei
 
 ## Content tests
 
+The installed check-engine acceptance uses a real provider to create a world and two stories, run a skill check and combat, exchange a native package, and verify restart recovery with the plugin absent:
+
+```bash
+python scripts/check_distribution.py --output outputs/validation/check-engine-live \
+  --checks-live --live-models-config configs/models.local.json --secrets-root secrets
+```
+
+The example host installs [a dice-pool engine](../examples/check_engine.py). Unit coverage also checks legacy d20/d100 results, invalid callbacks, pinned versions, prepared-result retries and tampered backup receipts.
+
 Each authored story revision runs structural/reference checks, rule routes and selected actual-model playtests in isolated state. Custom-state routes cover the declared actions/triggers. Opening/mechanics review reports source locations and claims. Failed checks remain attached to the job so a creator can revise and retest.
 
 Contract fixtures validate software behavior independently of model intelligence. Actual-model suites assess the chosen configuration on exercised tasks. Human playthroughs add coverage of prose, player agency and alternate routes.

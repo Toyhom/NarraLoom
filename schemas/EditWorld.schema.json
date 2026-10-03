@@ -71,6 +71,32 @@
       "title": "Character",
       "type": "object"
     },
+    "CheckBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "engine": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Engine",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Version",
+          "type": "string"
+        },
+        "options": {
+          "additionalProperties": true,
+          "title": "Options",
+          "type": "object"
+        }
+      },
+      "required": [
+        "engine",
+        "version"
+      ],
+      "title": "CheckBinding",
+      "type": "object"
+    },
     "Enemy": {
       "additionalProperties": false,
       "properties": {
@@ -1238,6 +1264,17 @@
           "anyOf": [
             {
               "$ref": "#/$defs/StateRules"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "check_engine": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CheckBinding"
             },
             {
               "type": "null"

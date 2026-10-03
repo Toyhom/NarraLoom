@@ -6,4 +6,6 @@
 - [make_evaluation_cases.py](make_evaluation_cases.py): freeze twelve multilingual planner, NPC and narrator tasks using packaged world data and runtime contracts.
 - [evaluation_adapter.py](evaluation_adapter.py): run generation and decision fixtures through a registered Python engine using the installed evaluation API.
 
+- [check_engine.py](check_engine.py): register a deterministic dice pool for skills and combat, verify its contract, and run an embedded backend that exposes it to world creators.
+
 See the [developer guide](../guides/developers.md) and [research guide](../guides/research.md) for configuration and evaluation.
