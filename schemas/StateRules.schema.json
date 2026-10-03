@@ -1,0 +1,514 @@
+{
+  "$defs": {
+    "StateAction": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "maxLength": 400,
+          "title": "Description",
+          "type": "string"
+        },
+        "location_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Location Id"
+        },
+        "when_all": {
+          "items": {
+            "$ref": "#/$defs/StateCondition"
+          },
+          "maxItems": 12,
+          "title": "When All",
+          "type": "array"
+        },
+        "when_any": {
+          "items": {
+            "$ref": "#/$defs/StateCondition"
+          },
+          "maxItems": 12,
+          "title": "When Any",
+          "type": "array"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/StateEffect"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Effects",
+          "type": "array"
+        },
+        "once": {
+          "default": false,
+          "title": "Once",
+          "type": "boolean"
+        },
+        "cooldown_s": {
+          "default": 0,
+          "maximum": 86400,
+          "minimum": 0,
+          "title": "Cooldown S",
+          "type": "integer"
+        },
+        "time_cost_s": {
+          "default": 60,
+          "maximum": 1800,
+          "minimum": 1,
+          "title": "Time Cost S",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "effects"
+      ],
+      "title": "StateAction",
+      "type": "object"
+    },
+    "StateCondition": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "variable",
+            "resource",
+            "item_count",
+            "location",
+            "knowledge",
+            "quest",
+            "clock",
+            "party",
+            "game_time"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Key"
+        },
+        "actor_id": {
+          "default": "pc_traveler",
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "op": {
+          "default": "eq",
+          "enum": [
+            "eq",
+            "ne",
+            "ge",
+            "gt",
+            "le",
+            "lt"
+          ],
+          "title": "Op",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "maxLength": 80,
+              "type": "string"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "source",
+        "value"
+      ],
+      "title": "StateCondition",
+      "type": "object"
+    },
+    "StateEffect": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "set",
+            "add",
+            "resource",
+            "clock",
+            "reveal",
+            "message"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target"
+        },
+        "actor_id": {
+          "default": "pc_traveler",
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Actor Id",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "maxLength": 80,
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "title": "Value"
+        },
+        "text": {
+          "default": "",
+          "maxLength": 400,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "StateEffect",
+      "type": "object"
+    },
+    "StateScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/StateTestStep"
+          },
+          "maxItems": 24,
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        },
+        "expect": {
+          "items": {
+            "$ref": "#/$defs/StateCondition"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Expect",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "steps",
+        "expect"
+      ],
+      "title": "StateScenario",
+      "type": "object"
+    },
+    "StateTestStep": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "state_action",
+            "move",
+            "reveal",
+            "challenge",
+            "attack",
+            "rest",
+            "say",
+            "wait"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        },
+        "seconds": {
+          "default": 60,
+          "maximum": 1800,
+          "minimum": 1,
+          "title": "Seconds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "StateTestStep",
+      "type": "object"
+    },
+    "StateTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "on": {
+          "default": "turn",
+          "enum": [
+            "turn",
+            "move",
+            "reveal",
+            "challenge",
+            "state_action",
+            "attack",
+            "rest",
+            "say",
+            "wait"
+          ],
+          "title": "On",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        },
+        "when_all": {
+          "items": {
+            "$ref": "#/$defs/StateCondition"
+          },
+          "maxItems": 12,
+          "title": "When All",
+          "type": "array"
+        },
+        "when_any": {
+          "items": {
+            "$ref": "#/$defs/StateCondition"
+          },
+          "maxItems": 12,
+          "title": "When Any",
+          "type": "array"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/StateEffect"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Effects",
+          "type": "array"
+        },
+        "once": {
+          "default": true,
+          "title": "Once",
+          "type": "boolean"
+        },
+        "cooldown_s": {
+          "default": 0,
+          "maximum": 86400,
+          "minimum": 0,
+          "title": "Cooldown S",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "effects"
+      ],
+      "title": "StateTrigger",
+      "type": "object"
+    },
+    "StateVariable": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "default": "integer",
+          "enum": [
+            "integer",
+            "boolean",
+            "enum"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "initial": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "maxLength": 80,
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "title": "Initial"
+        },
+        "minimum": {
+          "default": 0,
+          "maximum": 1000000,
+          "minimum": -1000000,
+          "title": "Minimum",
+          "type": "integer"
+        },
+        "maximum": {
+          "default": 100,
+          "maximum": 1000000,
+          "minimum": -1000000,
+          "title": "Maximum",
+          "type": "integer"
+        },
+        "options": {
+          "items": {
+            "maxLength": 60,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Options",
+          "type": "array"
+        },
+        "visibility": {
+          "default": "public",
+          "enum": [
+            "public",
+            "player",
+            "gm"
+          ],
+          "title": "Visibility",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "StateVariable",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "variables": {
+      "items": {
+        "$ref": "#/$defs/StateVariable"
+      },
+      "maxItems": 32,
+      "title": "Variables",
+      "type": "array"
+    },
+    "actions": {
+      "items": {
+        "$ref": "#/$defs/StateAction"
+      },
+      "maxItems": 16,
+      "title": "Actions",
+      "type": "array"
+    },
+    "triggers": {
+      "items": {
+        "$ref": "#/$defs/StateTrigger"
+      },
+      "maxItems": 24,
+      "title": "Triggers",
+      "type": "array"
+    },
+    "tests": {
+      "items": {
+        "$ref": "#/$defs/StateScenario"
+      },
+      "maxItems": 12,
+      "title": "Tests",
+      "type": "array"
+    }
+  },
+  "title": "StateRules",
+  "type": "object"
+}

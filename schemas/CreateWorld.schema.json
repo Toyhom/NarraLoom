@@ -1,0 +1,96 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Request Id"
+    },
+    "content_language": {
+      "anyOf": [
+        {
+          "maxLength": 35,
+          "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8}){0,3}$",
+          "type": "string"
+        },
+        {
+          "const": "auto",
+          "type": "string"
+        }
+      ],
+      "default": "auto",
+      "description": "BCP-47 content language; auto follows the creative brief, independently of UI language.",
+      "title": "Content Language"
+    },
+    "creation_preset": {
+      "default": "adventure",
+      "description": "Initial generation size: scene 1 location/1 NPC, story 3/2, adventure 4/3. Editing can expand any preset.",
+      "enum": [
+        "scene",
+        "story",
+        "adventure"
+      ],
+      "title": "Creation Preset",
+      "type": "string"
+    },
+    "prompt": {
+      "maxLength": 2500,
+      "minLength": 5,
+      "title": "Prompt",
+      "type": "string"
+    },
+    "story_prompt": {
+      "default": "",
+      "maxLength": 1800,
+      "title": "Story Prompt",
+      "type": "string"
+    },
+    "rules_mode": {
+      "default": "none",
+      "enum": [
+        "none",
+        "story-lite",
+        "d20",
+        "d100"
+      ],
+      "title": "Rules Mode",
+      "type": "string"
+    },
+    "living_world": {
+      "default": false,
+      "title": "Living World",
+      "type": "boolean"
+    },
+    "custom_states": {
+      "default": false,
+      "title": "Custom States",
+      "type": "boolean"
+    },
+    "avatar_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Avatar Id"
+    }
+  },
+  "required": [
+    "prompt"
+  ],
+  "title": "CreateWorld",
+  "type": "object"
+}

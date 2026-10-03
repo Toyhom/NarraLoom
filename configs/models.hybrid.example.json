@@ -1,0 +1,37 @@
+{
+  "default": {
+    "backend": "openai",
+    "url": "https://api.deepseek.com/v1",
+    "model": "deepseek-flash",
+    "api_key_env": "RPW_API_KEY",
+    "json_object": true,
+    "timeout_s": 90
+  },
+  "roles": {},
+  "providers": {
+    "local_decision": {
+      "backend": "systemone",
+      "url": "http://127.0.0.1:18110/v1",
+      "timeout_s": 15,
+      "context_chars": 20000
+    },
+    "local_dialogue": {
+      "backend": "openai",
+      "url": "http://127.0.0.1:8000/v1",
+      "json_object": true,
+      "timeout_s": 90
+    }
+  },
+  "bindings": {
+    "action_router": {
+      "provider": "local_decision",
+      "model": "jev-style-0.8b-decision-v3",
+      "revision": "b023d1f9c7858fbf01504577a3bfc349ea5c7385"
+    }
+  },
+  "decision_policy": {
+    "mode": "shadow",
+    "min_probability": 0.95,
+    "min_margin": 0.5
+  }
+}

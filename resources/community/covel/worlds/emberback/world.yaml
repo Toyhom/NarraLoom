@@ -1,0 +1,125 @@
+schemaVersion: "1.0"
+id: emberback
+name: Emberback Relay
+version: 1.1.0
+summary: A lonely relay on a tidally locked world receives a distress call in
+  your own voice—sent from seventy-two hours in the future.
+defaultLocale: en-US
+supportedLocales:
+  - en-US
+tags:
+  - science-fiction
+  - frontier
+  - mystery
+  - exploration
+pluginPolicy:
+  packs:
+    - id: emberback-rescue
+      label: Emberback Rescue
+      description: >-
+        A traditional story with dice checks, quests, a field inventory, crew
+        relationships, and live panels for the storm, the power grid, the signal
+        log, and the convoy.
+      tags:
+        - mode:traditional-story
+        - role:world-rules
+      reason: >-
+        Every choice in the three hours before Crownfire spends something —
+        time, charge, cargo, or trust — and the panels show exactly what is
+        left.
+      requested:
+        - pregame
+        - world-init
+        - char-creator
+        - narrator
+        - dice-check
+        - core-quest
+        - inventory
+        - affinity
+        - guide
+        - codex
+        - npc-graph
+        - living-world-rules
+        - character-blueprint
+        - character-presence
+        - director
+        - story-events
+        - story-plotter
+      recommended:
+        - branch-reply
+  presetId: emberback-rescue
+  preferredTags:
+    - mode:traditional-story
+    - role:codex
+    - role:world-rules
+  avoidedTags:
+    - mode:dialogue
+  requested:
+    - dice-check
+    - core-quest
+    - inventory
+    - affinity
+  recommended:
+    - npc-graph
+    - codex
+    - guide
+    - character-blueprint
+    - character-presence
+    - living-world-rules
+    - director
+    - story-events
+    - story-plotter
+characterSchema:
+  types:
+    - npc
+    - companion
+  attributes:
+    - id: grit
+      name: Grit
+      type: number
+      min: 0
+      max: 5
+      defaultValue: 2
+      category: stats
+      description:
+        Strength and endurance for hard travel, lifting, climbing, and
+        staying functional under heat or cold stress.
+    - id: systems
+      name: Systems
+      type: number
+      min: 0
+      max: 5
+      defaultValue: 2
+      category: abilities
+      description:
+        Technical skill with radios, power grids, vehicles, sensors, and
+        improvised repairs.
+    - id: fieldcraft
+      name: Fieldcraft
+      type: number
+      min: 0
+      max: 5
+      defaultValue: 2
+      category: abilities
+      description: Practical judgment for navigation, weather, driving, route
+        planning, and survival beyond the station.
+    - id: insight
+      name: Insight
+      type: number
+      min: 0
+      max: 5
+      defaultValue: 2
+      category: stats
+      description: Pattern recognition, careful observation, and the ability to
+        separate a meaningful signal from noise.
+    - id: rapport
+      name: Rapport
+      type: number
+      min: 0
+      max: 5
+      defaultValue: 2
+      category: social
+      description:
+        The ability to earn trust, calm conflict, read a room, and persuade
+        people without treating them as obstacles.
+worldData: data/world.data.yaml

@@ -1,0 +1,219 @@
+{
+  "id": "emberback",
+  "version": "1.0.0",
+  "title": "余烬中继站：未来来电",
+  "summary": "一段用你自己的声音发出的警告，指向七十二小时后的风暴。先救谁、相信谁，都需要证据。",
+  "source": {
+    "repository": "ackness/covel",
+    "commit": "1d2571cdba9dc897eb4ad024819328151d124ab6",
+    "path": "worlds/emberback",
+    "url": "https://github.com/ackness/covel/tree/1d2571cdba9dc897eb4ad024819328151d124ab6/worlds/emberback",
+    "author": "Covel Contributors",
+    "license": "MIT",
+    "license_text": "MIT License\n\nCopyright (c) 2026 Covel Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+  },
+  "adaptation": {
+    "scope": "英文世界包的中文调查篇；以查证信号并发送避险通告结束本篇，时间环的最终真相保持开放。",
+    "retained": [
+      "六个关键地点、五位原作人物、06:14 来电与三个警告",
+      "医疗车队、诊所供电、Crownfire 风暴和十七英里中继器"
+    ],
+    "adapted": [
+      "人物名保留英文，开场和设定翻译为中文",
+      "将首阶段调查整理成五条可获取线索和一条避险通告结局",
+      "新增载波对照记录作为可操作证据，不将回声解释成确定未来"
+    ],
+    "unsupported": [
+      "未移植动态电网、车辆位置、可消耗电量和完整三小时倒计时",
+      "不是原作三阶段长篇的全结局移植；本篇止于预警处置"
+    ]
+  },
+  "world": {
+    "title": "余烬中继站",
+    "genre": "科幻悬疑",
+    "tone": "务实互助与时间回声",
+    "premise": "潮汐锁定行星上的孤独中继站，收到来自未来、用玩家声音发出的警告。",
+    "setting": "Vesper 的昼夜固定，居民住在暮线地带。余烬中继站用三座塔连接六千人，由技工、医护、司机共同管理。太阳能、水和道路依赖合作；应急通信与医疗不能拿来牟利。Crownfire 风暴正在接近，回声可能来自某条未来，但并非命定。",
+    "locations": [
+      {
+        "name": "中继山脊",
+        "description": "值班大厅与主塔并列，06:14 的异常来电刚结束。",
+        "connects_to": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "name": "太阳能场",
+        "description": "轨道上的面板追着光照移动，维修板列出供电记录。",
+        "connects_to": [
+          0
+        ]
+      },
+      {
+        "name": "冷凝水场",
+        "description": "面向永夜的水厂安静寒冷，适合复核录音。",
+        "connects_to": [
+          0
+        ]
+      },
+      {
+        "name": "余烬诊所",
+        "description": "八张病床和药品冷库共用保底电源。",
+        "connects_to": [
+          0
+        ]
+      },
+      {
+        "name": "十七英里拱门",
+        "description": "亮侧道路经过玄武岩拱门，下面装有野外中继器。",
+        "connects_to": [
+          0
+        ]
+      },
+      {
+        "name": "夜玻璃天文台",
+        "description": "永夜边缘的穹顶记录磁天气与异常信号。",
+        "connects_to": [
+          0
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Tomas Reed",
+        "role": "总技师与值班负责人",
+        "personality": "耐心谨慎，讲究可核实证据，咖啡总煮得太苦。",
+        "goal": "在风暴中保住居民与中继站。",
+        "boundary": "不会为未经验证的猜测牺牲医疗保障。",
+        "location": 0,
+        "secret": "他正考虑紧急切断主阵列，保护设备免受风暴损毁。"
+      },
+      {
+        "name": "June Okafor",
+        "role": "Sunrunner 信使",
+        "personality": "平时风趣，危险时表达准确。",
+        "goal": "把三十份冷冻医疗物资安全送达。",
+        "boundary": "不接受没有理由的危险改道。",
+        "location": 4,
+        "secret": "车队即将经过警告中提到的拱门，她还未收到完整警告。"
+      },
+      {
+        "name": "Dr. Mina Park",
+        "role": "夜玻璃物理学家",
+        "personality": "严谨好奇，愿意用数据回应怀疑。",
+        "goal": "查明提前到达的信号是否真实存在。",
+        "boundary": "不把不可能现象随意解释为奇迹。",
+        "location": 5,
+        "secret": "她准备带读数仪登主塔，但未来来电特意警告不要让她上去。"
+      },
+      {
+        "name": "Priya Nair",
+        "role": "诊所负责人",
+        "personality": "务实冷静，不会被催促带乱节奏。",
+        "goal": "保证病人和冷库最低供电。",
+        "boundary": "急救不能作为交易筹码。",
+        "location": 3,
+        "secret": "诊所里有两位中暑病人，电源低于保底会直接危及治疗。"
+      },
+      {
+        "name": "Eli Varga",
+        "role": "夜班信号员",
+        "personality": "擅长设备却害怕自己出错，紧张时反复核对。",
+        "goal": "证明自己记录的来电没有被篡改。",
+        "boundary": "不愿把猜测冒充测量结果。",
+        "location": 2,
+        "secret": "玩家声音停下后，他还听见一个像 Mina 的声音从十倒数。"
+      }
+    ]
+  },
+  "story": {
+    "title": "来自七十二小时后的通告",
+    "synopsis": "保存并查证未来来电，检查医疗与线路条件，在风暴前发出基于证据的避险通告。",
+    "player_role": "新任线路守望员",
+    "opening": "06:14，值班大厅的所有接收机同时响起。一个与你相同的声音从噪声里说：“别让车队到十七英里。别让 Mina 上塔。无论 Tomas 怎么说，都别切断信号。”随后长波网络中断，亮侧天空染成金色。",
+    "start_location": 0,
+    "starting_item": "现场记录本",
+    "acts": [
+      "保存06:14来电，听取各人的责任与担忧，不把录音当作命令。",
+      "到诊所、天文台和道路查证信号机制与现实风险。",
+      "依据可验证证据发送避险通告，留待下一段故事追查谁会发出最初来电。"
+    ],
+    "clues": [
+      {
+        "title": "原始来电录音",
+        "text": "隔离副本保留着06:14时间戳和玩家的声纹；载波没有通常拼接录音的断点，但无法单凭声纹证明未来。",
+        "location": 0,
+        "known_by": [
+          0
+        ]
+      },
+      {
+        "title": "诊所保底电表",
+        "text": "电表显示冷库和两位病人的治疗共用保底电源；可以减少研究扫描供电，却不能切断诊所。",
+        "location": 3,
+        "known_by": [
+          3
+        ]
+      },
+      {
+        "title": "拱门载波指纹",
+        "text": "拱门下的中继器载波与06:14副本相似，风暴前后的磁扰可能在此形成重复路径；通告应要求车队停在安全岔路等待核查。",
+        "location": 4,
+        "known_by": [
+          1
+        ]
+      },
+      {
+        "title": "夜玻璃磁天气记录",
+        "text": "观测记录显示风暴会放大异常回波，地面读数仪可以完成必要测量；这给 Mina 提供了不上主塔也能研究的办法。",
+        "location": 5,
+        "known_by": [
+          2
+        ]
+      },
+      {
+        "title": "静电中的倒数",
+        "text": "Eli 的复核记录在玩家声音之后留下另一人的倒数，像 Mina 的声音；身份与含义都尚未确认。",
+        "location": 2,
+        "known_by": [
+          4
+        ]
+      }
+    ],
+    "challenges": [
+      {
+        "title": "保全现场信号档案",
+        "description": "在冷凝水场按原始录音记录时间戳、载波和未证实的倒数。",
+        "location": 2,
+        "required_clues": [
+          0,
+          4
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "档案区分了测量与猜测，任何后来解释都必须对照原始记录。",
+        "ending": false
+      },
+      {
+        "title": "发出避险通告",
+        "description": "依据诊所、道路和磁天气证据，向本地应急频道发布保留医疗供电、车队暂避拱门和地面观测建议。",
+        "location": 0,
+        "required_clues": [
+          1,
+          2,
+          3
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "你发出了注明依据和不确定性的通告，各班组获得了可执行的避险方案。本篇调查告一段落；谁会发出最初来电，仍由接下来的故事回答。",
+        "ending": true
+      }
+    ],
+    "pressure_name": "Crownfire 前沿",
+    "pressure_event": "远方风暴的静电增强，值班频道开始重复播送观测提示；这是局势变化，不直接扣除电量或封闭道路。"
+  }
+}

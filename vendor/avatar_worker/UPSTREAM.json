@@ -1,0 +1,32 @@
+{
+  "upstream": "roleplay-avatar",
+  "commit": "32d3fa444b11a4a01bdda28befef8050581f31ab",
+  "license": "MIT",
+  "files": {
+    "LICENSE": "ef6ed2daba7431cced2f125427b29b121c1ec449d78255ec0b72b79dc3497800",
+    "src/roleplay_avatar/__init__.py": "ee8f5c38f04723183b019ddfeccd383397deb543e30fbc9e1e9bad16194d3718",
+    "src/roleplay_avatar/creation.py": "146c0cf35b0745b033190c5e77be237a12a662ffee448ad07409f4eb8c1b7b37",
+    "src/roleplay_avatar/assets.py": "2bf333e635718e17c3ff6b55ab3449e3a26f4bd9a6d237b82d43f9eba0fc1db1",
+    "src/roleplay_avatar/contracts.py": "9ffd6189c57a31dd681e7e595ddceeea3c6d53c2c9b079a08e25213e5395f253",
+    "src/roleplay_avatar/languages.py": "797fcc9566cdb49f5f41d646ef297293a898c65c046db54504b3a8dc518d10bc",
+    "src/roleplay_avatar/models.py": "f3b5104e039e6fcc3e7df3517cd695ed7b0fa249b7e443aac4eb491298078cb5",
+    "src/roleplay_avatar/model_metadata.py": "f6df473cf91309c27673d986f54cd96282a669789ff8b9adc0effeaf23b099d4",
+    "src/roleplay_avatar/model_catalog.py": "74ec5e0fb5082f3d22595bce4d5eae763c86b3d15348df249d72941b9b7cd22e",
+    "src/roleplay_avatar/image_runtime.py": "233a6b4c0e30460cdb9902e6de936e59aeac0a99a992a80e43a4f597a6a99abc",
+    "src/roleplay_avatar/agents.py": "d68f0ddc64d3d36de0b0b98534f60b07ee01b6337c5ab407be327c69e07f0c22",
+    "src/roleplay_avatar/vision_api.py": "167e8206dc16362e033d2008ef90430f0718f60dfcd712be9b40b6befc3fdc47",
+    "src/roleplay_avatar/data/models.json": "ca6de29a6ea65d00b5076ac4cabdfb730acfcf8101b57910264d017e616062dd",
+    "services/create_character.py": "a55946fd91e0e455f1613764c0d8f4adc4b783af62a7c5d014a84b7d66c44bed",
+    "services/plan_character.py": "71c49dd21e1dd1d05cc97366745bcb4ed98f24580f07ac8f95255dc0a6fb9a70",
+    "services/expand_character.py": "51168398606f3da43437b9ee7dc8d4ea55546e6fef215a1ff3c1f23763500772",
+    "services/face_landmarks.py": "c6799e54c8569535fce631da4d2b3af435b1b28d4d27c2ef32559773c426a679",
+    "services/character_voices.py": "8e283a2c1f5a4690bd1b3c9d8126e6f518634a545811f427cc814d033f5272ab",
+    "services/package_portrait.py": "f80ae380a06e538ce7b6786eddb615d31f551fbc348eb498a238bfd4d19eb398",
+    "services/build_puppet.py": "114b7a8f227703f849de230609e9f2ef672049ee1762a27a6cdc959946641aaa",
+    "services/generate_mouth_poses.py": "49517b03286e65ebcfcc67486046c2a329c6ddfdfedc9227a0255c42e49b1050",
+    "services/build_mouth_atlas.py": "c069d069eee713159987145047b2bbf17148cac53cd05f5dce51a1f75d50ca86",
+    "services/bind_source_mouth.py": "936c499a4ee510601a85bb6d532223151c07cd27a3f73e41f6c237829228ae38",
+    "web/puppet.js": "43386dc8925bf350cdc264b9668b4e6e7f29702db58ffa9df0dc458b804c9013",
+    "web/actions.js": "ee2eed26c6a3d382231e43bee4de2328e7d6aae4e015e9da751a0dc69bca7bf6"
+  }
+}

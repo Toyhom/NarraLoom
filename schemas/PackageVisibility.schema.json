@@ -1,0 +1,26 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "visibility": {
+      "enum": [
+        "private",
+        "unlisted",
+        "listed",
+        "withdrawn"
+      ],
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "visibility"
+  ],
+  "title": "PackageVisibility",
+  "type": "object"
+}

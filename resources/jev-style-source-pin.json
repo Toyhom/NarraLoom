@@ -1,0 +1,27 @@
+{
+  "repository": "https://github.com/lawrence3699/jev-style",
+  "revision": "ef86def93c4b8c775523bea6812784a36b2b6d8a",
+  "license": "Apache-2.0",
+  "files": {
+    "jev_style/__init__.py": "bab6d2f3134f2673736bf6488189e66e0834626a4388b2ec06b9b0b8e59436da",
+    "jev_style/__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "jev_style/adapter.py": "8cc6353a40137579e9e9b023f11b86ff582163a4f86f1c251d752c5c578a0cae",
+    "jev_style/cascade.py": "9e47d52d4840b922b51e6cd9d01a9223d5849dc409b3b6033974d0694e985f78",
+    "jev_style/cascades.py": "dc96200c29a2c1a5455f857d3decb0a0d566784fe1a73f9481b3196163b98c5a",
+    "jev_style/cli.py": "88992701809ab56972fe6a45533262631d5d1bfa4e6b9506015d007e044f3376",
+    "jev_style/client.py": "2fd8640245fe2a6b0d150f566ca1f2c8a6e0b1d2f0bc323babb4846568777f61",
+    "jev_style/discovery.py": "a1387db358b363a1948a65ac055b28e0209357ad829aebb78086215219d87977",
+    "jev_style/evaluate.py": "03c8b2d1af1ed1ad00af236022307b544a1f0fd3c305f8257dce32d9361fffcf",
+    "jev_style/ext/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "jev_style/ext/agent_approval.py": "f49ba1c6df24808ff34cabed771e101738770aa4579f9b4f8180d649015e2f74",
+    "jev_style/fake.py": "ad23f40705f99473395723a4a48ed88d7244ce7fcfc442d411ff8437b63f3425",
+    "jev_style/fastpath.py": "1ca5fb225500dc015433d5cac6fed8ecf084ce9b556831e7583c2d65e84f0fd0",
+    "jev_style/guard.py": "602f549306ed13661efb8daafede5dfefad9070fab76d81d9476150acdd8ebf9",
+    "jev_style/guard_replay.py": "14d9e5ac6b37c6bb55fc2a7e0044d52ff134981218db34eab5b732d87931259e",
+    "jev_style/jevk5_engine.py": "ad60e6026c770ba1a2f21247a6bf9df90acfe9c3d0cf0f79e1e4b311ddafd529",
+    "jev_style/mcp_server.py": "5c3be80534c0142ba94c37be1c3d90ba4be776f1800fad81804aae9036082773",
+    "jev_style/models.py": "15b5bb23d2c3ee69bfc449c0187dc79e0c33cd18549944af639124307d71211d",
+    "jev_style/schema.py": "94ab8505551e47e9f019c4f891e161a1a7ac97e5a40ac68b3d7f719c2068d96c",
+    "jev_style/server.py": "3b093035c8e0afe549eb0b17338bb9b512a05ea5cfdfda8a37702862d011a990"
+  }
+}

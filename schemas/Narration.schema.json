@@ -1,0 +1,27 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "maxLength": 1800,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "suggestions": {
+      "default": [],
+      "items": {
+        "maxLength": 80,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 3,
+      "title": "Suggestions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "Narration",
+  "type": "object"
+}

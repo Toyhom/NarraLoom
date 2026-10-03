@@ -1,0 +1,185 @@
+{
+  "$defs": {
+    "Expansion": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "connects_to": {
+          "maximum": 23,
+          "minimum": 0,
+          "title": "Connects To",
+          "type": "integer"
+        },
+        "resident": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Resident"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "connects_to"
+      ],
+      "title": "Expansion",
+      "type": "object"
+    },
+    "Faction": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "goal": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Goal",
+          "type": "string"
+        },
+        "interval_s": {
+          "default": 900,
+          "maximum": 7200,
+          "minimum": 300,
+          "title": "Interval S",
+          "type": "integer"
+        },
+        "threshold": {
+          "default": 4,
+          "maximum": 24,
+          "minimum": 2,
+          "title": "Threshold",
+          "type": "integer"
+        },
+        "outcome": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Outcome",
+          "type": "string"
+        },
+        "expansion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Expansion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "goal",
+        "outcome"
+      ],
+      "title": "Faction",
+      "type": "object"
+    },
+    "Resident": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "role": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "personality": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Personality",
+          "type": "string"
+        },
+        "goal": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Goal",
+          "type": "string"
+        },
+        "boundary": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Boundary",
+          "type": "string"
+        },
+        "secret": {
+          "maxLength": 600,
+          "minLength": 1,
+          "title": "Secret",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "role",
+        "personality",
+        "goal",
+        "boundary",
+        "secret"
+      ],
+      "title": "Resident",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "interval_s": {
+      "default": 600,
+      "maximum": 3600,
+      "minimum": 300,
+      "title": "Interval S",
+      "type": "integer"
+    },
+    "actor_indices": {
+      "items": {
+        "type": "integer"
+      },
+      "maxItems": 16,
+      "title": "Actor Indices",
+      "type": "array"
+    },
+    "factions": {
+      "items": {
+        "$ref": "#/$defs/Faction"
+      },
+      "maxItems": 8,
+      "title": "Factions",
+      "type": "array"
+    }
+  },
+  "title": "SimulationConfig",
+  "type": "object"
+}

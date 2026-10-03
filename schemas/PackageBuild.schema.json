@@ -1,0 +1,131 @@
+{
+  "$defs": {
+    "PackageMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "pattern": "^[a-z0-9][a-z0-9-]{0,59}$",
+          "title": "Slug",
+          "type": "string"
+        },
+        "release": {
+          "pattern": "^\\d{1,4}\\.\\d{1,4}\\.\\d{1,4}$",
+          "title": "Release",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "author": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Author",
+          "type": "string"
+        },
+        "license": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "license_text": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "License Text",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "maxLength": 32,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Tags",
+          "type": "array"
+        },
+        "model_notes": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Model Notes",
+          "type": "string"
+        },
+        "known_limits": {
+          "items": {
+            "maxLength": 400,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Known Limits",
+          "type": "array"
+        }
+      },
+      "required": [
+        "slug",
+        "release",
+        "title",
+        "summary",
+        "author",
+        "license"
+      ],
+      "title": "PackageMetadata",
+      "type": "object"
+    },
+    "PackageStoryRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "title": "PackageStoryRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/PackageMetadata"
+    },
+    "stories": {
+      "items": {
+        "$ref": "#/$defs/PackageStoryRef"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Stories",
+      "type": "array"
+    },
+    "include_avatars": {
+      "default": true,
+      "title": "Include Avatars",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "metadata",
+    "stories"
+  ],
+  "title": "PackageBuild",
+  "type": "object"
+}

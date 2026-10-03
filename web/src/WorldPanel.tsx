@@ -1,0 +1,13 @@
+import { uiText, useLocale } from './i18n';
+import { Map, Pause, Play } from 'lucide-react';
+import { RuleAction } from './GamePanel';
+export type WorldMap={id:string;name:string;exits:string[]}[];
+export type WorldSimulation={paused:boolean;elapsed_s:number;next_tick_s:number;factions:{id:string;name:string;goal:string;value:number;threshold:number;completed:boolean}[]};
+export function WorldPanel({map,location,simulation,busy,onMove,onControl}:{map:WorldMap;location:string;simulation?:WorldSimulation;busy:boolean;onMove:(text:string,op:RuleAction)=>void;onControl:(control:'pause'|'resume')=>void}){
+  useLocale();
+  if(map.length<2&&!simulation)return null;
+  const current=map.find(p=>p.id===location);const positions=map.map((p,i)=>({...p,x:130+90*Math.cos(i*2*Math.PI/map.length-Math.PI/2),y:115+80*Math.sin(i*2*Math.PI/map.length-Math.PI/2)}));
+  return <section className="sidebar-section world-map"><h3><Map size={15}/>{uiText("WorldPanel.001")}<span>{uiText("Studio.019", {p0: (map.length)})}</span></h3><svg viewBox="0 0 260 230" aria-label={uiText("WorldPanel.010")} role="img">{positions.flatMap(p=>p.exits.filter(e=>e>p.id).map(e=>{const q=positions.find(x=>x.id===e);return q?<line key={p.id+e} x1={p.x} y1={p.y} x2={q.x} y2={q.y} stroke="#d0dccc"/>:null;}))}{positions.map(p=><g key={p.id}><circle cx={p.x} cy={p.y} r={p.id===location?9:6} fill={p.id===location?'#527b64':current?.exits.includes(p.id)?'#c3a571':'#cad7ce'}/><text x={p.x} y={p.y+(p.y<115?-14:21)} textAnchor="middle" fontSize={9} fill="#476655">{p.name.slice(0,10)}</text></g>)}</svg><details><summary>{uiText("WorldPanel.002")}</summary>{map.map(p=><button key={p.id} className="map-destination" disabled={busy||!current?.exits.includes(p.id)} onClick={()=>onMove(uiText("RoomPanel.069", {p0: (p.name)}),{kind:'move',target_id:p.id})}>{p.name}{p.id===location?uiText("WorldPanel.009"):''}</button>)}</details>
+    {simulation&&<div className="world-simulation"><div className="simulation-status"><strong>{simulation.paused?uiText("WorldPanel.008"):uiText("WorldPanel.007")}</strong><button className="icon-button" aria-label={simulation.paused?uiText("WorldPanel.006"):uiText("WorldPanel.005")} disabled={busy} onClick={()=>onControl(simulation.paused?'resume':'pause')}>{simulation.paused?<Play size={14}/>:<Pause size={14}/>}</button></div><p className="tiny-muted">{uiText("WorldPanel.003", {p0: (Math.max(0,Math.ceil((simulation.next_tick_s-simulation.elapsed_s)/60)))})}</p>{simulation.factions.map(f=><div className="faction-progress" key={f.id}><strong>{f.name}</strong><span>{f.value}/{f.threshold}</span><progress value={f.value} max={f.threshold}/><small>{f.completed?uiText("WorldPanel.004"):f.goal}</small></div>)}</div>}
+  </section>;
+}

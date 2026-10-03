@@ -1,0 +1,9 @@
+{
+  "default": {
+    "url": "http://127.0.0.1:8000/v1",
+    "model": "YOUR_MODEL",
+    "api_key_env": "RPW_API_KEY",
+    "json_schema": false
+  },
+  "roles": {}
+}

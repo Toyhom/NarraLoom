@@ -1,0 +1,28 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "source_branch_id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Source Branch Id",
+      "type": "string"
+    },
+    "world_version": {
+      "minimum": 0,
+      "title": "World Version",
+      "type": "integer"
+    },
+    "title": {
+      "default": "新的选择",
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_branch_id",
+    "world_version"
+  ],
+  "title": "ForkRequest",
+  "type": "object"
+}

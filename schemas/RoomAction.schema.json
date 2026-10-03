@@ -1,0 +1,353 @@
+{
+  "$defs": {
+    "ActionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0",
+          "default": "0.1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "action_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Action Id",
+          "type": "string"
+        },
+        "expected_world_version": {
+          "minimum": 0,
+          "title": "Expected World Version",
+          "type": "integer"
+        },
+        "mode": {
+          "default": "act",
+          "enum": [
+            "act",
+            "say",
+            "wait",
+            "ooc"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 1800,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "actor_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Actor Id"
+        },
+        "whisper_to": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Whisper To"
+        },
+        "selected_operation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Operation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "note_record": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NoteRecord"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "simulation_control": {
+          "anyOf": [
+            {
+              "enum": [
+                "pause",
+                "resume"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Simulation Control"
+        },
+        "trade": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TradeCommand"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "action_id",
+        "expected_world_version",
+        "text"
+      ],
+      "title": "ActionCommand",
+      "type": "object"
+    },
+    "NoteRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 1800,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "kind": {
+          "default": "note",
+          "enum": [
+            "note",
+            "commitment"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "status": {
+          "default": "open",
+          "enum": [
+            "open",
+            "done",
+            "archived"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source_event_ids": {
+          "items": {
+            "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+            "type": "string"
+          },
+          "maxItems": 12,
+          "title": "Source Event Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "NoteRecord",
+      "type": "object"
+    },
+    "Operation": {
+      "additionalProperties": false,
+      "description": "Small interpreted vocabulary. Each variant is validated again against world state.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "move",
+            "give",
+            "reveal",
+            "repair",
+            "escape",
+            "challenge",
+            "take",
+            "use",
+            "equip",
+            "unequip",
+            "buy",
+            "sell",
+            "attack",
+            "rest",
+            "recover",
+            "recruit",
+            "dismiss",
+            "state_action"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "when": {
+          "default": "always",
+          "enum": [
+            "always",
+            "success",
+            "failure"
+          ],
+          "title": "When",
+          "type": "string"
+        },
+        "quantity": {
+          "default": 1,
+          "maximum": 99,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "target_id"
+      ],
+      "title": "Operation",
+      "type": "object"
+    },
+    "TradeCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "propose",
+            "counter",
+            "accept",
+            "decline",
+            "withdraw"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        },
+        "offer_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Offer Id"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/TradeItem"
+          },
+          "maxItems": 6,
+          "title": "Items",
+          "type": "array"
+        },
+        "coins": {
+          "default": 0,
+          "maximum": 999999,
+          "minimum": 0,
+          "title": "Coins",
+          "type": "integer"
+        },
+        "request_coins": {
+          "default": 0,
+          "maximum": 999999,
+          "minimum": 0,
+          "title": "Request Coins",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "TradeCommand",
+      "type": "object"
+    },
+    "TradeItem": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "quantity": {
+          "default": 1,
+          "maximum": 9999,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "item_id"
+      ],
+      "title": "TradeItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 0,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "command": {
+      "$ref": "#/$defs/ActionCommand"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "command"
+  ],
+  "title": "RoomAction",
+  "type": "object"
+}

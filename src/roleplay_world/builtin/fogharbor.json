@@ -1,0 +1,515 @@
+{
+  "schema_version": "0.1.0",
+  "id": "world_fogharbor",
+  "version": "0.1.0-demo",
+  "title": "雾港的最后一班船",
+  "premise": "涨潮前离开雾港。船需要修理，几位居民各有目标；玩家可以帮助、交易、调查或寻找别的出路。",
+  "ruleset": {
+    "id": "story-lite",
+    "version": "0.1.0",
+    "check": "d20 + modifier >= difficulty"
+  },
+  "creation_policy": {
+    "allow_minor_npcs": true,
+    "allow_minor_locations": true,
+    "retcon_existing_facts": false,
+    "player_choices": "player_only"
+  },
+  "initial_game_time_s": 0,
+  "calendar": {
+    "start_label": "秋季第三日 17:00",
+    "seconds_per_day": 86400
+  },
+  "locations": [
+    {
+      "id": "loc_dock",
+      "name": "旧码头",
+      "description": "潮水拍打木桩，最后一艘小船系在旧码头。",
+      "visibility": {
+        "kind": "public"
+      },
+      "exits": [
+        {
+          "route_id": "dock_tavern",
+          "to": "loc_tavern",
+          "travel_time_s": 120
+        },
+        {
+          "route_id": "dock_warehouse",
+          "to": "loc_warehouse",
+          "travel_time_s": 180
+        },
+        {
+          "route_id": "dock_lighthouse",
+          "to": "loc_lighthouse",
+          "travel_time_s": 300
+        }
+      ]
+    },
+    {
+      "id": "loc_tavern",
+      "name": "雾灯酒馆",
+      "description": "居民在这里交换消息，老板记得每一个欠账的人。",
+      "visibility": {
+        "kind": "public"
+      },
+      "exits": [
+        {
+          "route_id": "tavern_dock",
+          "to": "loc_dock",
+          "travel_time_s": 120
+        }
+      ]
+    },
+    {
+      "id": "loc_warehouse",
+      "name": "潮边仓库",
+      "description": "修理师在整理木板，后门有新鲜的湿脚印。",
+      "visibility": {
+        "kind": "public"
+      },
+      "exits": [
+        {
+          "route_id": "warehouse_dock",
+          "to": "loc_dock",
+          "travel_time_s": 180
+        }
+      ]
+    },
+    {
+      "id": "loc_lighthouse",
+      "name": "旧灯塔",
+      "description": "灯塔可以看清航道，也能发现通向山脊的小路。",
+      "visibility": {
+        "kind": "public"
+      },
+      "exits": [
+        {
+          "route_id": "lighthouse_dock",
+          "to": "loc_dock",
+          "travel_time_s": 300
+        }
+      ]
+    }
+  ],
+  "actors": [
+    {
+      "id": "pc_traveler",
+      "name": "旅人",
+      "control": "player",
+      "persona": {
+        "background": "带着一套修理工具来到港口的旅人。"
+      },
+      "goals": [
+        "在涨潮前找到离开港口的方法"
+      ],
+      "boundaries": [
+        "重大选择与内心由玩家决定"
+      ],
+      "initial_state": {
+        "location_id": "loc_dock",
+        "resources": {
+          "coins": 8,
+          "vitality": 10
+        },
+        "skills": {
+          "observation": 2,
+          "persuasion": 1,
+          "agility": 1,
+          "craft": 2
+        },
+        "conditions": []
+      },
+      "initial_knowledge": [
+        "fact_ship_damaged",
+        "fact_tide_rising"
+      ],
+      "public_description": "今天抵达雾港的旅人"
+    },
+    {
+      "id": "npc_captain",
+      "name": "岚船长",
+      "control": "npc",
+      "persona": {
+        "personality": "务实，重承诺，讨厌空口许诺",
+        "speech_style": "简短直接",
+        "cooperation": "欢迎真正愿意帮忙的旅人，愿意收下完好的修理工具。收下工具不要求额外人手；玩家可以亲自协助修补。"
+      },
+      "goals": [
+        "修好船并带船员离港"
+      ],
+      "boundaries": [
+        "不抛弃船员"
+      ],
+      "initial_state": {
+        "location_id": "loc_dock",
+        "resources": {
+          "coins": 12
+        },
+        "conditions": []
+      },
+      "initial_knowledge": [
+        "fact_ship_damaged",
+        "fact_tide_rising"
+      ],
+      "public_description": "守着最后一艘船的务实船长"
+    },
+    {
+      "id": "npc_engineer",
+      "name": "修理师禾木",
+      "control": "npc",
+      "persona": {
+        "personality": "谨慎，愿意帮助尊重手艺的人",
+        "speech_style": "习惯用具体细节解释"
+      },
+      "goals": [
+        "找回丢失的铜尺",
+        "偿还酒馆欠账"
+      ],
+      "boundaries": [
+        "不愿被当作盗贼"
+      ],
+      "initial_state": {
+        "location_id": "loc_warehouse",
+        "resources": {
+          "coins": 1
+        },
+        "conditions": []
+      },
+      "initial_knowledge": [
+        "fact_ship_damaged",
+        "fact_ruler_missing"
+      ],
+      "public_description": "正在寻找失物的年轻修理师"
+    },
+    {
+      "id": "npc_keeper",
+      "name": "酒馆老板宁",
+      "control": "npc",
+      "persona": {
+        "personality": "温和善谈，但保守客人的秘密",
+        "speech_style": "以小故事试探对方"
+      },
+      "goals": [
+        "保护家人",
+        "避免走私者在店里闹事"
+      ],
+      "boundaries": [
+        "不轻易出卖客人"
+      ],
+      "initial_state": {
+        "location_id": "loc_tavern",
+        "resources": {
+          "coins": 30
+        },
+        "conditions": []
+      },
+      "initial_knowledge": [
+        "fact_tide_rising",
+        "fact_smuggler_route"
+      ],
+      "public_description": "记得每个客人故事的酒馆老板"
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction_crew",
+      "name": "港口船员",
+      "goals": [
+        "安全撤离",
+        "保住船只"
+      ],
+      "members": [
+        "npc_captain"
+      ]
+    },
+    {
+      "id": "faction_smugglers",
+      "name": "雾中商队",
+      "goals": [
+        "转移仓库货物"
+      ],
+      "members": []
+    }
+  ],
+  "items": [
+    {
+      "id": "item_tools",
+      "name": "修理工具",
+      "quantity": 1,
+      "holder_id": "pc_traveler"
+    },
+    {
+      "id": "item_warehouse_key",
+      "name": "仓库侧门钥匙",
+      "quantity": 1,
+      "holder_id": "npc_keeper"
+    }
+  ],
+  "relations": [
+    {
+      "from_actor": "npc_captain",
+      "to_actor": "pc_traveler",
+      "dimensions": {
+        "trust": 0
+      },
+      "visibility": {
+        "kind": "actors",
+        "actor_ids": [
+          "npc_captain"
+        ]
+      },
+      "player_display": "通过行为推测"
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact_ship_damaged",
+      "subject_id": "loc_dock",
+      "predicate": "ship_condition",
+      "value": "needs_repair",
+      "visibility": {
+        "kind": "public"
+      },
+      "source": "author",
+      "value_labels": {
+        "needs_repair": "码头的小船漏水，仍需要修理。",
+        "repaired": "小船已经修好，可以准备出航。"
+      }
+    },
+    {
+      "id": "fact_tide_rising",
+      "subject_id": "loc_dock",
+      "predicate": "tide",
+      "value": "rising",
+      "visibility": {
+        "kind": "public"
+      },
+      "source": "author",
+      "value_labels": {
+        "rising": "潮水正在上涨，低处航道还可通行。",
+        "high_tide": "潮水已封住低处航道，普通小船无法安全出港。"
+      }
+    },
+    {
+      "id": "fact_ruler_missing",
+      "subject_id": "npc_engineer",
+      "predicate": "copper_ruler",
+      "value": "missing",
+      "visibility": {
+        "kind": "actors",
+        "actor_ids": [
+          "npc_engineer"
+        ]
+      },
+      "source": "author",
+      "value_labels": {
+        "missing": "修理师丢失了一把铜尺，正在寻找线索。"
+      }
+    },
+    {
+      "id": "fact_smuggler_route",
+      "subject_id": "faction_smugglers",
+      "predicate": "route",
+      "value": "warehouse_to_ridge",
+      "visibility": {
+        "kind": "actors",
+        "actor_ids": [
+          "npc_keeper"
+        ]
+      },
+      "source": "author",
+      "value_labels": {
+        "warehouse_to_ridge": "走私者经过仓库后门，把货物运往山脊小路。"
+      }
+    },
+    {
+      "id": "fact_wet_tracks",
+      "subject_id": "loc_warehouse",
+      "predicate": "clue",
+      "value": "wet_tracks",
+      "visibility": {
+        "kind": "public"
+      },
+      "source": "author",
+      "discoverable_at": [
+        "loc_warehouse"
+      ],
+      "requires_check": true,
+      "value_labels": {
+        "wet_tracks": "仓库后门的湿脚印通向山坡；泥里夹着一枚铜尺的碎片。"
+      }
+    },
+    {
+      "id": "fact_ridge_path",
+      "subject_id": "loc_lighthouse",
+      "predicate": "route",
+      "value": "walkable",
+      "visibility": {
+        "kind": "public"
+      },
+      "source": "author",
+      "discoverable_at": [
+        "loc_lighthouse"
+      ],
+      "requires_check": false,
+      "value_labels": {
+        "walkable": "灯塔后有一条高于潮水的山脊小路，可以步行离开雾港。"
+      }
+    }
+  ],
+  "clocks": [
+    {
+      "id": "clock_tide",
+      "name": "涨潮",
+      "kind": "time",
+      "value": 1,
+      "threshold": 4,
+      "interval_s": 600,
+      "visibility": {
+        "kind": "public"
+      },
+      "on_threshold": {
+        "kind": "request_gm_plan",
+        "intent": "处理潮水对码头和航路的影响；仍需正式事件裁定"
+      }
+    },
+    {
+      "id": "clock_repair",
+      "name": "修船进展",
+      "kind": "progress",
+      "value": 0,
+      "threshold": 2,
+      "trigger": "有效的修船协助",
+      "visibility": {
+        "kind": "public"
+      },
+      "on_threshold": {
+        "kind": "request_gm_plan",
+        "intent": "确认船况并判断是否可以出航"
+      },
+      "observe_at": [
+        "loc_dock"
+      ]
+    }
+  ],
+  "hooks": [
+    {
+      "id": "hook_departure",
+      "name": "最后一班船",
+      "status": "available",
+      "opportunities": [
+        "帮助修船换取船位",
+        "协商付费离港",
+        "寻找灯塔后的陆路"
+      ],
+      "consequences": [
+        "等待会推进潮汐",
+        "失去工具会改变可选行动"
+      ]
+    },
+    {
+      "id": "hook_ruler",
+      "name": "失踪的铜尺",
+      "status": "undiscovered",
+      "opportunities": [
+        "调查仓库脚印",
+        "向酒馆老板打听"
+      ],
+      "consequences": [
+        "帮助修理师可换取修船协助"
+      ]
+    }
+  ],
+  "lore_entries": [
+    {
+      "id": "lore_wet_tracks",
+      "keys": [
+        "脚印",
+        "仓库后门"
+      ],
+      "content": "仓库后门留有新鲜湿脚印。",
+      "visibility": {
+        "kind": "actors",
+        "actor_ids": [
+          "npc_engineer"
+        ]
+      },
+      "enabled": true
+    },
+    {
+      "id": "lore_lantern_code",
+      "keys": [
+        "暗号",
+        "雾灯"
+      ],
+      "content": "走私者使用三短一长的灯光。",
+      "visibility": {
+        "kind": "gm_only"
+      },
+      "enabled": true
+    },
+    {
+      "id": "lore_ridge_path",
+      "keys": [
+        "灯塔",
+        "山脊"
+      ],
+      "content": "从灯塔向后可以观察通往山脊的小路，是否可通行需现场调查。",
+      "visibility": {
+        "kind": "public"
+      },
+      "enabled": true
+    }
+  ],
+  "provenance": {
+    "kind": "author",
+    "description": "Roleplay World 原创手工冒险模板；游玩时由真实模型产生对白与叙事。",
+    "external_assets": []
+  },
+  "opening": "傍晚的雾正在吞没海面。最后一艘还能出海的小船搁在旧码头，船长蹲在裂开的船板旁。再过半小时，潮水就会封住低处的航道。你的行囊里，恰好有一套修理工具。",
+  "opening_suggestions": [
+    "我走近船长，问她发生了什么。",
+    "我把修理工具交给船长。",
+    "我去雾灯酒馆打听其它离港方法。"
+  ],
+  "mechanics": {
+    "repair": {
+      "clock_id": "clock_repair",
+      "tool_id": "item_tools",
+      "actor_id": "npc_captain",
+      "location_id": "loc_dock"
+    },
+    "thresholds": [
+      {
+        "clock_id": "clock_repair",
+        "fact_id": "fact_ship_damaged",
+        "value": "repaired"
+      },
+      {
+        "clock_id": "clock_tide",
+        "fact_id": "fact_tide_rising",
+        "value": "high_tide"
+      }
+    ],
+    "escape_routes": {
+      "ship": {
+        "location_id": "loc_dock",
+        "min_clocks": {
+          "clock_repair": 2
+        },
+        "max_clocks": {
+          "clock_tide": 3
+        },
+        "ending": "你登上修好的船，与船长一起离开雾港。"
+      },
+      "ridge": {
+        "location_id": "loc_lighthouse",
+        "known_facts": [
+          "fact_ridge_path"
+        ],
+        "ending": "你沿山脊小路离开雾港，将潮水和灯火留在身后。"
+      }
+    }
+  }
+}

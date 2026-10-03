@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "content_language": {
+      "anyOf": [
+        {
+          "maxLength": 35,
+          "pattern": "^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8}){0,3}$",
+          "type": "string"
+        },
+        {
+          "const": "auto",
+          "type": "string"
+        }
+      ],
+      "default": "auto",
+      "title": "Content Language"
+    },
+    "brief": {
+      "default": "",
+      "maxLength": 2500,
+      "title": "Brief",
+      "type": "string"
+    },
+    "additional_ids": {
+      "items": {
+        "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+        "type": "string"
+      },
+      "maxItems": 15,
+      "title": "Additional Ids",
+      "type": "array"
+    }
+  },
+  "title": "ConvertRequest",
+  "type": "object"
+}

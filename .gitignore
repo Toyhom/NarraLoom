@@ -1,0 +1,54 @@
+# Private deployment and development records
+.env
+.env.*
+!.env.example
+.local.env
+*.local.json
+docs/local/
+secrets/
+*.key
+*.pem
+
+# User worlds, saves, generated assets and diagnostics
+data/
+outputs/
+uploads/
+exports/
+logs/
+scratch/
+tmp/
+.cache/
+third_party/
+*.log
+*.sqlite*
+*.db
+
+# Build products and environments
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+node_modules/
+web/dist/
+build/
+dist/
+.venv/
+
+# Downloaded weights and generated media belong in configured storage
+*.safetensors
+*.gguf
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.wav
+*.mp4
+*.zip
+
+# Reviewed upstream scenario data is public source material, not runtime state.
+!resources/community/covel/worlds/*/data/
+!resources/community/covel/worlds/*/data/**
+
+# Optional generated Avatar packages
+characters/

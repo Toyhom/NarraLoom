@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "Check": {
+      "additionalProperties": false,
+      "properties": {
+        "skill": {
+          "enum": [
+            "observation",
+            "persuasion",
+            "agility",
+            "craft"
+          ],
+          "title": "Skill",
+          "type": "string"
+        },
+        "difficulty": {
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Difficulty",
+          "type": "integer"
+        },
+        "purpose": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        }
+      },
+      "required": [
+        "skill",
+        "difficulty",
+        "purpose"
+      ],
+      "title": "Check",
+      "type": "object"
+    },
+    "Operation": {
+      "additionalProperties": false,
+      "description": "Small interpreted vocabulary. Each variant is validated again against world state.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "move",
+            "give",
+            "reveal",
+            "repair",
+            "escape",
+            "challenge",
+            "take",
+            "use",
+            "equip",
+            "unequip",
+            "buy",
+            "sell",
+            "attack",
+            "rest",
+            "recover",
+            "recruit",
+            "dismiss",
+            "state_action"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "target_id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Target Id",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        },
+        "when": {
+          "default": "always",
+          "enum": [
+            "always",
+            "success",
+            "failure"
+          ],
+          "title": "When",
+          "type": "string"
+        },
+        "quantity": {
+          "default": 1,
+          "maximum": 99,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "target_id"
+      ],
+      "title": "Operation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "intent": {
+      "maxLength": 240,
+      "minLength": 1,
+      "title": "Intent",
+      "type": "string"
+    },
+    "time_cost_s": {
+      "default": 60,
+      "maximum": 1800,
+      "minimum": 0,
+      "title": "Time Cost S",
+      "type": "integer"
+    },
+    "operations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Operation"
+      },
+      "maxItems": 5,
+      "title": "Operations",
+      "type": "array"
+    },
+    "check": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Check"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "speakers": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+        "type": "string"
+      },
+      "maxItems": 2,
+      "title": "Speakers",
+      "type": "array"
+    }
+  },
+  "required": [
+    "intent"
+  ],
+  "title": "TurnPlan",
+  "type": "object"
+}

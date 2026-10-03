@@ -1,0 +1,226 @@
+{
+  "$defs": {
+    "DecisionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "default": "off",
+          "enum": [
+            "off",
+            "shadow",
+            "auto"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "min_probability": {
+          "default": 0.95,
+          "maximum": 1,
+          "minimum": 0.5,
+          "title": "Min Probability",
+          "type": "number"
+        },
+        "min_margin": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Margin",
+          "type": "number"
+        }
+      },
+      "title": "DecisionPolicy",
+      "type": "object"
+    },
+    "NamedProvider": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "openai",
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Backend",
+          "type": "string"
+        },
+        "url": {
+          "maxLength": 300,
+          "minLength": 8,
+          "title": "Url",
+          "type": "string"
+        },
+        "api_key": {
+          "default": "",
+          "maxLength": 500,
+          "title": "Api Key",
+          "type": "string"
+        },
+        "clear_key": {
+          "default": false,
+          "title": "Clear Key",
+          "type": "boolean"
+        },
+        "json_mode": {
+          "default": "object",
+          "enum": [
+            "object",
+            "schema",
+            "prompt"
+          ],
+          "title": "Json Mode",
+          "type": "string"
+        },
+        "thinking_disabled": {
+          "default": false,
+          "title": "Thinking Disabled",
+          "type": "boolean"
+        },
+        "context_chars": {
+          "default": 120000,
+          "maximum": 1000000,
+          "minimum": 1000,
+          "title": "Context Chars",
+          "type": "integer"
+        },
+        "timeout_s": {
+          "default": 90,
+          "maximum": 120,
+          "minimum": 1,
+          "title": "Timeout S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "NamedProvider",
+      "type": "object"
+    },
+    "TaskBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "revision": {
+          "default": "",
+          "maxLength": 120,
+          "title": "Revision",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "model"
+      ],
+      "title": "TaskBinding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "url": {
+      "maxLength": 300,
+      "minLength": 8,
+      "title": "Url",
+      "type": "string"
+    },
+    "model": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "api_key": {
+      "default": "",
+      "maxLength": 500,
+      "title": "Api Key",
+      "type": "string"
+    },
+    "json_mode": {
+      "default": "object",
+      "enum": [
+        "object",
+        "schema",
+        "prompt"
+      ],
+      "title": "Json Mode",
+      "type": "string"
+    },
+    "thinking_disabled": {
+      "default": true,
+      "title": "Thinking Disabled",
+      "type": "boolean"
+    },
+    "context_chars": {
+      "default": 120000,
+      "maximum": 1000000,
+      "minimum": 10000,
+      "title": "Context Chars",
+      "type": "integer"
+    },
+    "roles": {
+      "additionalProperties": {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Roles",
+      "type": "object"
+    },
+    "input_price": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Input Price",
+      "type": "number"
+    },
+    "output_price": {
+      "default": 0,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Output Price",
+      "type": "number"
+    },
+    "currency": {
+      "default": "CNY",
+      "enum": [
+        "CNY",
+        "USD"
+      ],
+      "title": "Currency",
+      "type": "string"
+    },
+    "providers": {
+      "maxProperties": 16,
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]{1,80}$": {
+          "$ref": "#/$defs/NamedProvider"
+        }
+      },
+      "title": "Providers",
+      "type": "object"
+    },
+    "bindings": {
+      "additionalProperties": {
+        "$ref": "#/$defs/TaskBinding"
+      },
+      "title": "Bindings",
+      "type": "object"
+    },
+    "decision_policy": {
+      "$ref": "#/$defs/DecisionPolicy"
+    }
+  },
+  "required": [
+    "url",
+    "model"
+  ],
+  "title": "ProviderSettings",
+  "type": "object"
+}

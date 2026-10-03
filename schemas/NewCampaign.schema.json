@@ -1,0 +1,85 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Request Id"
+    },
+    "template_id": {
+      "default": "world_fogharbor",
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Template Id",
+      "type": "string"
+    },
+    "story_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Story Id"
+    },
+    "player_name": {
+      "default": "旅人",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Player Name",
+      "type": "string"
+    },
+    "source_campaign_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Campaign Id"
+    },
+    "source_branch_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Branch Id"
+    },
+    "source_world_version": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source World Version"
+    }
+  },
+  "title": "NewCampaign",
+  "type": "object"
+}

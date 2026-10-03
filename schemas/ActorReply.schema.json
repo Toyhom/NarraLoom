@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "reaction": {
+      "default": "none",
+      "description": "先决定是否接受本轮 offered_items；accept=愿意接收，refuse=明确拒绝，none=无物品交易。text 必须与该决定一致。",
+      "enum": [
+        "accept",
+        "refuse",
+        "none"
+      ],
+      "title": "Reaction",
+      "type": "string"
+    },
+    "text": {
+      "maxLength": 600,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "reveal_fact_ids": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+        "type": "string"
+      },
+      "maxItems": 2,
+      "title": "Reveal Fact Ids",
+      "type": "array"
+    },
+    "emotion": {
+      "default": "neutral",
+      "enum": [
+        "neutral",
+        "happy",
+        "sad",
+        "angry",
+        "soft"
+      ],
+      "title": "Emotion",
+      "type": "string"
+    },
+    "gesture": {
+      "default": "none",
+      "enum": [
+        "none",
+        "nod",
+        "shake_head",
+        "tilt",
+        "bow",
+        "lean_forward",
+        "lean_back",
+        "sway",
+        "bounce"
+      ],
+      "title": "Gesture",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "ActorReply",
+  "type": "object"
+}

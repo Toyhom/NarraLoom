@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "AssetEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "digest": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Digest",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "digest"
+      ],
+      "title": "AssetEntry",
+      "type": "object"
+    },
+    "FileEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "bytes": {
+          "maximum": 33554432,
+          "minimum": 1,
+          "title": "Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "title": "FileEntry",
+      "type": "object"
+    },
+    "PackageMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "pattern": "^[a-z0-9][a-z0-9-]{0,59}$",
+          "title": "Slug",
+          "type": "string"
+        },
+        "release": {
+          "pattern": "^\\d{1,4}\\.\\d{1,4}\\.\\d{1,4}$",
+          "title": "Release",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "author": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Author",
+          "type": "string"
+        },
+        "license": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "license_text": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "License Text",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "maxLength": 32,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "title": "Tags",
+          "type": "array"
+        },
+        "model_notes": {
+          "default": "",
+          "maxLength": 1000,
+          "title": "Model Notes",
+          "type": "string"
+        },
+        "known_limits": {
+          "items": {
+            "maxLength": 400,
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Known Limits",
+          "type": "array"
+        }
+      },
+      "required": [
+        "slug",
+        "release",
+        "title",
+        "summary",
+        "author",
+        "license"
+      ],
+      "title": "PackageMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "narraloom.content-package",
+      "default": "narraloom.content-package",
+      "title": "Format",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/PackageMetadata"
+    },
+    "engine_minimum": {
+      "const": "0.12.0",
+      "default": "0.12.0",
+      "title": "Engine Minimum",
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/FileEntry"
+      },
+      "maxItems": 13,
+      "minItems": 1,
+      "title": "Files",
+      "type": "array"
+    },
+    "assets": {
+      "items": {
+        "$ref": "#/$defs/AssetEntry"
+      },
+      "maxItems": 4,
+      "title": "Assets",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "omissions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Omissions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "files",
+    "capabilities"
+  ],
+  "title": "PackageManifest",
+  "type": "object"
+}

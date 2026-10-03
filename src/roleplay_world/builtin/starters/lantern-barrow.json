@@ -1,0 +1,785 @@
+{
+  "id": "lantern-barrow",
+  "version": "1.2.0",
+  "title": "提灯古冢：归还灯心",
+  "summary": "置办补给、邀请同伴下墓，管理古冢警戒与壁灯，找到守灯人并归还灯心。",
+  "source": {
+    "repository": "ackness/covel",
+    "commit": "1d2571cdba9dc897eb4ad024819328151d124ab6",
+    "path": "worlds/lantern-barrow",
+    "url": "https://github.com/ackness/covel/tree/1d2571cdba9dc897eb4ad024819328151d124ab6/worlds/lantern-barrow",
+    "author": "Covel Contributors",
+    "license": "MIT",
+    "license_text": "MIT License\n\nCopyright (c) 2026 Covel Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+  },
+  "adaptation": {
+    "scope": "中文探索冒险改编；保留主要人物与灯灭事件，增加可操作的补给、装备、同行、战斗和三个原作任务方向。",
+    "retained": [
+      "六名具名人物、灰苇村与古冢、灯灭与守灯人失踪",
+      "围绕灯心与守灯人展开的隐藏线索",
+      "原作短剑、药水、麻绳、火把和干粮，以及寻找守灯人、消失的灯心、地下歌声三条任务方向",
+      "古冢警戒、喧闹/交战/久留与安静/重燃壁灯之间的因果方向，以及名望面板"
+    ],
+    "adapted": [
+      "村长家与磨坊合并到村庄场景；深层墓室归并为合唱厅",
+      "新增可调查证据与归还仪式步骤，使短篇在类型化状态规则内闭环",
+      "原作银币映射为通用规则货币；治疗、补给和战斗数值改用本项目d20轻规则",
+      "雷恩与布兰诺克可经本人同意同行；同行不会代替玩家选择，也不单独参加战斗",
+      "新增守冢残影作为可绕开的轻战斗，以及村民开放避雨棚的自主世界事件",
+      "1.2以声明式变量与明确行动实现警戒0至6、交战/休息加警戒、安静绕行/重燃壁灯减警戒、警戒满时苏醒，以及安眠仪式清零和一次名望奖励；每个行动与触发器均有可执行验收路线"
+    ],
+    "unsupported": [
+      "六属性配点、队友独立战斗、火把自动燃尽、黑暗视野及古冢之王交易仍未移植",
+      "警戒是有界改编：未对自由文本中的破门、喧哗或火光逐句判定；古冢苏醒没有创建独立之王战斗或交易角色",
+      "原作多结局没有全部等价复刻；补给、战斗和警戒数值为本项目改编"
+    ]
+  },
+  "world": {
+    "title": "灰苇村与提灯古冢",
+    "genre": "奇幻探索",
+    "tone": "温暖村落与克制的幽暗",
+    "premise": "守护村庄百年的古灯熄灭，失踪的守灯人仍未归来。",
+    "setting": "灰苇村在沼泽边，歪角鹿酒馆、磨坊和小礼拜堂维系居民生活。村北的提灯古冢每夜亮灯；最近灯灭、羊失踪，地下传来歌声。村长以三十枚银币悬赏寻找守灯人；确认守灯人生还并标出归路，可领取三十单位规则货币；一笔赏金只结算一次。",
+    "locations": [
+      {
+        "name": "歪角鹿酒馆",
+        "description": "雨中的村庄中心，吧台挂着寻人告示；村长与磨坊的消息也在这里汇集。",
+        "connects_to": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "守灯人小屋",
+        "description": "山脚石屋从不锁门，灯油与巡山日志整齐放在桌上。",
+        "connects_to": [
+          0,
+          3
+        ]
+      },
+      {
+        "name": "黎明礼拜堂",
+        "description": "雷恩修女借住于此，桌上铺着古灯铭文拓片。",
+        "connects_to": [
+          0
+        ]
+      },
+      {
+        "name": "青铜墓门",
+        "description": "墓门朝内洞开，退役老兵守在门边；石阶通向壁灯长廊。",
+        "connects_to": [
+          0,
+          1,
+          4
+        ]
+      },
+      {
+        "name": "千灯廊",
+        "description": "两侧壁灯熄灭，远端传来低声争执，地面有断续拖痕。",
+        "connects_to": [
+          3,
+          5
+        ]
+      },
+      {
+        "name": "合唱厅",
+        "description": "歌声在深处交叠，中央古灯的凹槽空着，侧边留有一条回廊。",
+        "connects_to": [
+          4
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "梅瑞尔·沃斯",
+        "role": "酒馆老板娘",
+        "personality": "热络精明、记性好，确认值得信任才说真话。",
+        "goal": "把村里的客人和邻居照顾好。",
+        "boundary": "不拿别人的困境当谈资。",
+        "location": 0,
+        "secret": "她记得科尔文在灯灭前一天退了房，却没有出村。"
+      },
+      {
+        "name": "阿尔多斯·潘恩",
+        "role": "灰苇村村长",
+        "personality": "体面而焦虑，说话回避自己的失误。",
+        "goal": "在领主追问前让村庄恢复安稳。",
+        "boundary": "不愿未经核实便被公开指控。",
+        "location": 0,
+        "secret": "他曾允许年轻学者查阅古灯资料，却没有告诉村民。"
+      },
+      {
+        "name": "雷恩修女",
+        "role": "黎明灯修会见习祭司",
+        "personality": "认真温和，遇到陌生铭文会先查证。",
+        "goal": "读懂古灯铭文，帮助守灯人回家。",
+        "boundary": "不把未经验证的教义当作命令。",
+        "location": 2,
+        "secret": "她对修会关于古灯的解释已有疑问。"
+      },
+      {
+        "name": "布兰诺克·黑尔",
+        "role": "退役老兵",
+        "personality": "寡言警惕，危险前会先观察退路。",
+        "goal": "让这次进入古冢的人活着出来。",
+        "boundary": "不让无准备的人莽撞下墓。",
+        "location": 3,
+        "secret": "二十年前他随队下过古冢，只有自己返回。"
+      },
+      {
+        "name": "科尔文·艾什",
+        "role": "王都学者",
+        "personality": "傲慢里藏着恐惧，对自己的发现不肯轻易放手。",
+        "goal": "证明灯心值得研究并离开险境。",
+        "boundary": "不接受把他当作毫无价值的罪犯。",
+        "location": 4,
+        "secret": "他抱着灯心躲在长廊边，担心归还后自己的研究再无机会。"
+      },
+      {
+        "name": "伊索德",
+        "role": "守灯人",
+        "personality": "疲惫但坚定，熟悉古冢中的每种回声。",
+        "goal": "拖住合唱，等来能够重新点灯的人。",
+        "boundary": "不以村民的安危换取研究成果。",
+        "location": 5,
+        "secret": "她用巡山小调压住合唱，为外面的人争取时间。"
+      }
+    ],
+    "rules": {
+      "system": "d20",
+      "hp": 24,
+      "coins": 12,
+      "vitality": 10,
+      "attack_bonus": 3,
+      "defense": 12,
+      "damage": 4,
+      "percentile_skill": 65,
+      "party_limit": 3,
+      "recruitable": [
+        2,
+        3
+      ],
+      "items": [
+        {
+          "id": "adventurers_blade",
+          "name": "随身短剑",
+          "description": "原作的趁手短剑。装备后提升近战伤害。",
+          "kind": "weapon",
+          "price": 8,
+          "power": 2
+        },
+        {
+          "id": "leather_coat",
+          "name": "旧皮护衣",
+          "description": "本项目新增的简易防护。",
+          "kind": "armor",
+          "price": 6,
+          "power": 2
+        },
+        {
+          "id": "healing_draught",
+          "name": "治疗药水",
+          "description": "苦涩草药水。使用一瓶恢复8点生命。",
+          "kind": "consumable",
+          "price": 8,
+          "power": 8,
+          "restores": "hp"
+        },
+        {
+          "id": "rations",
+          "name": "干粮",
+          "description": "恢复4点体力，使用后减少一份。",
+          "kind": "consumable",
+          "price": 2,
+          "power": 4,
+          "restores": "vitality"
+        },
+        {
+          "id": "rope",
+          "name": "十五米麻绳",
+          "description": "可携带或交给角色的普通道具。",
+          "kind": "ordinary",
+          "price": 3,
+          "power": 0
+        },
+        {
+          "id": "torch",
+          "name": "松脂火把",
+          "description": "普通照明道具；本版本没有自动燃尽机制。",
+          "kind": "ordinary",
+          "price": 1,
+          "power": 0
+        }
+      ],
+      "starting_items": [
+        {
+          "item_id": "adventurers_blade",
+          "quantity": 1,
+          "holder": "player"
+        },
+        {
+          "item_id": "healing_draught",
+          "quantity": 2,
+          "holder": "player"
+        },
+        {
+          "item_id": "rations",
+          "quantity": 3,
+          "holder": "player"
+        },
+        {
+          "item_id": "rope",
+          "quantity": 1,
+          "holder": "player"
+        },
+        {
+          "item_id": "torch",
+          "quantity": 3,
+          "holder": "player"
+        }
+      ],
+      "shops": [
+        {
+          "id": "meryl_supplies",
+          "name": "梅瑞尔的补给柜",
+          "location": 0,
+          "buyback": true,
+          "stock": [
+            {
+              "item_id": "healing_draught",
+              "quantity": 5
+            },
+            {
+              "item_id": "rations",
+              "quantity": 8
+            },
+            {
+              "item_id": "leather_coat",
+              "quantity": 2
+            },
+            {
+              "item_id": "torch",
+              "quantity": 12
+            }
+          ]
+        }
+      ],
+      "enemies": [
+        {
+          "id": "barrow_echo",
+          "name": "守冢残影",
+          "description": "徘徊在墓门外的古老回声，可以绕行。",
+          "location": 3,
+          "hp": 12,
+          "defense": 10,
+          "attack_bonus": 1,
+          "damage": 2,
+          "reward_coins": 3,
+          "reward_xp": 5
+        }
+      ]
+    },
+    "simulation": {
+      "interval_s": 900,
+      "actor_indices": [
+        0,
+        1
+      ],
+      "factions": [
+        {
+          "id": "village_aid",
+          "name": "村民互助队",
+          "goal": "给进山的人准备安全的歇脚处。",
+          "interval_s": 600,
+          "threshold": 3,
+          "outcome": "村民在酒馆后搭起避雨棚，冒险者可以前去歇脚。",
+          "expansion": {
+            "name": "村后避雨棚",
+            "description": "一处从酒馆后门通往的干燥棚屋，适合休整和分享消息。",
+            "connects_to": 0
+          }
+        }
+      ]
+    },
+    "state_rules": {
+      "variables": [
+        {
+          "id": "greyreed_renown",
+          "name": "灰苇村名望",
+          "minimum": 0,
+          "maximum": 100,
+          "initial": 0,
+          "visibility": "player"
+        }
+      ]
+    }
+  },
+  "story": {
+    "title": "归还灯心",
+    "synopsis": "查明古灯熄灭的原因，找到守灯人与灯心，按证据记录的步骤重新点亮古灯。",
+    "player_role": "来到灰苇村的冒险者",
+    "opening": "深秋雨夜，你推开歪角鹿酒馆的门。吧台挂着守灯人失踪的告示，村长在壁炉旁踱步。梅瑞尔把热麦酒推到你面前：“也是为告示来的？”",
+    "start_location": 0,
+    "starting_item": "防水札记",
+    "acts": [
+      "在酒馆与山脚核实失踪经过，自行决定先向谁询问。",
+      "读懂铭文，进入千灯廊，辨认灯心和守灯人的线索。",
+      "抵达合唱厅后选择是否依据已核实步骤归还灯心；玩家不必接受村长的安排。"
+    ],
+    "clues": [
+      {
+        "title": "巡山日志",
+        "text": "伊索德最后一页记着：灯灭后应沿千灯廊追查灯心，归来路上不要随合唱走向侧门。",
+        "location": 1,
+        "known_by": []
+      },
+      {
+        "title": "古灯铭文",
+        "text": "铭文记录一种安眠仪式：将灯心归入灯座，按照守灯人的巡山调点亮三盏壁灯；不需要献祭。",
+        "location": 2,
+        "known_by": [
+          2
+        ]
+      },
+      {
+        "title": "学者与灯心",
+        "text": "廊边记录与微光位置互相印证：科尔文带走了灯心，灯座空缺使合唱苏醒；这块晶石能够归位。",
+        "location": 4,
+        "known_by": [
+          4
+        ]
+      },
+      {
+        "title": "守灯人的调子",
+        "text": "合唱厅内有一道清晰的巡山小调压着亡者合唱，来自仍然活着的伊索德；她身旁回廊通向出口。",
+        "location": 5,
+        "known_by": [
+          5
+        ]
+      }
+    ],
+    "challenges": [
+      {
+        "title": "标记安全归路",
+        "description": "依据巡山日志，在青铜墓门处标出返回村庄的路线。",
+        "location": 3,
+        "required_clues": [
+          0
+        ],
+        "skill": "observation",
+        "difficulty": 8,
+        "success": "你把归路标在札记上，后来者能辨认回廊。",
+        "ending": false,
+        "reward_xp": 3
+      },
+      {
+        "title": "归还灯心并重燃古灯",
+        "description": "根据已查明的灯心、铭文与巡山调，在合唱厅完成归位仪式。",
+        "location": 5,
+        "required_clues": [
+          1,
+          2,
+          3
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "灯心归入灯座，三盏壁灯依次亮起，合唱沉下去。伊索德能够沿回廊离开；村庄迎来一个安静的清晨。",
+        "ending": true,
+        "reward_xp": 15
+      },
+      {
+        "title": "确认守灯人生还",
+        "description": "结合巡山日志和守灯人的调子，在合唱厅记录伊索德仍然生还、以及可用的归路。",
+        "location": 5,
+        "required_clues": [
+          0,
+          3
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "你核实了伊索德的处境并记录安全归路，村长预留的三十单位酬金记入你的行囊。",
+        "ending": false,
+        "reward_coins": 30,
+        "reward_xp": 5
+      },
+      {
+        "title": "查明地下歌声",
+        "description": "在合唱厅辨认守灯人的巡山调与亡者合唱的区别，记下能够报告给梅瑞尔的观察。",
+        "location": 5,
+        "required_clues": [
+          1,
+          3
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "你记下歌声的来源和点灯能使其平息的依据，找到可以向村民解释的线索。",
+        "ending": false,
+        "reward_xp": 5
+      }
+    ],
+    "pressure_name": "古冢回声",
+    "pressure_event": "更深处的合唱响起，村外有人听见自己的亲人名字。归路与点灯机会仍然存在。",
+    "state_rules": {
+      "variables": [
+        {
+          "id": "barrow_alarm",
+          "name": "古冢警戒",
+          "maximum": 6
+        },
+        {
+          "id": "barrow_awake",
+          "name": "古冢已苏醒",
+          "kind": "boolean",
+          "initial": false,
+          "visibility": "player"
+        },
+        {
+          "id": "wall_lamps",
+          "name": "壁灯状态",
+          "kind": "enum",
+          "initial": "熄灭",
+          "options": [
+            "熄灭",
+            "重燃",
+            "安眠仪式完成"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "id": "ring_stone",
+          "name": "敲响墓厅石钟",
+          "description": "用石钟试探回声，会明显惊动沉睡的古冢。",
+          "location_id": "loc_5",
+          "time_cost_s": 30,
+          "effects": [
+            {
+              "kind": "add",
+              "target": "barrow_alarm",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "id": "quiet_passage",
+          "name": "安静绕行并遮住火光",
+          "description": "放轻动作，给古冢一段安静；已醒来的存在不会仅因此重新入睡。",
+          "when_all": [
+            {
+              "source": "variable",
+              "key": "barrow_alarm",
+              "op": "gt",
+              "value": 0
+            }
+          ],
+          "when_any": [
+            {
+              "source": "location",
+              "value": "loc_3"
+            },
+            {
+              "source": "location",
+              "value": "loc_4"
+            },
+            {
+              "source": "location",
+              "value": "loc_5"
+            }
+          ],
+          "time_cost_s": 120,
+          "effects": [
+            {
+              "kind": "add",
+              "target": "barrow_alarm",
+              "value": -1
+            }
+          ]
+        },
+        {
+          "id": "rekindle_wall",
+          "name": "按铭文重燃三盏壁灯",
+          "description": "根据已调查的铭文与灯心线索安抚古冢；重燃壁灯只是仪式的准备。",
+          "location_id": "loc_5",
+          "once": true,
+          "time_cost_s": 120,
+          "when_all": [
+            {
+              "source": "knowledge",
+              "key": "fact_clue_1",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "source": "knowledge",
+              "key": "fact_clue_2",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "effects": [
+            {
+              "kind": "set",
+              "target": "wall_lamps",
+              "value": "重燃"
+            },
+            {
+              "kind": "add",
+              "target": "barrow_alarm",
+              "value": -3
+            }
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "id": "combat_noise",
+          "name": "地下交战惊动古冢",
+          "on": "attack",
+          "once": false,
+          "cooldown_s": 1,
+          "when_any": [
+            {
+              "source": "location",
+              "value": "loc_3"
+            },
+            {
+              "source": "location",
+              "value": "loc_4"
+            },
+            {
+              "source": "location",
+              "value": "loc_5"
+            }
+          ],
+          "effects": [
+            {
+              "kind": "add",
+              "target": "barrow_alarm",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": "rest_noise",
+          "name": "地下久留惊动古冢",
+          "on": "rest",
+          "once": false,
+          "cooldown_s": 600,
+          "when_any": [
+            {
+              "source": "location",
+              "value": "loc_3"
+            },
+            {
+              "source": "location",
+              "value": "loc_4"
+            },
+            {
+              "source": "location",
+              "value": "loc_5"
+            }
+          ],
+          "effects": [
+            {
+              "kind": "add",
+              "target": "barrow_alarm",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": "barrow_wakes",
+          "name": "古冢苏醒",
+          "when_all": [
+            {
+              "source": "variable",
+              "key": "barrow_alarm",
+              "op": "ge",
+              "value": 6
+            }
+          ],
+          "effects": [
+            {
+              "kind": "set",
+              "target": "barrow_awake",
+              "value": true
+            },
+            {
+              "kind": "message",
+              "text": "古冢深处传来沉重的回声，沉睡的存在已被惊醒。你仍能离开，也可以寻找重新安抚它的方法。"
+            }
+          ]
+        },
+        {
+          "id": "lamps_restored",
+          "name": "安眠仪式落实",
+          "on": "challenge",
+          "target_id": "challenge_1",
+          "when_all": [
+            {
+              "source": "quest",
+              "key": "quest_1",
+              "op": "eq",
+              "value": "completed"
+            }
+          ],
+          "effects": [
+            {
+              "kind": "set",
+              "target": "wall_lamps",
+              "value": "安眠仪式完成"
+            },
+            {
+              "kind": "set",
+              "target": "barrow_alarm",
+              "value": 0
+            },
+            {
+              "kind": "set",
+              "target": "barrow_awake",
+              "value": false
+            },
+            {
+              "kind": "add",
+              "target": "greyreed_renown",
+              "value": 1
+            },
+            {
+              "kind": "message",
+              "text": "灯心归位，安眠仪式完成：古冢警戒归零，灰苇村名望增加。"
+            }
+          ]
+        }
+      ],
+      "tests": [
+        {
+          "name": "安静准备并完成安眠仪式",
+          "steps": [
+            {
+              "kind": "move",
+              "target_id": "loc_2"
+            },
+            {
+              "kind": "reveal",
+              "target_id": "fact_clue_1"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_0"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_3"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_4"
+            },
+            {
+              "kind": "reveal",
+              "target_id": "fact_clue_2"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_5"
+            },
+            {
+              "kind": "reveal",
+              "target_id": "fact_clue_3"
+            },
+            {
+              "kind": "state_action",
+              "target_id": "ring_stone"
+            },
+            {
+              "kind": "state_action",
+              "target_id": "quiet_passage"
+            },
+            {
+              "kind": "state_action",
+              "target_id": "rekindle_wall"
+            },
+            {
+              "kind": "challenge",
+              "target_id": "challenge_1"
+            }
+          ],
+          "expect": [
+            {
+              "source": "variable",
+              "key": "wall_lamps",
+              "op": "eq",
+              "value": "安眠仪式完成"
+            },
+            {
+              "source": "variable",
+              "key": "barrow_alarm",
+              "op": "eq",
+              "value": 0
+            },
+            {
+              "source": "variable",
+              "key": "barrow_awake",
+              "op": "eq",
+              "value": false
+            },
+            {
+              "source": "variable",
+              "key": "greyreed_renown",
+              "op": "eq",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "name": "交战与久留后惊醒古冢",
+          "steps": [
+            {
+              "kind": "move",
+              "target_id": "loc_3"
+            },
+            {
+              "kind": "attack",
+              "target_id": "enemy_barrow_echo"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_4"
+            },
+            {
+              "kind": "move",
+              "target_id": "loc_5"
+            },
+            {
+              "kind": "rest",
+              "target_id": "pc_traveler"
+            },
+            {
+              "kind": "state_action",
+              "target_id": "ring_stone"
+            },
+            {
+              "kind": "state_action",
+              "target_id": "ring_stone"
+            }
+          ],
+          "expect": [
+            {
+              "source": "variable",
+              "key": "barrow_alarm",
+              "op": "eq",
+              "value": 6
+            },
+            {
+              "source": "variable",
+              "key": "barrow_awake",
+              "op": "eq",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

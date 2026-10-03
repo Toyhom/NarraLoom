@@ -1,0 +1,49 @@
+{
+  "repo": "AndreiNicu/World-Forge",
+  "sha": "612d117af08bd50f9f5bb09f4cfe327a7ff5a3a9",
+  "files": [
+    {
+      "path": "Samples/Apartment_Test_Director/Export/Apartment5C_ChatPreset.json",
+      "bytes": 26819,
+      "sha256": "ff34b2f37a79531c5edb514334b4c68cfb65672d6bedbc0399d6ada6ab11fc6b"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/Apartment_NPC_Lorebook.json",
+      "bytes": 23652,
+      "sha256": "130e843eb921203555c05fa4dfb854d5c1832eb48942b0ad5fcd4ae260e1a991"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/Apartment_World_Lorebook.json",
+      "bytes": 3845,
+      "sha256": "bf0bfbd2d63f0877496951aaddb522e5fe54b0f1ec1827db27ed88971eefcbab"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/Prompt_Engineer_Audit.md",
+      "bytes": 3078,
+      "sha256": "f37e80412c628204f6281cba02cd8e82ee95c74162fc04d2841736afea956df8"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/Sandbox_Lorebook.json",
+      "bytes": 4496,
+      "sha256": "a146583d20eec89e86817da050b6b65dfc04c0235b139fc7ecd545bf2e27fb53"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/User.md",
+      "bytes": 984,
+      "sha256": "769ef6862f19db6f06f6f123fa2e51cb29538b1d0d5dab4e881ad3ca54d7b751"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/Export/WorldDirector_Card.json",
+      "bytes": 5334,
+      "sha256": "8646974e6613ad1ccde27eb210ae4bf913aa4536166dbd2201aa4d77a8398cbb"
+    },
+    {
+      "path": "Samples/Apartment_Test_Director/README.md",
+      "bytes": 5669,
+      "sha256": "7dbf43f5c2f35f9c2879f7c272bcbfb968c9001836f6d6ea5273eb99c36395de"
+    }
+  ],
+  "license": "MIT",
+  "retrieved_on": "2026-10-02",
+  "scope": "Pinned complete text/data files for these scenarios; no external media or executable plugins downloaded."
+}

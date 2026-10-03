@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 1500,
+      "minLength": 2,
+      "title": "Description",
+      "type": "string"
+    },
+    "image_base64": {
+      "maxLength": 14000000,
+      "minLength": 32,
+      "title": "Image Base64",
+      "type": "string"
+    },
+    "seed": {
+      "default": 42,
+      "maximum": 2147483647,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "request_id",
+    "description",
+    "image_base64"
+  ],
+  "title": "AvatarCreate",
+  "type": "object"
+}

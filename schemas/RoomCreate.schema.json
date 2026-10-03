@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "campaign_id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Campaign Id",
+      "type": "string"
+    },
+    "branch_id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Branch Id",
+      "type": "string"
+    },
+    "name": {
+      "default": "房主",
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "mode": {
+      "default": "shared_character",
+      "enum": [
+        "shared_character",
+        "independent_characters"
+      ],
+      "title": "Mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "campaign_id",
+    "branch_id"
+  ],
+  "title": "RoomCreate",
+  "type": "object"
+}

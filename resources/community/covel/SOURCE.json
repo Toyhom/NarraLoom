@@ -1,0 +1,199 @@
+{
+  "repo": "ackness/covel",
+  "sha": "1d2571cdba9dc897eb4ad024819328151d124ab6",
+  "files": [
+    {
+      "path": "worlds/emberback/WORLD.md",
+      "bytes": 7582,
+      "sha256": "4c28e0d4ca0fe4d16d6d3effb1b19fd55389f01cf08599649d7bc47b781065c6"
+    },
+    {
+      "path": "worlds/emberback/characters/characters.json",
+      "bytes": 3786,
+      "sha256": "6a2da581c4ac4b855c9fb660ea15b04b9ffcd4e2efbb6733569182bd4e06400a"
+    },
+    {
+      "path": "worlds/emberback/characters/main-cast.json",
+      "bytes": 8279,
+      "sha256": "0e920aad0a93ef93c45c743aefc53da3799184e542e08bf9eb06668fe18d34ad"
+    },
+    {
+      "path": "worlds/emberback/data/affinity.yaml",
+      "bytes": 926,
+      "sha256": "931c32c831a56cbfccc0a48cfaaa1c74de0daf0c53c4e5d1dff4500dc29d016c"
+    },
+    {
+      "path": "worlds/emberback/data/dimensions.yaml",
+      "bytes": 22335,
+      "sha256": "f0152c855fdde2e59b61e1156a3a6949e09fb64e0bb92ae63a33862a1e3201ea"
+    },
+    {
+      "path": "worlds/emberback/data/hidden/story-events.yaml",
+      "bytes": 2156,
+      "sha256": "571bf3c5831838bc309ff1b81e133748968e97f72fda08647b7d6daf9e5ac213"
+    },
+    {
+      "path": "worlds/emberback/data/items.yaml",
+      "bytes": 1337,
+      "sha256": "dbc37492fa09ae78118f7ccfe6b89c04c9018d848cb42e6c4ac3e754612dcd6f"
+    },
+    {
+      "path": "worlds/emberback/data/lorebook.yaml",
+      "bytes": 2756,
+      "sha256": "4032bcfb1a06e0454d70961ee822a6a79e0a8d5dab1a9edbb4ed7fdad59c7396"
+    },
+    {
+      "path": "worlds/emberback/data/memory-blocks.json",
+      "bytes": 687,
+      "sha256": "1868518ad7db71a7dc17fe032743634678fc927969b92ca12efa312f61f074ab"
+    },
+    {
+      "path": "worlds/emberback/data/quests.yaml",
+      "bytes": 1779,
+      "sha256": "922d386813d29a7c0d0e870d46d71ca2879e08334b1ef74a4ce5dbea3a6d764a"
+    },
+    {
+      "path": "worlds/emberback/data/rules/emberback-rules.yaml",
+      "bytes": 3932,
+      "sha256": "b4cab4c59314b0225bd242b307d16ea2d4bf4ac4db39768fe32dc0dae80d65b4"
+    },
+    {
+      "path": "worlds/emberback/data/world.data.yaml",
+      "bytes": 1871,
+      "sha256": "2ee9a44775cb3fc23084b2c179a75709335b6b56d1fee59523d1d15abb1353b6"
+    },
+    {
+      "path": "worlds/emberback/media/portraits.json",
+      "bytes": 4391,
+      "sha256": "02a0ac23e7503e195c047bc5b625cbf91c4bbe5ae88854b6c85db560f795b867"
+    },
+    {
+      "path": "worlds/emberback/media/presence.json",
+      "bytes": 2443,
+      "sha256": "420f73e54dd26367cf91364f420703d14c12e0237a8bc9b88414e7b785f08204"
+    },
+    {
+      "path": "worlds/emberback/world.yaml",
+      "bytes": 3127,
+      "sha256": "d888d67d364e8a471c2b928f8788dd34c555c1724e7d356db4b92a04587e4bcd"
+    },
+    {
+      "path": "worlds/lantern-barrow/WORLD.en.md",
+      "bytes": 5951,
+      "sha256": "87270e562f364206b1b06fc002bf895b819bcdcad7d5a65d451b716dd1d68968"
+    },
+    {
+      "path": "worlds/lantern-barrow/WORLD.md",
+      "bytes": 5048,
+      "sha256": "69eaf9191556f0e3d725caa72843ee872b0c5828f8906e37a772868f607c9c1e"
+    },
+    {
+      "path": "worlds/lantern-barrow/characters/characters.en.json",
+      "bytes": 2896,
+      "sha256": "408ebbe4351f18f327e762ca7ea67b8c4e044774431d138f016d5cc683720e30"
+    },
+    {
+      "path": "worlds/lantern-barrow/characters/characters.json",
+      "bytes": 2698,
+      "sha256": "d636295a762156aef0041139a33eb4a459088ac980b91537e06d84df5de13f75"
+    },
+    {
+      "path": "worlds/lantern-barrow/characters/main-cast.en.json",
+      "bytes": 6868,
+      "sha256": "1084285bd4278cdbec174d7c43ea6d40574d4e3092e2d40c82415209e68ecbd2"
+    },
+    {
+      "path": "worlds/lantern-barrow/characters/main-cast.json",
+      "bytes": 6060,
+      "sha256": "fb956430d365e3f83fd9a3277e8b3cfc1259e1d391fbc3799ace8ce7c5a6a41d"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/affinity.en.yaml",
+      "bytes": 606,
+      "sha256": "ebfb3afbfa8667de849ff00105befb71b8399386241648925e7af65f8845a8d7"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/affinity.yaml",
+      "bytes": 534,
+      "sha256": "d30ca34cb5edd67f735b8cd8a77c9f91ef16bada723f1c4f5818b424d4e5b3a8"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/dimensions.yaml",
+      "bytes": 19829,
+      "sha256": "e78fc2e7f05c2181150c7828589c206d3a6c311993c92b40241bd3ec9300cf56"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/hidden/story-events.en.yaml",
+      "bytes": 2874,
+      "sha256": "8b345be1c84c167b4a5a0a1c4a8a9ba6c1bf8a88850c9354c2826f4e54b5c855"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/hidden/story-events.yaml",
+      "bytes": 2453,
+      "sha256": "2df1fd2ddf7dcf75bacbcbb2dd5ef3e90f72b7f7529e03aeb8c3f0035a6267c8"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/items.en.yaml",
+      "bytes": 1117,
+      "sha256": "8bab8e005ef2a34faf6ed8de9c48c172eb07304c4f4bb9b4a274262852052590"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/items.yaml",
+      "bytes": 1049,
+      "sha256": "e912f80104452640c8c0575000d80fe1401840bb8aeeff374e100920b437f70e"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/memory-blocks.json",
+      "bytes": 1045,
+      "sha256": "228e55004ccd6523a88622a7f0c9462d71815e05baeb7f9faa62d4d30b7a55e8"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/quests.en.yaml",
+      "bytes": 1811,
+      "sha256": "1edfe511148bbe4ce2b9590213092cd5e9476d34cb333e4790383d5605503f96"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/quests.yaml",
+      "bytes": 1660,
+      "sha256": "835199e923abf9cb4f82d39527d7af02ab4655df806582b3a42b85bdcd1c57b9"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/rules/barrow-rules.en.yaml",
+      "bytes": 3609,
+      "sha256": "1bfb4b449e5761d9ccc11fdb47e191f7b903ee6de7e91954fd25b65d1a790177"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/rules/barrow-rules.yaml",
+      "bytes": 3345,
+      "sha256": "6db4bf009e67c2ac8382697c83b9800898e53a2c69d2c7a03356cf02b4ccb779"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/tabletop-rules.en.json",
+      "bytes": 620,
+      "sha256": "f73a919d6691fb83156df7969f2c21e1b03299fe07b1566fcb777c287eaa1c8e"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/tabletop-rules.json",
+      "bytes": 616,
+      "sha256": "30934ee3dde643d2efa655775553c630c323717249b07864291f399e787a76c6"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/time.yaml",
+      "bytes": 987,
+      "sha256": "28362375efc183b47b9b8d5fc2580dd8ff57fe3307adc4af2339fbd9dd1142af"
+    },
+    {
+      "path": "worlds/lantern-barrow/data/world.data.yaml",
+      "bytes": 1760,
+      "sha256": "f743dfcd30d07f007c3510f9c1f1b3102f217c7064d9657d97ff2096d371c061"
+    },
+    {
+      "path": "worlds/lantern-barrow/world.yaml",
+      "bytes": 6936,
+      "sha256": "1c6f90d9dc8f34041439dad446a905e73c176310acb20e2432f84ae7ab7c6ffd"
+    }
+  ],
+  "license": "MIT",
+  "retrieved_on": "2026-10-02",
+  "scope": "Pinned complete text/data files for these scenarios; no external media or executable plugins downloaded."
+}

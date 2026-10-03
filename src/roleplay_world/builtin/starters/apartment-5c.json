@@ -1,0 +1,170 @@
+{
+  "id": "apartment-5c",
+  "version": "1.0.0",
+  "title": "合租公寓 5C：晚餐之前",
+  "summary": "三位作息不同的室友、一张总被占满的餐桌。听清每个人的需求，拟一份今晚的共用安排。",
+  "source": {
+    "repository": "AndreiNicu/World-Forge",
+    "commit": "612d117af08bd50f9f5bb09f4cfe327a7ff5a3a9",
+    "path": "Samples/Apartment_Test_Director",
+    "url": "https://github.com/AndreiNicu/World-Forge/tree/612d117af08bd50f9f5bb09f4cfe327a7ff5a3a9/Samples/Apartment_Test_Director",
+    "author": "Danut Niculae",
+    "license": "MIT",
+    "license_text": "MIT License\n\nCopyright (c) 2026 Danut Niculae\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+  },
+  "adaptation": {
+    "scope": "酒馆完整沙盒示例的中文改编；原示例明确无主线，本项目增写“晚餐前的共用安排”短篇。",
+    "retained": [
+      "Apartment 5C、Priya/Theo/Nadia 的性格、说话方式与常驻目标",
+      "共享厨房、音乐角和合租生活的低风险喜剧基调"
+    ],
+    "adapted": [
+      "新增可调查便笺与晚餐安排目标，作为可完成的入门篇",
+      "玩家姓名可自定，不绑定原示例 persona Sam",
+      "角色由独立知识上下文扮演，原 World Director 的全知视角不直接复用"
+    ],
+    "unsupported": [
+      "原作是记忆接口测试沙盒，不是完整线性冒险；新增短篇不能归称原作者剧本",
+      "不执行原 ChatPreset、宏或 NPC Memory 扩展；没有自动离场与跨日生活模拟"
+    ]
+  },
+  "world": {
+    "title": "合租公寓 5C",
+    "genre": "日常群像",
+    "tone": "温暖、具体、低风险的喜剧",
+    "premise": "四个人共用一份租约，却有四套截然不同的作息。",
+    "setting": "老楼5C有三间卧室和一间走廊边的小房间。厨房是公寓中心，餐桌常堆着医学生课本，客厅有吉他和音箱。Nadia维持家务秩序，Priya赶临床轮转，Theo兼顾咖啡店与乐队；玩家是第四位室友。摩擦来自日常，不人为制造灾难。",
+    "locations": [
+      {
+        "name": "共享厨房",
+        "description": "炉上煮着晚餐，餐桌一半被书占据，Nadia在分装食物。",
+        "connects_to": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "客厅音乐角",
+        "description": "沙发旁有吉他、未接电的音箱和写了一半的曲谱。",
+        "connects_to": [
+          0,
+          2
+        ]
+      },
+      {
+        "name": "走廊留言板",
+        "description": "门边贴着家务表、轮班表和买菜便笺。",
+        "connects_to": [
+          0,
+          1
+        ]
+      },
+      {
+        "name": "临窗学习角",
+        "description": "窄窗下摆着医学生复习卡，咖啡已经凉了。",
+        "connects_to": [
+          0
+        ]
+      }
+    ],
+    "characters": [
+      {
+        "name": "Priya Anand",
+        "role": "25岁的医学生",
+        "personality": "短句、冷幽默、临床式比喻，紧张时用问题回答问题。",
+        "goal": "完成轮转并通过考试，争取不被打扰的复习时间。",
+        "boundary": "不愿别人未经同意移动她的复习材料。",
+        "location": 3,
+        "secret": "她用充分准备掩饰对失败的恐惧，却不愿承认自己很累。"
+      },
+      {
+        "name": "Theo Walsh",
+        "role": "23岁的咖啡师与乐手",
+        "personality": "温和、句尾拖长，喜欢用颜色和和弦比喻，容易忘记承诺。",
+        "goal": "完成一份正式小样，争取乐队第一场有报酬演出。",
+        "boundary": "不愿被简单当成没有责任心的人。",
+        "location": 1,
+        "secret": "他担心音乐梦想落空，常用随和掩饰焦虑。"
+      },
+      {
+        "name": "Nadia Okonkwo",
+        "role": "28岁的自由设计师",
+        "personality": "直接、镇定、善用一句干笑话，嘴上严厉却会默默照顾别人。",
+        "goal": "拿下稳定客户，同时让公寓能正常生活。",
+        "boundary": "不愿一直替所有人收拾残局。",
+        "location": 0,
+        "secret": "她也需要休息，却习惯把别人的需求排在前面。"
+      }
+    ]
+  },
+  "story": {
+    "title": "晚餐前的一张安排表",
+    "synopsis": "调查三人的日程和共享空间需求，写出一份待大家确认的晚餐与安静时段安排。",
+    "player_role": "公寓的第四位室友",
+    "opening": "周二晚上九点刚过，Nadia在厨房搅动锅里的晚餐，餐桌上散着医学课本。客厅同一小节吉他又响了一遍。她看见你回来：“正好，盘子干净了。先拿四个。”",
+    "start_location": 0,
+    "starting_item": "便签本",
+    "acts": [
+      "加入今晚的生活，先听在场室友的需要。",
+      "查看轮班、音乐和复习便笺，把已经写明的日程与推测分开。",
+      "把可兼容的时间段写成待确认草案；不替其他人承诺，讨论可以继续。"
+    ],
+    "clues": [
+      {
+        "title": "公寓轮班表",
+        "text": "留言板记录明早有早班，家务可错峰处理；今晚的公共安排不能假定每个人都能熬夜。",
+        "location": 2,
+        "known_by": [
+          2
+        ]
+      },
+      {
+        "title": "录音便笺",
+        "text": "Theo的便笺写着今晚只需录一段吉他；耳机和未接电音箱可用于安静练习。",
+        "location": 1,
+        "known_by": [
+          1
+        ]
+      },
+      {
+        "title": "复习时间卡",
+        "text": "Priya在卡片上列出两小时安静复习的需求，饭后可以将课本移回学习角；这只是她的书面意向，不是他人能强制执行的承诺。",
+        "location": 3,
+        "known_by": [
+          0
+        ]
+      }
+    ],
+    "challenges": [
+      {
+        "title": "整理公共桌面清单",
+        "description": "依据轮班表，列出公共桌面需要腾出的物件与对应主人，先不移动私人物品。",
+        "location": 0,
+        "required_clues": [
+          0
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "你写下了清楚的清单，没有替别人决定私人物品去处。",
+        "ending": false
+      },
+      {
+        "title": "写好晚餐与安静时段草案",
+        "description": "依据三份日程记录，写下兼顾晚餐、复习和耳机练习的共用空间提案。",
+        "location": 0,
+        "required_clues": [
+          0,
+          1,
+          2
+        ],
+        "skill": "none",
+        "difficulty": 8,
+        "success": "你把草案贴到留言板，注明需要三位室友确认。今晚有了可以讨论的具体安排；没有任何人被系统代替承诺，公寓生活仍会继续。",
+        "ending": true
+      }
+    ],
+    "pressure_name": "晚餐时刻",
+    "pressure_event": "晚餐渐渐放凉，厨房里有人提议先吃再聊；这只是生活提示，不制造灾难。"
+  }
+}

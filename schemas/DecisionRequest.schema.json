@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "DecisionQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "choice",
+            "noul",
+            "score"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "instructions": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Instructions",
+          "type": "string"
+        },
+        "criteria": {
+          "anyOf": [
+            {
+              "patternProperties": {
+                "^[a-zA-Z0-9_-]{1,80}$": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Criteria"
+        }
+      },
+      "required": [
+        "type",
+        "instructions"
+      ],
+      "title": "DecisionQuestion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "state": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "items": {},
+          "type": "array"
+        }
+      ],
+      "title": "State"
+    },
+    "questions": {
+      "maxProperties": 16,
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]{1,80}$": {
+          "$ref": "#/$defs/DecisionQuestion"
+        }
+      },
+      "title": "Questions",
+      "type": "object"
+    }
+  },
+  "required": [
+    "state",
+    "questions"
+  ],
+  "title": "DecisionRequest",
+  "type": "object"
+}
