@@ -13,6 +13,24 @@ NarraLoom 将模型职责分开暴露，因此你可以在保持故事游戏系�
 
 按模块的追踪记录请求的模型、响应模型、部署修订标签、延迟和使用量。提供方修订标签是由实验者提供的元数据。原始诊断可能包含故事提示和秘密；在分享前选择并匿名化数据。
 
+## 用固定输入评测模块
+
+通过 `python -m pip install '.[research]'` 安装研究扩展。先保存一份模型输入，再用不同配置运行同一组任务：
+
+```bash
+python examples/make_evaluation_cases.py --output outputs/evaluation/cases.jsonl
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/baseline.local.json --output outputs/evaluation/baseline
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/candidate.local.json --output outputs/evaluation/candidate
+narraloom compare outputs/evaluation/baseline/report.json \
+  outputs/evaluation/candidate/report.json --output outputs/evaluation/comparison.json
+```
+
+示例包含中、英、日三种语言的十二个任务。规划结果按明确断言自动计分；NPC 对话和旁白保留供人工评价。同一接口支持生成模块、System One 决策和自定义 Python 引擎。预期答案与模型请求、修复提示分别保存。
+
+报告保留失败、修复次数、耗时、服务商返回的 token 用量及用量缺失情况。`--resume` 保留已有结果，继续尚未执行的任务。[评测接口文档](../../docs/EVALUATION.md) 介绍用例格式、指标、恢复方式和自定义适配器。
+
 ## 决策模型
 
 ```bash

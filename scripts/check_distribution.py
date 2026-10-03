@@ -125,6 +125,17 @@ def main():
             "p=pathlib.Path(roleplay_world.__file__).resolve(); "
             "assert p.is_relative_to(pathlib.Path(__import__('sys').argv[1])); print(p)"), str(target)])
         run("console-entry", [str(target / "bin/narraloom"), "--version"])
+        # Research tools use only the installed package and the host's optional
+        # research dependency, with no backend process or game storage.
+        for example in ('make_evaluation_cases', 'evaluation_adapter'):
+            shutil.copyfile(ROOT / f'examples/{example}.py', workspace / f'{example}.py')
+        run('evaluation-cases', [sys.executable, str(workspace / 'make_evaluation_cases.py'),
+                                 '--output', str(workspace / 'cases.jsonl')])
+        run('evaluation-native', [sys.executable, str(workspace / 'evaluation_adapter.py'),
+                                  '--output', str(workspace / 'evaluation')])
+        run('evaluation-compare', [str(target / 'bin/narraloom'), 'compare',
+                                   str(workspace / 'evaluation/report.json'), str(workspace / 'evaluation/report.json'),
+                                   '--output', str(workspace / 'comparison.json')])
         cli = [sys.executable, "-m", "roleplay_world", "serve", "--workspace", str(workspace)]
         with server("cli-start", cli) as (client, _):
             connect(client)

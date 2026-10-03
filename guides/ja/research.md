@@ -13,6 +13,24 @@ NarraLoomはモデルの責務を個別に公開しているため、ストー�
 
 モジュールごとのトレースは、要求されたモデル、応答モデル、デプロイリビジョンラベル、レイテンシ、使用量を記録します。プロバイダーのリビジョンラベルは実験者が提供するメタデータです。生の診断情報にはストーリープロンプトやシークレットが含まれる可能性があります。共有する前にデータを選択して匿名化してください。
 
+## 固定入力によるモジュール評価
+
+`python -m pip install '.[research]'` で研究用の依存関係をインストールします。入力を一度保存し、同じタスクを各モデル構成で実行します。
+
+```bash
+python examples/make_evaluation_cases.py --output outputs/evaluation/cases.jsonl
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/baseline.local.json --output outputs/evaluation/baseline
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/candidate.local.json --output outputs/evaluation/candidate
+narraloom compare outputs/evaluation/baseline/report.json \
+  outputs/evaluation/candidate/report.json --output outputs/evaluation/comparison.json
+```
+
+サンプルには英語・中国語・日本語の計12タスクが含まれます。プランナーは明示的な条件で採点し、NPCの会話とナレーションは人による評価用に保存します。同じAPIで生成、System Oneの意思決定、登録済みPythonエンジンを評価できます。正解条件はモデルへの入力や修復プロンプトから分離されています。
+
+レポートには失敗、修復回数、所要時間、プロバイダーが返したトークン数と使用量の欠落を記録します。`--resume` は既存の結果を保持し、未実行のタスクを続行します。形式、指標、再開方法、独自アダプターについては[評価APIのリファレンス](../../docs/EVALUATION.md)を参照してください。
+
 ## 意思決定モデル
 
 ```bash

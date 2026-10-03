@@ -36,6 +36,10 @@ The installed live SDK flow creates one world and two stories, executes automati
 
 These flags extend `scripts/verify.py`; individual `check_*` scripts expose their parameters with `--help`. Optional Avatar browser checks require an owned prepared asset or explicitly configured creator service.
 
+## Module evaluations
+
+`narraloom evaluate` runs authored JSONL tasks through the configured gateway. Reports include failed responses, schema repairs, assertion results, latency and incomplete usage accounting. `narraloom compare` pairs completed runs of the same workload. See [EVALUATION](EVALUATION.md) for the installed CLI and Python API. Distribution checks exercise native generation/decision adapters and report comparison outside the source import path.
+
 ## Content tests
 
 Each authored story revision runs structural/reference checks, rule routes and selected actual-model playtests in isolated state. Custom-state routes cover the declared actions/triggers. Opening/mechanics review reports source locations and claims. Failed checks remain attached to the job so a creator can revise and retest.

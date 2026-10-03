@@ -13,6 +13,24 @@ NarraLoom exposes model responsibilities separately so you can change one module
 
 Per-module traces record requested model, response model, deployment revision label, latency and usage. Provider revision labels are metadata supplied by the experimenter. Raw diagnostics may contain story prompts and secrets; select and anonymize data before sharing.
 
+## Evaluate frozen module tasks
+
+Install the research extra with `python -m pip install '.[research]'`. Freeze model inputs once, then reuse them with each configuration:
+
+```bash
+python examples/make_evaluation_cases.py --output outputs/evaluation/cases.jsonl
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/baseline.local.json --output outputs/evaluation/baseline
+narraloom evaluate --cases outputs/evaluation/cases.jsonl \
+  --models-config configs/candidate.local.json --output outputs/evaluation/candidate
+narraloom compare outputs/evaluation/baseline/report.json \
+  outputs/evaluation/candidate/report.json --output outputs/evaluation/comparison.json
+```
+
+The example includes twelve tasks across English, Chinese and Japanese. Planner assertions are scored automatically; NPC and narrator outputs support human review. The same API supports generation, System One decisions and registered Python engines. Expected answers stay separate from model requests and repair prompts.
+
+Reports retain failures, repairs, latency and provider-reported tokens, including missing-usage counts. `--resume` continues pending cases while preserving previous results. The [evaluation reference](../docs/EVALUATION.md) covers case format, metrics, recovery and custom adapters.
+
 ## Decision models
 
 ```bash

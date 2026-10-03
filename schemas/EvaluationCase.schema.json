@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "DecisionQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "choice",
+            "noul",
+            "score"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "instructions": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Instructions",
+          "type": "string"
+        },
+        "criteria": {
+          "anyOf": [
+            {
+              "patternProperties": {
+                "^[a-zA-Z0-9_-]{1,80}$": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Criteria"
+        }
+      },
+      "required": [
+        "type",
+        "instructions"
+      ],
+      "title": "DecisionQuestion",
+      "type": "object"
+    },
+    "DecisionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "items": {},
+              "type": "array"
+            }
+          ],
+          "title": "State"
+        },
+        "questions": {
+          "maxProperties": 16,
+          "minProperties": 1,
+          "patternProperties": {
+            "^[a-zA-Z0-9_-]{1,80}$": {
+              "$ref": "#/$defs/DecisionQuestion"
+            }
+          },
+          "title": "Questions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "state",
+        "questions"
+      ],
+      "title": "DecisionRequest",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "narraloom.eval-case-1",
+      "default": "narraloom.eval-case-1",
+      "title": "Format",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "role": {
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Role",
+      "type": "string"
+    },
+    "kind": {
+      "default": "generate",
+      "enum": [
+        "generate",
+        "decide"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "system": {
+      "default": "",
+      "maxLength": 60000,
+      "title": "System",
+      "type": "string"
+    },
+    "data": {
+      "additionalProperties": true,
+      "title": "Data",
+      "type": "object"
+    },
+    "output_schema": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Schema"
+    },
+    "decision": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DecisionRequest"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "expect": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expect"
+    }
+  },
+  "required": [
+    "id",
+    "role"
+  ],
+  "title": "EvaluationCase",
+  "type": "object"
+}
