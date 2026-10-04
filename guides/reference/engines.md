@@ -1,6 +1,6 @@
 # Model engines
 
-[Model selection](../guides/models.md) explains useful model properties for each module. The gateway separates generation, semantic decisions, deterministic rules and presentation.
+[Model selection](../models.md) explains useful model properties for each module. The gateway separates generation, semantic decisions, deterministic rules and presentation.
 
 ## Bind modules
 
@@ -26,7 +26,7 @@ Anthropic separates `system` from `messages`. Schema mode requests one forced `e
 
 Set `generation: {"temperature": null}` to omit temperature for models that require their own sampling defaults. `generation` also supports `top_p`, `seed`, `frequency_penalty` and `presence_penalty` when the selected provider accepts them; a null value omits that parameter. The browser exposes **Use the model’s default temperature**. Provider-specific parameters such as Responses `reasoning` go in `extra_body`. Routing fields, messages, stream settings, token limits and result tools are owned by the gateway. DeepSeek's `thinking` option belongs to the Chat provider and is cleared when switching protocols in the reference frontend.
 
-Example configuration: [models.native.example.json](../configs/models.native.example.json). `POST /api/engines/{module}/check` exercises the configured protocol and model. Anthropic readiness is established by this generation check; its adapter does not enumerate account models.
+Example configuration: [models.native.example.json](../../configs/models.native.example.json). `POST /api/engines/{module}/check` exercises the configured protocol and model. Anthropic readiness is established by this generation check; its adapter does not enumerate account models.
 
 Protocol references: [Responses streaming](https://developers.openai.com/api/docs/guides/streaming-responses), [OpenAI structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Messages streaming](https://platform.claude.com/docs/en/build-with-claude/streaming), [Anthropic tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview).
 
@@ -47,7 +47,7 @@ registry.register(Engine("my_backend", frozenset({"generate"}), invoke))
 app = create_app(registry=registry, model_config=my_configuration)
 ```
 
-The snippet illustrates the adapter interface; `my_model` and `my_configuration` are supplied by the host. [embedded_backend.py](../examples/embedded_backend.py) is a runnable deterministic fixture. Native Python backends need no HTTP URL. An optional async `probe(config, auth_headers)` adds transport-specific readiness; otherwise status reports `ready: null, mode: unprobed`.
+The snippet illustrates the adapter interface; `my_model` and `my_configuration` are supplied by the host. [embedded_backend.py](../../examples/embedded_backend.py) is a runnable deterministic fixture. Native Python backends need no HTTP URL. An optional async `probe(config, auth_headers)` adds transport-specific readiness; otherwise status reports `ready: null, mode: unprobed`.
 
 `invoke(config, payload, auth_headers)` returns generation `{text,model,usage?}` or a System One decision response according to its declared capability. The gateway manages cancellation, timeout, context/output bounds, call/repair budgets, validation and traces. The request's actual schema may be narrowed to the current scene.
 
@@ -59,7 +59,7 @@ The `systemone` transport calls `/v1/systemone`. A request includes `state` and 
 
 The bundled movement router receives action text and adjacent exit IDs/names. `defer` handles uncertain or unsupported inputs. Modes are `off`, `shadow` and `auto`; default is off. Shadow records a decision while using the planner. Auto accepts a single movement only when both top probability and margin meet thresholds, then uses normal rules and commits. Other actions and failures return to the main planner. Cancellation propagates.
 
-Jev-style is an optional implementation of this protocol. Its pinned source and runtime hashes are in [resources/jev-style-source-pin.json](../resources/jev-style-source-pin.json). Evaluate your checkpoint in shadow mode before enabling automatic routing. The included small checkpoints require task-specific validation; probabilities alone do not establish accuracy.
+Jev-style is an optional implementation of this protocol. Its pinned source and runtime hashes are in [resources/jev-style-source-pin.json](../../resources/jev-style-source-pin.json). Evaluate your checkpoint in shadow mode before enabling automatic routing. The included small checkpoints require task-specific validation; probabilities alone do not establish accuracy.
 
 ### Local setup
 
@@ -73,11 +73,11 @@ python scripts/download_jev.py --size 0.8B --model-root /path/to/models
 python scripts/serve_jev.py --source third_party/jev-style   --model-root /path/to/models --size 0.8B --port 18110 --max-runtime-s 3600
 ```
 
-The runner validates the pinned Python source and runtime hashes. `--size 2B` selects the other pinned checkpoint; `--device cpu` is available. On shared GPU hosts, submit this command through the host's scheduler and preserve its assigned CUDA visibility. The runtime limit stops only this optional model service. [Research](../guides/research.md) covers evaluation and generation-model comparisons.
+The runner validates the pinned Python source and runtime hashes. `--size 2B` selects the other pinned checkpoint; `--device cpu` is available. On shared GPU hosts, submit this command through the host's scheduler and preserve its assigned CUDA visibility. The runtime limit stops only this optional model service. [Research](../research.md) covers evaluation and generation-model comparisons.
 
 ## Memory embeddings
 
-The `embed` capability supplies vectors through a native Python adapter or the `openai_embedding` transport (`POST /embeddings`). An explicit `memory_embedding` binding selects the model. Hybrid recall uses only the current actor's branch records and retains source IDs. See [memory retrieval](MEMORY.md) for configuration, local Transformers inference, caching and read-only recall APIs.
+The `embed` capability supplies vectors through a native Python adapter or the `openai_embedding` transport (`POST /embeddings`). An explicit `memory_embedding` binding selects the model. Hybrid recall uses only the current actor's branch records and retains source IDs. See [memory retrieval](memory.md) for configuration, local Transformers inference, caching and read-only recall APIs.
 
 ## Diagnostics
 

@@ -7,7 +7,7 @@
 - [evaluation_adapter.py](evaluation_adapter.py): run generation and decision fixtures through a registered Python engine using the installed evaluation API.
 
 - [check_engine.py](check_engine.py): register a deterministic dice pool for skills and combat, verify its contract, and run an embedded backend that exposes it to world creators.
-- [transformer_embedding.py](transformer_embedding.py): serve a local embedding model through an OpenAI-compatible endpoint or register its native `embed` adapter. See [memory retrieval](../docs/MEMORY.md).
+- [transformer_embedding.py](transformer_embedding.py): serve a local embedding model through an OpenAI-compatible endpoint or register its native `embed` adapter. See [memory retrieval](../guides/reference/memory.md).
 
 See the [developer guide](../guides/developers.md) and [research guide](../guides/research.md) for configuration and evaluation.
 

@@ -51,4 +51,4 @@ The server revalidates conditions. The player view's `custom_state` exposes visi
 
 Imported mechanics can be adapted to this typed format with a conversion report. Supported effects operate on declared data; arbitrary JavaScript, macros, MVU scripts and nested JSON writes require their own trusted host extensions. Item-count conditions sum matching inventory items; effects currently cover the operations listed above.
 
-See [StateRules schema](../schemas/StateRules.schema.json), `tests/test_state_rules.py`, and `scripts/check_states_browser.py`. `scripts/check_content_review.py --output outputs/validation/review` evaluates mechanics-review contrasts with the configured model.
+See [StateRules schema](../../schemas/StateRules.schema.json), `tests/test_state_rules.py`, and `scripts/check_states_browser.py`. `scripts/check_content_review.py --output outputs/validation/review` evaluates mechanics-review contrasts with the configured model.

@@ -55,7 +55,7 @@ registry.register(CheckEngine(
 app = create_app(check_registry=registry, model_config=my_models)
 ```
 
-The host supplies `my_models` using the normal model configuration. A complete dice-pool implementation is in [check_engine.py](../examples/check_engine.py). Run its contract example with `python examples/check_engine.py --output outputs/check-example.json`.
+The host supplies `my_models` using the normal model configuration. A complete dice-pool implementation is in [check_engine.py](../../examples/check_engine.py). Run its contract example with `python examples/check_engine.py --output outputs/check-example.json`.
 
 To run its embedded backend, set `NARRALOOM_RULES_WORKSPACE`, `NARRALOOM_RULES_MODELS_CONFIG` and, when needed, `NARRALOOM_RULES_SECRETS_ROOT`, then use `uvicorn check_engine:create --factory --app-dir examples`. It registers `example_pool@1`, which counts successful d6 faces before adding the supplied modifier.
 
@@ -83,4 +83,4 @@ Committed receipts contain the engine ID, version, option digest, score and dice
 
 Native packages preserve the binding, declare the `check_engine` capability and expose the required ID/version in preview. Packages containing the new field declare a minimum framework version of 0.16.0. Recipients can import the data, install the matching engine in their host application and rerun content tests. Original world and story text stay intact.
 
-Custom checks extend numerical adjudication within the existing action/event system. New operation types, event reducers, combat turn structures and persistence backends have their own core contracts. See [rules](RULES.md), [state rules](STATE_RULES.md), [contracts](CONTRACTS.md) and [testing](TESTING.md).
+Custom checks extend numerical adjudication within the existing action/event system. New operation types, event reducers, combat turn structures and persistence backends have their own core contracts. See [rules](rules.md), [state rules](state-rules.md), [contracts](contracts.md) and [testing](testing.md).

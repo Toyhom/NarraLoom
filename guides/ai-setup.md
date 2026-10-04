@@ -34,4 +34,4 @@ If I bring a research model, use guides/research.md to change one module and
 record its actual response model, failures, latency and usage.
 ```
 
-Optional 2D creation has its own executor and model dependencies. Configure it when selected; see [Avatar](../docs/AVATARS.md).
+Optional 2D creation has its own executor and model dependencies. Configure it when selected; see [Avatar](reference/avatars.md).

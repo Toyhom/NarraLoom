@@ -34,7 +34,7 @@ Only the engine's validated commit changes canonical state. Model summaries and 
 
 `create_app` accepts `AppConfig`, an in-memory `model_config`, a model `registry` or complete `gateway`, a `check_registry`, an `action_registry` and an `avatar_factory`. Generation and decision transports declare capabilities. Deterministic check engines pin their ID/version in each world and share the existing commit pipeline. A host can embed the backend in ASGI or build any frontend on the API.
 
-Host-registered action modules supply typed parameters and portable state through the existing event pipeline. New event types and persistence internals are versioned core code, with ownership, replay and recovery contracts. See [action modules](ACTION_MODULES.md). See [check engines](CHECK_ENGINES.md), [contracts](CONTRACTS.md), [model engines](ENGINES.md), [SDK](CLIENT.md) and the [developer guide](../guides/developers.md).
+Host-registered action modules supply typed parameters and portable state through the existing event pipeline. New event types and persistence internals are versioned core code, with ownership, replay and recovery contracts. See [action modules](action-modules.md). See [check engines](check-engines.md), [contracts](contracts.md), [model engines](engines.md), [SDK](client.md) and the [developer guide](../developers.md).
 
 ## Hosting
 

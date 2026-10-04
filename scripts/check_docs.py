@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     files = [*ROOT.glob('README*.md'), ROOT / 'NOTICE.md', ROOT / 'CONTRIBUTING.md',
              ROOT / 'SECURITY.md', ROOT / 'examples/README.md', ROOT / 'resources/community/README.md',
-             *sorted((ROOT / 'guides').rglob('*.md')), *sorted((ROOT / 'docs').glob('*.md'))]
+             *sorted((ROOT / 'guides').rglob('*.md'))]
     errors = []
     for path in files:
         source = path.read_text()

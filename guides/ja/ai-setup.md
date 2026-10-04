@@ -37,4 +37,4 @@ README.md、guides/quickstart.md、guides/models.md、guides/developers.md
 変更し、その実際の応答モデル、失敗、レイテンシ、使用状況を記録する。
 ```
 
-オプションの 2D 作成には独自のエグゼキューターとモデル依存関係があります。選択時に設定してください。[Avatar](../../docs/AVATARS.md) を参照してください。
+オプションの 2D 作成には独自のエグゼキューターとモデル依存関係があります。選択時に設定してください。[Avatar](../reference/avatars.md) を参照してください。

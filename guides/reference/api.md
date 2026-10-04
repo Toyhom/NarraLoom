@@ -1,10 +1,10 @@
 # HTTP API
 
-The running backend publishes interactive documentation at `/docs` and its complete request/response schema at `/openapi.json`. [Python SDK](CLIENT.md) handles sessions, polling and recoverable requests.
+The running backend publishes interactive documentation at `/docs` and its complete request/response schema at `/openapi.json`. [Python SDK](client.md) handles sessions, polling and recoverable requests.
 
 Start with `POST /api/session`. Retain `rpw_session` and send the returned `csrf_token` as `X-CSRF-Token` on writes. Sessions scope libraries, settings and campaigns. The server validates ownership for reads and writes.
 
-Creation jobs and actions are asynchronous. Poll their returned IDs. Action SSE emits `event: state` with public snapshots. Display committed narrative with its resulting player view. Receipt recovery reuses original request IDs; retries use explicit endpoints. See [contracts](CONTRACTS.md).
+Creation jobs and actions are asynchronous. Poll their returned IDs. Action SSE emits `event: state` with public snapshots. Display committed narrative with its resulting player view. Receipt recovery reuses original request IDs; retries use explicit endpoints. See [contracts](contracts.md).
 
 | Method | Route | Handler |
 | --- | --- | --- |

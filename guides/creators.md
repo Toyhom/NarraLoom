@@ -22,7 +22,7 @@ Generation saves editable drafts. Check the opening, player identity, map connec
 
 Edit failed content or use **AI revision and retest** to request a new revision and review its text changes. Every test result belongs to its exact revision. Existing campaigns keep their original compiled content when you edit a world or story.
 
-[State rules](../docs/STATE_RULES.md) define integers, switches, phases, conditions, actions and triggers. Include executable acceptance routes for all declared actions/triggers. [Game rules](../docs/RULES.md) covers equipment, trading, lightweight combat and d20/d100 checks. Automatic tests cover the declared routes; explore alternate player choices yourself for narrative quality.
+[State rules](reference/state-rules.md) define integers, switches, phases, conditions, actions and triggers. Include executable acceptance routes for all declared actions/triggers. [Game rules](reference/rules.md) covers equipment, trading, lightweight combat and d20/d100 checks. Automatic tests cover the declared routes; explore alternate player choices yourself for narrative quality.
 
 ## Create another story
 
@@ -34,4 +34,4 @@ Build a native `.narraloom.zip` from up to eight tested stories in one world rev
 
 Recipients choose stories, install editable copies and run tests with their own models. Package content includes creator text and GM secrets, so use **player notes export** when sharing only a playthrough's visible story. Full campaign backups serve a separate restoration workflow.
 
-Character-card JSON/PNG, CHARX and world books have a basic import-and-review path. Review the conversion report, especially unsupported scripts and mechanics. Native packages preserve the framework's own typed content. See [package reference](../docs/COMMUNITY_PACKAGES.md) and [starter attribution](../docs/COMMUNITY_CONTENT.md).
+Character-card JSON/PNG, CHARX and world books have a basic import-and-review path. Review the conversion report, especially unsupported scripts and mechanics. Native packages preserve the framework's own typed content. See [package reference](reference/community-packages.md) and [starter attribution](reference/community-content.md).

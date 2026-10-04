@@ -1,6 +1,6 @@
 # Data and recovery contracts
 
-The authoritative Python types live in `content.py`, `contracts.py`, `state_rules.py`, `packages.py` and the corresponding modules under `src/roleplay_world`. [schemas](../schemas) contains generated JSON Schema. Run `python scripts/export_schemas.py` after changing a public type. The running API publishes `/openapi.json`.
+The authoritative Python types live in `content.py`, `contracts.py`, `state_rules.py`, `packages.py` and the corresponding modules under `src/roleplay_world`. [schemas](../../schemas) contains generated JSON Schema. Run `python scripts/export_schemas.py` after changing a public type. The running API publishes `/openapi.json`.
 
 ## Content identity
 
@@ -17,7 +17,7 @@ Entity IDs are stable references. Display names and translated interface labels 
 
 An `ActionCommand` contains `schema_version`, `action_id`, `expected_world_version`, `mode` and `text`, plus supported operation/visibility fields. The campaign and branch come from the URL. The session determines actor authority. Modes are `act`, `say`, `wait`, `ooc`. Game-outside discussion can add a saved narrative turn/version while preserving game facts and time.
 
-Persist the session and prepared request before sending. Receipt recovery preserves original IDs and versions; execution retry is an explicit separate operation. Stale versions return a conflict. [CLIENT](CLIENT.md) gives recovery examples.
+Persist the session and prepared request before sending. Receipt recovery preserves original IDs and versions; execution retry is an explicit separate operation. Stale versions return a conflict. [CLIENT](client.md) gives recovery examples.
 
 ## Commit and replay
 
@@ -31,9 +31,9 @@ World truth, NPC knowledge, individual player knowledge and visible narrative ha
 
 NPC reply schemas include facts observed through the current action's deterministic effects. Transfers of newly observed facts follow the clock or authored events that establish the NPC's knowledge. Facts outside that resulting perspective remain invalid disclosures.
 
-Action modules partition their state into public, actor-private and host-private data. Stored outcomes are validated against pinned schemas and can replay without module code. See [action modules](ACTION_MODULES.md).
+Action modules partition their state into public, actor-private and host-private data. Stored outcomes are validated against pinned schemas and can replay without module code. See [action modules](action-modules.md).
 
-Player notes contain visible history. Creator exports, native content packages and full backups contain authored secrets and are intended for creators or restoration. See [package format](COMMUNITY_PACKAGES.md).
+Player notes contain visible history. Creator exports, native content packages and full backups contain authored secrets and are intended for creators or restoration. See [package format](community-packages.md).
 
 ## Model responses
 

@@ -4,7 +4,7 @@ The `roleplay_world.evaluation` API and installed `narraloom evaluate` command r
 
 ## Run and compare
 
-Install from the checkout with `python -m pip install '.[research]'`. Development installations already include this extra. Prepare two model configurations using the [provider format](ENGINES.md), then run:
+Install from the checkout with `python -m pip install '.[research]'`. Development installations already include this extra. Prepare two model configurations using the [provider format](engines.md), then run:
 
 ```bash
 python examples/make_evaluation_cases.py --output outputs/evaluation/cases.jsonl
@@ -24,7 +24,7 @@ The example freezes twelve English, Chinese and Japanese tasks from the packaged
 
 ## Case format
 
-The JSONL file contains one object per line. The [case schema](../schemas/EvaluationCase.schema.json) defines the envelope. A generation case includes a task, its model-visible output contract and optional private scoring assertions:
+The JSONL file contains one object per line. The [case schema](../../schemas/EvaluationCase.schema.json) defines the envelope. A generation case includes a task, its model-visible output contract and optional private scoring assertions:
 
 ```json
 {
@@ -51,11 +51,11 @@ The JSONL file contains one object per line. The [case schema](../schemas/Evalua
 
 The gateway receives `system`, `data` and `output_schema`. Only output-contract failures can enter schema repair. `expect` is checked after the gateway returns and stays out of both the original request and repair prompts. A schema-valid wrong answer is retained as `assertion_failed`.
 
-A decision case sets `kind: "decide"`, `role: "action_router"` and a `decision` object matching [DecisionRequest](../schemas/DecisionRequest.schema.json). Its optional `expect` applies to the validated `answers` dictionary. [evaluation_adapter.py](../examples/evaluation_adapter.py) includes both case types.
+A decision case sets `kind: "decide"`, `role: "action_router"` and a `decision` object matching [DecisionRequest](../../schemas/DecisionRequest.schema.json). Its optional `expect` applies to the validated `answers` dictionary. [evaluation_adapter.py](../../examples/evaluation_adapter.py) includes both case types.
 
 Frozen evaluation validates JSON structure and authored assertions. Domain checks that depend on live world transitions remain in the runtime and its playtests. For prose, record human ratings of knowledge consistency, voice, agency and usefulness alongside case IDs.
 
-For complete action sequences, use [`narraloom playtest`](PLAYTESTING.md). It executes the runtime against a native world/story export, checks projected results and recalled sources, and resumes from durable campaign receipts.
+For complete action sequences, use [`narraloom playtest`](playtesting.md). It executes the runtime against a native world/story export, checks projected results and recalled sources, and resumes from durable campaign receipts.
 
 ## Python engines
 
@@ -73,7 +73,7 @@ report = await evaluate(
 )
 ```
 
-Run `python examples/evaluation_adapter.py --output outputs/evaluation/adapter` for a complete native-engine example. It uses authored constant responses to demonstrate generation and decision contracts. Replace its `invoke()` with your model implementation. The [engine guide](ENGINES.md) documents adapter inputs and outputs. Record a new provider `revision` whenever weights, adapter implementation or deployment settings change; native callable implementations and remote weights are identified by this caller-supplied label.
+Run `python examples/evaluation_adapter.py --output outputs/evaluation/adapter` for a complete native-engine example. It uses authored constant responses to demonstrate generation and decision contracts. Replace its `invoke()` with your model implementation. The [engine guide](engines.md) documents adapter inputs and outputs. Record a new provider `revision` whenever weights, adapter implementation or deployment settings change; native callable implementations and remote weights are identified by this caller-supplied label.
 
 ## Reports and recovery
 

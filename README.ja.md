@@ -8,11 +8,11 @@ NarraLoom は、物語ゲームのためのモジュール式 AI フレームワ
 
 Python バックエンドを単独で動かす、自分のアプリに組み込む、明るい配色のリファレンスフロントエンドで試す、といった使い方ができます。創作、行動計画、キャラクターの会話、ナレーション、意味判断に使うモデルは、ローカルサービス、API、Python アダプターで個別に設定できます。
 
-[![NarraLoom デモ](media/poster-ja.jpg)](https://toyhom.github.io/NarraLoom/?lang=ja)
+https://github.com/user-attachments/assets/c276a2c0-8375-42eb-aa62-d4f0ed70bb33
 
-**デモを見る：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
+**デモを見る：** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-約 15 分、13 チャプターとクリックできる字幕で紹介します。世界の作成と自動テスト、動く NPC、ルールとマルチプレイ、共有と復元、エンジン設定、SDK と研究ツールを実際の操作で確認できます。画面の使い方は[ワークスペースガイド](guides/ja/workspace.md)をご覧ください。
+約 15 分、13 チャプターと解説字幕で紹介します。世界の作成と自動テスト、動く NPC、ルールとマルチプレイ、共有と復元、エンジン設定、SDK と研究ツールを実際の操作で確認できます。画面の使い方は[ワークスペースガイド](guides/ja/workspace.md)をご覧ください。
 
 ## はじめに
 
@@ -21,7 +21,7 @@ Python バックエンドを単独で動かす、自分のアプリに組み込�
 | API またはローカルモデルを設定して遊ぶ | [クイックスタート](guides/ja/quickstart.md) |
 | Codex や Claude Code にセットアップを任せる | [AI によるセットアップ](guides/ja/ai-setup.md) |
 | 世界、ストーリー、共有パッケージを作る | [クリエイター向け](guides/ja/creators.md) |
-| 独自のフロントエンドやゲームを開発する | [開発者向け](guides/ja/developers.md) · [Python SDK](docs/CLIENT.md) |
+| 独自のフロントエンドやゲームを開発する | [開発者向け](guides/ja/developers.md) · [Python SDK](guides/reference/client.md) |
 | モデルを入れ替えて性能を比較する | [研究者向け](guides/ja/research.md) · [モデルの選択](guides/ja/models.md) |
 | サーバーの運用、バックアップ、問題解決 | [デプロイ](guides/ja/deployment.md) |
 

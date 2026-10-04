@@ -25,6 +25,7 @@ jobs:
           python scripts/check_workspace_browser.py --url http://127.0.0.1:18991 --output outputs/validation/workspace
           python scripts/check_provider_browser.py --url http://127.0.0.1:18991 --output outputs/validation/providers
       - run: python scripts/check_docs.py
+      - run: python scripts/check_public_tree.py
       - run: python scripts/export_schemas.py && git diff --exit-code -- schemas
       - uses: actions/upload-artifact@v4
         if: failure()

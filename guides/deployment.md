@@ -38,4 +38,4 @@ Avoid sharing a live data directory between backend processes. The journal lock 
 | Frontend unavailable | Build path passed with `--web-dist`; `npm run build` completed |
 | Optional Avatar creation unavailable | Configure an executor and its model dependencies; portable finished assets can be imported |
 
-See [tests](../docs/TESTING.md) for installation checks and [Avatar setup](../docs/AVATARS.md) for optional presentation.
+See [tests](reference/testing.md) for installation checks and [Avatar setup](reference/avatars.md) for optional presentation.

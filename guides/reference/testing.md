@@ -11,10 +11,6 @@ module bindings on a running test workspace using a fresh browser session.
 
 `python scripts/check_workspace_browser.py --url http://localhost:18090 --output outputs/validation/workspace` checks keyboard navigation, section isolation, retained files and drafts, three-language mobile layouts, and configured providers without model-list probes. It uses a fresh session and no model calls. This suite and provider settings checks run in CI.
 
-The published demonstration player uses MP4 and WebM sources. Its deployment runs
-`scripts/check_demo_browser.py` in Chromium to verify all three languages, decoded
-frames after seeking, desktop/mobile playback and layout before publishing.
-
 Install the development dependencies and frontend packages:
 
 ```bash
@@ -53,13 +49,13 @@ These flags extend `scripts/verify.py`; individual `check_*` scripts expose thei
 
 ## Module evaluations
 
-`narraloom evaluate` runs authored JSONL tasks through the configured gateway. Reports include failed responses, schema repairs, assertion results, latency and incomplete usage accounting. `narraloom compare` pairs completed runs of the same workload. See [EVALUATION](EVALUATION.md) for the installed CLI and Python API. Distribution checks exercise native generation/decision adapters and report comparison outside the source import path.
+`narraloom evaluate` runs authored JSONL tasks through the configured gateway. Reports include failed responses, schema repairs, assertion results, latency and incomplete usage accounting. `narraloom compare` pairs completed runs of the same workload. See [EVALUATION](evaluation.md) for the installed CLI and Python API. Distribution checks exercise native generation/decision adapters and report comparison outside the source import path.
 
 ## Memory retrieval
 
-The installed [`narraloom playtest`](PLAYTESTING.md) command runs creator-authored trajectories with durable checkpoint/retry, per-step assertions and actor/historical-memory probes. `examples/make_playtest_plan.py` supplies a 100-turn starting point. Distribution checks exercise the Python runner outside the checkout with a native adapter, inventory assertions and restart recovery.
+The installed [`narraloom playtest`](playtesting.md) command runs creator-authored trajectories with durable checkpoint/retry, per-step assertions and actor/historical-memory probes. `examples/make_playtest_plan.py` supplies a 100-turn starting point. Distribution checks exercise the Python runner outside the checkout with a native adapter, inventory assertions and restart recovery.
 
-`tests/test_semantic_memory.py` checks vector protocols, actor/branch isolation, caching, limits and cancellation. The [memory guide](MEMORY.md) includes a local service and a fixed multilingual recall comparison. To run that comparison, actual-model dialogue and restart recovery from an independently installed wheel:
+`tests/test_semantic_memory.py` checks vector protocols, actor/branch isolation, caching, limits and cancellation. The [memory guide](memory.md) includes a local service and a fixed multilingual recall comparison. To run that comparison, actual-model dialogue and restart recovery from an independently installed wheel:
 
 ```bash
 python scripts/check_distribution.py --output outputs/validation/memory-wheel \
@@ -76,9 +72,9 @@ python scripts/check_distribution.py --output outputs/validation/check-engine-li
   --checks-live --live-models-config configs/models.local.json --secrets-root secrets
 ```
 
-The example host installs [a dice-pool engine](../examples/check_engine.py). Unit coverage also checks legacy d20/d100 results, invalid callbacks, pinned versions, prepared-result retries and tampered backup receipts.
+The example host installs [a dice-pool engine](../../examples/check_engine.py). Unit coverage also checks legacy d20/d100 results, invalid callbacks, pinned versions, prepared-result retries and tampered backup receipts.
 
-The [action-module example](../examples/action_module.py) supplies survey/rest mechanics and host-authored test routes. The distribution suite runs its standalone contracts and plugin-free replay. This real-provider check adds automatic creation, English/Japanese/Chinese action requests, story continuation, content-package exchange and process restart:
+The [action-module example](../../examples/action_module.py) supplies survey/rest mechanics and host-authored test routes. The distribution suite runs its standalone contracts and plugin-free replay. This real-provider check adds automatic creation, English/Japanese/Chinese action requests, story continuation, content-package exchange and process restart:
 
 ```bash
 python scripts/check_distribution.py --output outputs/validation/action-module-live \
@@ -91,4 +87,4 @@ Contract fixtures validate software behavior independently of model intelligence
 
 ## CI and documentation
 
-GitHub Actions runs the CPU suite, lint, catalog checks, frontend build, distribution checks and local documentation links. It requires no provider credentials. Schemas should be regenerated from their Python types when contracts change. See [CONTRIBUTING](../CONTRIBUTING.md).
+GitHub Actions runs the CPU suite, lint, catalog checks, frontend build, distribution checks and local documentation links. It requires no provider credentials. Schemas should be regenerated from their Python types when contracts change. See [CONTRIBUTING](../../CONTRIBUTING.md).

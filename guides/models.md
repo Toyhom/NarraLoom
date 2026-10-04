@@ -12,9 +12,9 @@ The simplest setup uses one strong instruction model through an OpenAI-compatibl
 | `character_actor`, `narrator` | Character voice, dialogue and prose in the content language |
 | `world_actor` | Bounded proposals that respect NPC knowledge and available actions |
 | `action_router` | System One decision protocol; measured accuracy on your action distribution |
-| `memory_embedding` | Multilingual text embeddings such as BGE-M3; local/API or native Python `embed` adapters. [Memory setup](../docs/MEMORY.md) |
+| `memory_embedding` | Multilingual text embeddings such as BGE-M3; local/API or native Python `embed` adapters. [Memory setup](reference/memory.md) |
 | Deterministic rules | Engine code handles dice, arithmetic, ownership and persistence |
-| Avatar presentation | Separate image/rig creation or imported ready assets; see [Avatar](../docs/AVATARS.md) |
+| Avatar presentation | Separate image/rig creation or imported ready assets; see [Avatar](reference/avatars.md) |
 
 Smaller dialogue models can reduce cost. Evaluate their structured outputs and character behavior separately from the main planner. A general small model usually needs more testing for world generation and complex rules.
 
@@ -22,7 +22,7 @@ Smaller dialogue models can reduce cost. Evaluate their structured outputs and c
 
 Choose **API protocol** in **Models & usage**: OpenAI Chat Completions, OpenAI Responses or Anthropic Messages. Enter the provider base URL, a model ID from your account and its API key, then save and test. Use `https://api.openai.com/v1` for Responses or `https://api.anthropic.com/v1` for Messages. Each named provider has the same protocol control, so creation, planning and dialogue can use different services.
 
-For Anthropic, choose **JSON Schema** to request structured results through a result tool; Object and prompt modes request JSON through the prompt. Enable **Use the model’s default temperature** when required by your model. [Native configuration example](../configs/models.native.example.json) and [transport reference](../docs/ENGINES.md#generation-protocols) cover file-based setup and provider options.
+For Anthropic, choose **JSON Schema** to request structured results through a result tool; Object and prompt modes request JSON through the prompt. Enable **Use the model’s default temperature** when required by your model. [Native configuration example](../configs/models.native.example.json) and [transport reference](reference/engines.md#generation-protocols) cover file-based setup and provider options.
 
 ## Server configuration
 
@@ -46,7 +46,7 @@ Save this as `configs/models.local.json`, and set `RPW_API_KEY` privately in you
 
 For a local service, set `url` to its reachable address, such as `http://127.0.0.1:8000/v1`, and use its served model name. URLs are reached from the backend host. Each role may have its own provider, model, timeout, output limit and generation parameters. `json_object`, `json_schema` and prompt-based JSON depend on provider support; all results still pass runtime validation.
 
-The reference frontend exposes named providers and module bindings under **Models & usage**. Save settings before running a module check. A blank key preserves a saved key for the same endpoint; removing it uses the explicit clear control. [Engine contracts](../docs/ENGINES.md) describes the deployment-file format and Python extension API.
+The reference frontend exposes named providers and module bindings under **Models & usage**. Save settings before running a module check. A blank key preserves a saved key for the same endpoint; removing it uses the explicit clear control. [Engine contracts](reference/engines.md) describes the deployment-file format and Python extension API.
 
 ## Optional System One / Jev
 
@@ -54,4 +54,4 @@ System One handles typed `choice`, `noul` and `score` questions. The bundled ada
 
 Routing defaults to **off**. **Shadow** records classifications while the main planner still handles the turn. **Auto** can route an explicit single movement when probability and margin thresholds pass. Start in shadow mode and evaluate negation, ambiguity, multi-step actions and language variation before enabling auto. Thresholds are model outputs; measure actual errors on held-out cases.
 
-Local model memory depends on weights, context, quantization and concurrency. Run optional inference in a separate environment, share endpoints between roles using the same weights, and follow your host's GPU scheduler. The regular API backend needs no GPU or Torch. Pinned Jev setup commands are in [ENGINES](../docs/ENGINES.md).
+Local model memory depends on weights, context, quantization and concurrency. Run optional inference in a separate environment, share endpoints between roles using the same weights, and follow your host's GPU scheduler. The regular API backend needs no GPU or Torch. Pinned Jev setup commands are in [ENGINES](reference/engines.md).

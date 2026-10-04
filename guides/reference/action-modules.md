@@ -2,7 +2,7 @@
 
 Action modules add Python gameplay rules to an embedded NarraLoom host. A module declares typed parameters, portable state and deterministic action handlers. Worlds pin the implementation ID, version and options. The normal runtime handles model planning, narration, commits, cancellation, branches and recovery.
 
-The [exploration example](../examples/action_module.py) adds terrain/weather surveys and rest. Surveys consume personal focus, record a seeded d6 quality and increment shared progress. Its optional vitality cost uses an adventure world's existing bounded resource.
+The [exploration example](../../examples/action_module.py) adds terrain/weather surveys and rest. Surveys consume personal focus, record a seeded d6 quality and increment shared progress. Its optional vitality cost uses an adventure world's existing bounded resource.
 
 ## Install and register
 
@@ -105,4 +105,4 @@ New actions require the pinned module version. A `module.resolved` event records
 
 Packages preview each binding's ID, engine and version. Snapshots containing `action_modules` require NarraLoom 0.19.0 or newer. Recipients install the matching host module before testing and playing imported content. Missing implementations report `action_module_unavailable` while the imported draft remains editable.
 
-Run `python -m pytest -q tests/test_action_modules.py` for focused regressions and `python scripts/verify.py --distribution` for installation checks. [Testing](TESTING.md) describes real-provider acceptance. Custom event types and persistence backends remain versioned core interfaces.
+Run `python -m pytest -q tests/test_action_modules.py` for focused regressions and `python scripts/verify.py --distribution` for installation checks. [Testing](testing.md) describes real-provider acceptance. Custom event types and persistence backends remain versioned core interfaces.

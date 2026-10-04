@@ -20,4 +20,4 @@ During play, the right panel separates character information, available actions 
 
 **Model settings** has three tabs: connection, module assignments, and usage. Start with one model; open a module to inspect its model guidance or assign a separate service. Save before testing a connection or module. A configured provider can be used even when its protocol has no model-list probe. See [model selection](models.md) for protocols and recommended capabilities.
 
-[Watch the chaptered walkthrough](https://toyhom.github.io/NarraLoom/?lang=en) for actual creation, automatic testing, play, 2D NPCs, rule systems, multiplayer, packages, engine configuration, SDK use and research examples.
+[Watch the chaptered walkthrough](../README.md) for actual creation, automatic testing, play, 2D NPCs, rule systems, multiplayer, packages, engine configuration, SDK use and research examples.

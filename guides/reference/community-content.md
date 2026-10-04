@@ -10,7 +10,7 @@ The home-page catalog includes three Chinese-language adaptations. Choose a star
 
 The adaptations cover these short routes. Covel's complete time-loop endings, full tabletop rules and vehicle/power simulation remain in its source materials. The apartment dinner storyline is authored by NarraLoom contributors. Package metadata describes retained mechanics and omissions.
 
-Pinned text/data, source hashes and original licenses are in [resources/community](../resources/community/README.md). The runtime loads typed adaptations from `src/roleplay_world/builtin/starters`; source presets/macros are reference data. Attribution and full MIT notices travel with creator exports.
+Pinned text/data, source hashes and original licenses are in [resources/community](../../resources/community/README.md). The runtime loads typed adaptations from `src/roleplay_world/builtin/starters`; source presets/macros are reference data. Attribution and full MIT notices travel with creator exports.
 
 Repeated installation of the same content returns the original copy/job and preserves edits. New package content has a new digest. New stories and edits pin their own revisions; existing campaigns keep their original template.
 

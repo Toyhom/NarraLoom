@@ -29,7 +29,7 @@ narraloom compare outputs/evaluation/baseline/report.json \
 
 示例包含中、英、日三种语言的十二个任务。规划结果按明确断言自动计分；NPC 对话和旁白保留供人工评价。同一接口支持生成模块、System One 决策和自定义 Python 引擎。预期答案与模型请求、修复提示分别保存。
 
-报告保留失败、修复次数、耗时、服务商返回的 token 用量及用量缺失情况。`--resume` 保留已有结果，继续尚未执行的任务。[评测接口文档](../../docs/EVALUATION.md) 介绍用例格式、指标、恢复方式和自定义适配器。
+报告保留失败、修复次数、耗时、服务商返回的 token 用量及用量缺失情况。`--resume` 保留已有结果，继续尚未执行的任务。[评测接口文档](../reference/evaluation.md) 介绍用例格式、指标、恢复方式和自定义适配器。
 
 ## 决策模型
 
@@ -50,8 +50,8 @@ python scripts/check_distribution.py --output outputs/validation/sdk-model-check
 
 实时安装包检查会创建一个世界和两个故事，运行它们的自动测试，进行一个回合，恢复备份，并验证重启后的请求恢复。`scripts/check_longrun.py` 会执行更长的动作序列；检查其参数以了解场景和输出目录。
 
-确定性重放检查事件/持久化行为。契约夹具隔离软件边界。实际模型检查在已执行任务上测量所选模型。在评估对话、能动性和故事质量时，将它们与人工评估结合使用。[Testing](../../docs/TESTING.md) 列出了重点测试套件；[engine contracts](../../docs/ENGINES.md) 描述了追踪和适配器。
+确定性重放检查事件/持久化行为。契约夹具隔离软件边界。实际模型检查在已执行任务上测量所选模型。在评估对话、能动性和故事质量时，将它们与人工评估结合使用。[Testing](../reference/testing.md) 列出了重点测试套件；[engine contracts](../reference/engines.md) 描述了追踪和适配器。
 
 ## 可恢复的长程试跑
 
-使用 `narraloom playtest --source story.json --plan plan.json --models-config models.local.json --output outputs/playtests/run` 运行完整行动序列。计划可指定玩家行动、独立评分断言，以及不同角色和历史版本的记忆查询。`--max-steps` 保存检查点，`--resume` 恢复已提交回执，`--retry-failed` 显式重试失败行动。格式、原生适配器和用量记录见[长程试跑](../../docs/PLAYTESTING.md)。
+使用 `narraloom playtest --source story.json --plan plan.json --models-config models.local.json --output outputs/playtests/run` 运行完整行动序列。计划可指定玩家行动、独立评分断言，以及不同角色和历史版本的记忆查询。`--max-steps` 保存检查点，`--resume` 恢复已提交回执，`--retry-failed` 显式重试失败行动。格式、原生适配器和用量记录见[长程试跑](../reference/playtesting.md)。

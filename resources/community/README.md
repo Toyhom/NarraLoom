@@ -9,4 +9,4 @@ These are reference text/data, not executable plugins. The application loads onl
 
 Each `SOURCE.json` records original paths, SHA256 and byte counts. External media and executable plugins are excluded. Source presets/macros are retained as inert reference data; do not run them or automatically fetch embedded URLs. Original files are unmodified.
 
-The playable adaptations are smaller than the originals: Lantern Barrow covers lamp restoration; Emberback covers the opening investigation; Apartment was a plot-free sandbox and receives a newly authored dinner-planning story here. See the precise [adaptation notes](../../docs/COMMUNITY_CONTENT.md).
+The playable adaptations are smaller than the originals: Lantern Barrow covers lamp restoration; Emberback covers the opening investigation; Apartment was a plot-free sandbox and receives a newly authored dinner-planning story here. See the precise [adaptation notes](../../guides/reference/community-content.md).

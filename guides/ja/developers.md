@@ -19,13 +19,13 @@ app = create_app(config=AppConfig(
 ))
 ```
 
-この ASGI アプリケーションを Uvicorn と単一ワーカーで配信します。`AppConfig` は相対パスをワークスペースに対して解決します。明示的な設定はプロセス全体の `RPW_*` パス設定とは独立しています。`model_config={...}` はインメモリ設定を提供します。[アーキテクチャ](../../docs/ARCHITECTURE.md) ではライターの所有権とモジュール境界について説明しています。
+この ASGI アプリケーションを Uvicorn と単一ワーカーで配信します。`AppConfig` は相対パスをワークスペースに対して解決します。明示的な設定はプロセス全体の `RPW_*` パス設定とは独立しています。`model_config={...}` はインメモリ設定を提供します。[アーキテクチャ](../reference/architecture.md) ではライターの所有権とモジュール境界について説明しています。
 
 ## HTTP または Python を使用する
 
 インタラクティブな OpenAPI ドキュメントは `/docs` に、スキーマは `/openapi.json` にあります。まず `POST /api/session` で開始し、HttpOnly Cookie を保持し、返された CSRF トークンを書き込み時に `X-CSRF-Token` として送信します。ブラウザフロントエンドは同一オリジンまたは同一オリジンのリバースプロキシを使用する必要があります。
 
-非同期の `roleplay_world.client.NarraLoomClient` がこれらの詳細を処理します。送信前に `Session` と各 `PreparedRequest` を保存してください。タイムアウトやプロセス再起動後にその保存済みリクエストを再利用して、同じジョブ、キャンペーン、アクションを復元します。実行のリトライは明示的です。完全な [SDK ガイド](../../docs/CLIENT.md) と [ヘッドレス例](../../examples/headless.py) を参照してください。
+非同期の `roleplay_world.client.NarraLoomClient` がこれらの詳細を処理します。送信前に `Session` と各 `PreparedRequest` を保存してください。タイムアウトやプロセス再起動後にその保存済みリクエストを再利用して、同じジョブ、キャンペーン、アクションを復元します。実行のリトライは明示的です。完全な [SDK ガイド](../reference/client.md) と [ヘッドレス例](../../examples/headless.py) を参照してください。
 
 カスタムフロントエンドは `GET /api/studio/jobs/{id}` を通じて作成ジョブを追跡します。プレイでは、ブランチビューを読み取り、`expected_world_version` を添えてアクションを送信し、アクションスナップショットまたは SSE エンドポイントを追跡します。コミットされたナラティブと新しいビューを一緒に表示します。安定した機械可読なエラーコードが、古いバージョン、権限の失敗、モデルエラーを区別します。プロバイダの診断テキストは元の言語を保持する場合があります。
 
@@ -33,7 +33,7 @@ app = create_app(config=AppConfig(
 
 `builtin_engines()` に `Engine` を登録し、`registry=registry` を `create_app` に渡します。その非同期呼び出しは設定、生成または決定のペイロード、認証ヘッダーを受け取ります。生成は `text`、`model`、およびオプションの `usage` を返します。オプションの `probe` はトランスポート固有のヘルスチェックを提供します。
 
-`examples/embedded_backend.py` は、決定論的なコントラクトフィクスチャを備えたネイティブ Python アダプターを示しています。アダプターはローカルライブラリまたはリモートサービスを呼び出すことができます。モデルの提案は提供されたスキーマ内に保ってください。[ENGINES](../../docs/ENGINES.md) では機能検証、予算、トレーシングについて説明しています。
+`examples/embedded_backend.py` は、決定論的なコントラクトフィクスチャを備えたネイティブ Python アダプターを示しています。アダプターはローカルライブラリまたはリモートサービスを呼び出すことができます。モデルの提案は提供されたスキーマ内に保ってください。[ENGINES](../reference/engines.md) では機能検証、予算、トレーシングについて説明しています。
 
 `gateway=` を使用してゲートウェイ全体を置き換えるか、`avatar_factory(store)` を使用してプレゼンテーションサービスを提供します。これらのフックは正規の状態コミットをフレームワーク内に残します。新しいイベントタイプと永続化の実装には、コアコントラクトへのバージョン付き変更とリプレイテストが必要です。
 
@@ -41,17 +41,17 @@ app = create_app(config=AppConfig(
 
 `create_app(check_registry=...)` に `CheckRegistry` を渡し、技能・攻撃・反撃の決定論的な判定処理を登録できます。世界にはエンジンID、バージョン、設定値を固定します。組み込み実装は複数のダイスの合計に対応し、[check_engine.py](../../examples/check_engine.py) は成功数を数えるダイスプールの例です。
 
-`GET /api/check-engines` で実装を確認し、`CreateWorld.check_engine` または `WorldBlueprint.check_engine` を設定します。コンテンツの自動テストで実装を検証し、確定記録にダイスと結果を保存するため、リプレイ・分岐・復元にも対応します。[判定エンジンのリファレンス](../../docs/CHECK_ENGINES.md) に登録、乱数、バージョン固定、パッケージ依存関係をまとめています。
+`GET /api/check-engines` で実装を確認し、`CreateWorld.check_engine` または `WorldBlueprint.check_engine` を設定します。コンテンツの自動テストで実装を検証し、確定記録にダイスと結果を保存するため、リプレイ・分岐・復元にも対応します。[判定エンジンのリファレンス](../reference/check-engines.md) に登録、乱数、バージョン固定、パッケージ依存関係をまとめています。
 
 ## ゲームの行動を追加する
 
 `ActionRegistry` に `ActionModule` を登録し、`create_app(action_registry=...)` に渡します。モジュールは型付きの引数、公開・キャラクター別・ホスト専用の状態、シード付き乱数を使うルール、検証用の手順を定義します。世界の作成時に `CreateWorld.action_modules` で選択すると、その世界のストーリーに引き継がれます。自然言語による計画と SDK からの行動指定は、同じコミット処理を使います。
 
-[探索モジュールの例](../../examples/action_module.py) は調査と休息を外部プラグインとして実装しています。コンテンツの自動テストで動作を検証し、保存済みの結果はプラグインなしでも再生・分岐・復元できます。[行動モジュール](../../docs/ACTION_MODULES.md) にコールバック、視点、パッケージ依存関係、独自フロントエンドからの利用方法をまとめています。
+[探索モジュールの例](../../examples/action_module.py) は調査と休息を外部プラグインとして実装しています。コンテンツの自動テストで動作を検証し、保存済みの結果はプラグインなしでも再生・分岐・復元できます。[行動モジュール](../reference/action-modules.md) にコールバック、視点、パッケージ依存関係、独自フロントエンドからの利用方法をまとめています。
 
 ## 記憶検索を拡張する
 
-`memory_embedding` を `openai_embedding` のローカルサービスや API に接続するか、`embed` 能力を持つ Python `Engine` を登録します。`memory_policy.mode=hybrid` に設定すると、プランナーと NPC のコンテキストが意味検索を使用します。カスタムフロントエンドでは `client.recall(...)` で出典付きの記録を取得できます。[記憶 API](../../docs/MEMORY.md) にベクトル契約、視点、予算、キャッシュ、Transformers アダプターの例をまとめています。
+`memory_embedding` を `openai_embedding` のローカルサービスや API に接続するか、`embed` 能力を持つ Python `Engine` を登録します。`memory_policy.mode=hybrid` に設定すると、プランナーと NPC のコンテキストが意味検索を使用します。カスタムフロントエンドでは `client.recall(...)` で出典付きの記録を取得できます。[記憶 API](../reference/memory.md) にベクトル契約、視点、予算、キャッシュ、Transformers アダプターの例をまとめています。
 
 ## リファレンスフロントエンドで作業する
 
@@ -61,4 +61,4 @@ npm ci
 npm run dev
 ```
 
-Vite は `/api` をポート 18090 のバックエンドに転送します。`npm run build` でビルドします。カタログキー、パラメータ、ブラウザ設定は `npm run test:i18n` でチェックされます。[ローカリゼーション](../../docs/I18N.md)、[コントラクト](../../docs/CONTRACTS.md)、[テスト](../../docs/TESTING.md) を参照してください。
+Vite は `/api` をポート 18090 のバックエンドに転送します。`npm run build` でビルドします。カタログキー、パラメータ、ブラウザ設定は `npm run test:i18n` でチェックされます。[ローカリゼーション](../reference/i18n.md)、[コントラクト](../reference/contracts.md)、[テスト](../reference/testing.md) を参照してください。

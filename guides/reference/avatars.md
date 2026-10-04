@@ -6,10 +6,10 @@ The portable format is `deformable-portrait` version 3 with `source-lip-warp-v3`
 
 ## Create new assets
 
-The source checkout includes a versioned Roleplay Avatar worker. Its bundled executor uses GPUQ and explicit model environments from `configs/avatar.local.json`; start with [the example](../configs/avatar.example.json). It needs the upstream image/vision/face/voice creation dependencies, configured model directories and compatible Python interpreters. See [Roleplay Avatar](https://github.com/Toyhom/RoleplayAvatar) for those model services and their terms.
+The source checkout includes a versioned Roleplay Avatar worker. Its bundled executor uses GPUQ and explicit model environments from `configs/avatar.local.json`; start with [the example](../../configs/avatar.example.json). It needs the upstream image/vision/face/voice creation dependencies, configured model directories and compatible Python interpreters. See [Roleplay Avatar](https://github.com/Toyhom/RoleplayAvatar) for those model services and their terms.
 
 This worker is an optional source integration. For another scheduler or a remote creation service, inject `avatar_factory(store)` in `create_app`; the host owns executor startup and resources. Independently installed backends can serve imported finished assets without launching the source worker.
 
 Creation accepts PNG, JPEG and WebP references, at least 128 pixels on each side, at most 24 million pixels and 10 MB. Stable request IDs recover existing jobs. Packages publish only after contract/asset validation. The stage uses the committed story dialogue; character generation and rendering have independent job/state lifecycles.
 
-The current stage is a WebGL portrait renderer with silent subtitle performance. Voice playback, phoneme synchronization and native Cubism rendering require separate presentation integrations. Adapter provenance and MIT terms are in [vendor/avatar_worker](../vendor/avatar_worker/ADAPTER.md).
+The current stage is a WebGL portrait renderer with silent subtitle performance. Voice playback, phoneme synchronization and native Cubism rendering require separate presentation integrations. Adapter provenance and MIT terms are in [vendor/avatar_worker](../../vendor/avatar_worker/ADAPTER.md).

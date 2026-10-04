@@ -8,11 +8,11 @@ NarraLoom 是模块化的故事游戏 AI 框架。描述一个设定，即可生
 
 可以独立运行 Python 后端、嵌入自己的应用，也可以通过亮色参考前端体验。创作、主持规划、角色对白、叙述和语义判断分别配置模型，支持本地服务、API 和 Python 适配器。
 
-[![NarraLoom 演示](media/poster-zh-CN.jpg)](https://toyhom.github.io/NarraLoom/?lang=zh-CN)
+https://github.com/user-attachments/assets/cbac40f7-cd6c-4513-9313-bf087467ce0b
 
-**观看演示：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
+**观看演示：** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-约 15 分钟，包含 13 个章节与可点击字幕，完整展示世界创作与自动测试、动态 NPC、规则玩法、多人互动、分享恢复、引擎配置，以及 SDK 与研究工具。参考前端的入口说明见[工作台指南](guides/zh-CN/workspace.md)。
+约 15 分钟，包含 13 个章节与画面讲解字幕，完整展示世界创作与自动测试、动态 NPC、规则玩法、多人互动、分享恢复、引擎配置，以及 SDK 与研究工具。参考前端的入口说明见[工作台指南](guides/zh-CN/workspace.md)。
 
 ## 从这里开始
 
@@ -21,7 +21,7 @@ NarraLoom 是模块化的故事游戏 AI 框架。描述一个设定，即可生
 | 配置 API 或本地模型，开始体验 | [快速开始](guides/zh-CN/quickstart.md) |
 | 请 Codex 或 Claude Code 帮忙部署 | [AI 辅助安装](guides/zh-CN/ai-setup.md) |
 | 创作世界、故事和分享包 | [创作者指南](guides/zh-CN/creators.md) |
-| 开发自己的前端或游戏 | [开发者指南](guides/zh-CN/developers.md) · [Python SDK](docs/CLIENT.md) |
+| 开发自己的前端或游戏 | [开发者指南](guides/zh-CN/developers.md) · [Python SDK](guides/reference/client.md) |
 | 替换模型并比较效果 | [研究者指南](guides/zh-CN/research.md) · [模型选择](guides/zh-CN/models.md) |
 | 运行服务、备份和排查问题 | [部署指南](guides/zh-CN/deployment.md) |
 

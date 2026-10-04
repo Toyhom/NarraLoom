@@ -8,11 +8,11 @@ NarraLoom is a modular AI framework for story games. Describe a setting, generat
 
 Use the Python backend on its own, embed it in an application, or explore it through the light reference frontend. Models for creation, planning, dialogue, narration and semantic decisions can be configured separately through local services, APIs or Python adapters.
 
-[![NarraLoom demonstration](media/poster-en.jpg)](https://toyhom.github.io/NarraLoom/?lang=en)
+https://github.com/user-attachments/assets/c21808ee-fc10-43e9-8bc9-69c2e2a6454b
 
-**Watch the tour:** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
+**Watch the tour:** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-About 15 minutes, with 13 chapters and clickable transcripts: create and test worlds, play with animated NPCs, explore rules and multiplayer, share and restore content, configure engines, and use the SDK and research tools. See the [workspace guide](guides/workspace.md) for the reference frontend's navigation.
+About 15 minutes, with 13 chapters and on-screen explanations: create and test worlds, play with animated NPCs, explore rules and multiplayer, share and restore content, configure engines, and use the SDK and research tools. See the [workspace guide](guides/workspace.md) for the reference frontend's navigation.
 
 ## Start here
 
@@ -21,7 +21,7 @@ About 15 minutes, with 13 chapters and clickable transcripts: create and test wo
 | Configure an API or local model and play | [Quick start](guides/quickstart.md) |
 | Ask Codex or Claude Code to set it up | [AI-assisted setup](guides/ai-setup.md) |
 | Create worlds, stories and reusable packages | [Creator guide](guides/creators.md) |
-| Build your own frontend or game | [Developer guide](guides/developers.md) · [Python SDK](docs/CLIENT.md) |
+| Build your own frontend or game | [Developer guide](guides/developers.md) · [Python SDK](guides/reference/client.md) |
 | Replace models and compare their behavior | [Research guide](guides/research.md) · [Model selection](guides/models.md) |
 | Run, back up and troubleshoot a server | [Deployment](guides/deployment.md) |
 

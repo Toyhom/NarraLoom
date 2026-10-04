@@ -38,4 +38,4 @@ API のみで使用する場合は `--web-dist` を省略します。パスは `
 | フロントエンドが利用不可 | `--web-dist` で渡されたビルド パス。`npm run build` が完了している |
 | オプションの Avatar 作成が利用不可 | エグゼキューターとそのモデル依存関係を構成する。ポータブルな完成済みアセットはインポート可能 |
 
-インストール チェックについては [tests](../../docs/TESTING.md) を、オプションのプレゼンテーションについては [Avatar setup](../../docs/AVATARS.md) を参照してください。
+インストール チェックについては [tests](../reference/testing.md) を、オプションのプレゼンテーションについては [Avatar setup](../reference/avatars.md) を参照してください。

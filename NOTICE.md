@@ -12,7 +12,7 @@ Original NarraLoom code is [MIT](LICENSE). The following sources retain their up
 | TypeScript | npm lockfile | Apache-2.0 |
 | Lucide | npm lockfile | ISC |
 
-[Starter notes](docs/COMMUNITY_CONTENT.md) describe the playable adaptations. The apartment dinner storyline and Fogharbor are original NarraLoom content. Original resource notices are included in portable starter exports.
+[Starter notes](guides/reference/community-content.md) describe the playable adaptations. The apartment dinner storyline and Fogharbor are original NarraLoom content. Original resource notices are included in portable starter exports.
 
 The optional Jev runtime is downloaded separately at the pinned [source revision](resources/jev-style-source-pin.json). Model weights and inference services retain their own source/model-card terms. Optional Avatar model/resource dependencies follow [Roleplay Avatar's resource documentation](https://github.com/Toyhom/RoleplayAvatar).
 

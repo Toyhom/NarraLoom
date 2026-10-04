@@ -4,7 +4,8 @@
 !.env.example
 .local.env
 *.local.json
-docs/local/
+.local/
+docs/
 secrets/
 *.key
 *.pem

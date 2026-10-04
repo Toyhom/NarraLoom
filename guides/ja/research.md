@@ -29,7 +29,7 @@ narraloom compare outputs/evaluation/baseline/report.json \
 
 サンプルには英語・中国語・日本語の計12タスクが含まれます。プランナーは明示的な条件で採点し、NPCの会話とナレーションは人による評価用に保存します。同じAPIで生成、System Oneの意思決定、登録済みPythonエンジンを評価できます。正解条件はモデルへの入力や修復プロンプトから分離されています。
 
-レポートには失敗、修復回数、所要時間、プロバイダーが返したトークン数と使用量の欠落を記録します。`--resume` は既存の結果を保持し、未実行のタスクを続行します。形式、指標、再開方法、独自アダプターについては[評価APIのリファレンス](../../docs/EVALUATION.md)を参照してください。
+レポートには失敗、修復回数、所要時間、プロバイダーが返したトークン数と使用量の欠落を記録します。`--resume` は既存の結果を保持し、未実行のタスクを続行します。形式、指標、再開方法、独自アダプターについては[評価APIのリファレンス](../reference/evaluation.md)を参照してください。
 
 ## 意思決定モデル
 
@@ -50,8 +50,8 @@ python scripts/check_distribution.py --output outputs/validation/sdk-model-check
 
 ライブのインストール済みパッケージチェックは、世界と2つのストーリーを作成し、それらの自動テストを実行し、1ターンをプレイし、バックアップを復元し、再起動後のリクエスト回復を検証します。`scripts/check_longrun.py`はより長いアクションシーケンスを実行します。シナリオと出力ディレクトリについてはその引数を確認してください。
 
-決定論的リプレイはイベント/永続化の動作をチェックします。コントラクトフィクスチャはソフトウェア境界を分離します。実モデルチェックは、実行されたタスクで選択されたモデルを測定します。対話、エージェンシー、ストーリー品質を評価する際は、これらを人間による評価と組み合わせてください。[Testing](../../docs/TESTING.md)には焦点を絞ったスイートが一覧されています。[engine contracts](../../docs/ENGINES.md)ではトレースとアダプターについて説明しています。
+決定論的リプレイはイベント/永続化の動作をチェックします。コントラクトフィクスチャはソフトウェア境界を分離します。実モデルチェックは、実行されたタスクで選択されたモデルを測定します。対話、エージェンシー、ストーリー品質を評価する際は、これらを人間による評価と組み合わせてください。[Testing](../reference/testing.md)には焦点を絞ったスイートが一覧されています。[engine contracts](../reference/engines.md)ではトレースとアダプターについて説明しています。
 
 ## 再開できるキャンペーンテスト
 
-`narraloom playtest --source story.json --plan plan.json --models-config models.local.json --output outputs/playtests/run` で一連の行動を実行できます。計画には行動、モデルへ渡さない評価条件、人物や履歴バージョンごとの記憶検索を指定します。`--max-steps` でチェックポイントを保存し、`--resume` で確定済みの行動を復元します。失敗した行動の再実行には `--retry-failed` を追加します。形式、ネイティブアダプター、使用量の記録は[キャンペーンテスト](../../docs/PLAYTESTING.md)を参照してください。
+`narraloom playtest --source story.json --plan plan.json --models-config models.local.json --output outputs/playtests/run` で一連の行動を実行できます。計画には行動、モデルへ渡さない評価条件、人物や履歴バージョンごとの記憶検索を指定します。`--max-steps` でチェックポイントを保存し、`--resume` で確定済みの行動を復元します。失敗した行動の再実行には `--retry-failed` を追加します。形式、ネイティブアダプター、使用量の記録は[キャンペーンテスト](../reference/playtesting.md)を参照してください。
