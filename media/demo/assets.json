@@ -1,0 +1,32 @@
+[
+  {
+    "file": "narraloom-en.mp4",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-en.mp4",
+    "sha256": "69d1fb96881fe95397fa1cc955f8a382636c35023853031a5532abaeada04ad6"
+  },
+  {
+    "file": "narraloom-zh-CN.mp4",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-zh-CN.mp4",
+    "sha256": "c2bbb333675fc4d8523972e06bf844d82e3b1e1a4edaa48a56a65883db3a1aff"
+  },
+  {
+    "file": "narraloom-ja.mp4",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-ja.mp4",
+    "sha256": "33eb09ff31b2dab158e12ea847f77361475a97dff013b50f9b5f2feb31eb3957"
+  },
+  {
+    "file": "narraloom-en.webm",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.19.0/narraloom-en.webm",
+    "sha256": "8c6ac044c1357c19c72ce225a201dec129a2b582f58d4b3bf902602fa8bb2195"
+  },
+  {
+    "file": "narraloom-zh-CN.webm",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.19.0/narraloom-zh-CN.webm",
+    "sha256": "b01425bf3b1b43bc9494840a454cccbb86920a82704718159e2e8f3437d53fc5"
+  },
+  {
+    "file": "narraloom-ja.webm",
+    "url": "https://github.com/Toyhom/NarraLoom/releases/download/v0.19.0/narraloom-ja.webm",
+    "sha256": "17d3bfcab68b1a6980c68cb5cac0e954fd4705ca17c20ef58a0f7066e25cba6b"
+  }
+]

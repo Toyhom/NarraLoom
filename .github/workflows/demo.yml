@@ -1,0 +1,50 @@
+name: Demonstration player
+on:
+  push:
+    branches: [main]
+    paths: ['media/**', 'scripts/build_demo.py', 'scripts/check_demo_browser.py', '.github/workflows/demo.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python scripts/build_demo.py --output outputs/demo-site
+      - run: pip install 'playwright>=1.55,<2' 'starlette>=0.49,<2' 'uvicorn>=0.34,<1'
+      - run: python -m playwright install --with-deps chromium
+      - name: Check playback
+        run: |
+          python -c "import uvicorn; from starlette.staticfiles import StaticFiles; uvicorn.run(StaticFiles(directory='outputs/demo-site', html=True), host='127.0.0.1', port=18990)" &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          python scripts/check_demo_browser.py --url http://127.0.0.1:18990 --output outputs/demo-check
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: outputs/demo-site
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: demo-check
+          path: outputs/demo-check
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

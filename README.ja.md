@@ -8,9 +8,9 @@ NarraLoom は、物語ゲームのためのモジュール式 AI フレームワ
 
 Python バックエンドを単独で動かす、自分のアプリに組み込む、明るい配色のリファレンスフロントエンドで試す、といった使い方ができます。創作、行動計画、キャラクターの会話、ナレーション、意味判断に使うモデルは、ローカルサービス、API、Python アダプターで個別に設定できます。
 
-[![NarraLoom デモ](media/poster-ja.jpg)](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-ja.mp4)
+[![NarraLoom デモ](media/poster-ja.jpg)](https://toyhom.github.io/NarraLoom/?lang=ja)
 
-**デモを見る：** [English](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-en.mp4) · [简体中文](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-zh-CN.mp4) · [日本語](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-ja.mp4)
+**デモを見る：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
 ## はじめに
 

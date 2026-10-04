@@ -1,0 +1,16 @@
+* { box-sizing: border-box; }
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #28352e; background: #f8f8f3; }
+body { margin: 0; }
+main { width: min(1120px, 100%); padding: 32px 24px; margin: auto; }
+header, nav, footer { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+header { justify-content: space-between; margin-bottom: 44px; }
+a { color: #226544; text-underline-offset: 4px; }
+a:focus-visible, video:focus-visible { outline: 3px solid #2d7955; outline-offset: 5px; }
+.brand { font-size: 1.25rem; font-weight: 700; text-decoration: none; }
+nav a[aria-current] { font-weight: 700; }
+h1 { font-size: clamp(1.65rem, 4vw, 2.75rem); line-height: 1.25; }
+p { line-height: 1.6; }
+video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #e6eadf; border-radius: 12px; }
+footer { margin-top: 24px; }
+#status:empty { display: none; }
+@media (max-width: 480px) { main { padding: 24px 16px; } header { margin-bottom: 28px; } nav { gap: 16px; } }

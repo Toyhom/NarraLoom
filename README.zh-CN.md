@@ -8,9 +8,9 @@ NarraLoom 是模块化的故事游戏 AI 框架。描述一个设定，即可生
 
 可以独立运行 Python 后端、嵌入自己的应用，也可以通过亮色参考前端体验。创作、主持规划、角色对白、叙述和语义判断分别配置模型，支持本地服务、API 和 Python 适配器。
 
-[![NarraLoom 演示](media/poster-zh-CN.jpg)](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-zh-CN.mp4)
+[![NarraLoom 演示](media/poster-zh-CN.jpg)](https://toyhom.github.io/NarraLoom/?lang=zh-CN)
 
-**观看演示：** [English](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-en.mp4) · [简体中文](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-zh-CN.mp4) · [日本語](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-ja.mp4)
+**观看演示：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
 ## 从这里开始
 

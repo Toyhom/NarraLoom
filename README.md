@@ -8,9 +8,9 @@ NarraLoom is a modular AI framework for story games. Describe a setting, generat
 
 Use the Python backend on its own, embed it in an application, or explore it through the light reference frontend. Models for creation, planning, dialogue, narration and semantic decisions can be configured separately through local services, APIs or Python adapters.
 
-[![NarraLoom demonstration](media/poster-en.jpg)](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-en.mp4)
+[![NarraLoom demonstration](media/poster-en.jpg)](https://toyhom.github.io/NarraLoom/?lang=en)
 
-**Watch the tour:** [English](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-en.mp4) · [简体中文](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-zh-CN.mp4) · [日本語](https://github.com/Toyhom/NarraLoom/releases/download/v0.14.0/narraloom-ja.mp4)
+**Watch the tour:** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
 ## Start here
 
