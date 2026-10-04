@@ -8,11 +8,15 @@ NarraLoom is a modular AI framework for story games. Describe a setting, generat
 
 Use the Python backend on its own, embed it in an application, or explore it through the light reference frontend. Models for creation, planning, dialogue, narration and semantic decisions can be configured separately through local services, APIs or Python adapters.
 
-https://github.com/user-attachments/assets/c21808ee-fc10-43e9-8bc9-69c2e2a6454b
+**Explore the framework:** [Illustrated feature tour](guides/features.md) · [Quick start](guides/quickstart.md)
+
+https://github.com/user-attachments/assets/1967056e-4d6c-4052-93eb-2d99ae239853
 
 **Watch the tour:** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-About 15 minutes, with 13 chapters and on-screen explanations: create and test worlds, play with animated NPCs, explore rules and multiplayer, share and restore content, configure engines, and use the SDK and research tools. See the [workspace guide](guides/workspace.md) for the reference frontend's navigation.
+A 4-minute 10-second tour of creation and automatic tests, NPC interaction, rules, multiplayer, sharing, engine configuration, SDK and research tools. Loading and generation waits are cut. The [illustrated guide](guides/features.md) has screenshots, explanations and chapter positions; the [workspace guide](guides/workspace.md) covers navigation.
+
+[![NarraLoom reference frontend: a world, an animated NPC and the player’s story](media/features/en/play.jpg)](guides/features.md)
 
 ## Start here
 

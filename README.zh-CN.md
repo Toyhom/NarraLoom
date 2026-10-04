@@ -8,11 +8,15 @@ NarraLoom 是模块化的故事游戏 AI 框架。描述一个设定，即可生
 
 可以独立运行 Python 后端、嵌入自己的应用，也可以通过亮色参考前端体验。创作、主持规划、角色对白、叙述和语义判断分别配置模型，支持本地服务、API 和 Python 适配器。
 
-https://github.com/user-attachments/assets/cbac40f7-cd6c-4513-9313-bf087467ce0b
+**了解框架：** [功能图览与说明](guides/zh-CN/features.md) · [快速开始](guides/zh-CN/quickstart.md)
+
+https://github.com/user-attachments/assets/5ae7ff20-89c3-4f7e-bf2c-70475e98be9f
 
 **观看演示：** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
 
-约 15 分钟，包含 13 个章节与画面讲解字幕，完整展示世界创作与自动测试、动态 NPC、规则玩法、多人互动、分享恢复、引擎配置，以及 SDK 与研究工具。参考前端的入口说明见[工作台指南](guides/zh-CN/workspace.md)。
+4 分 10 秒，展示创作与自动测试、NPC 互动、规则玩法、多人协作、分享恢复、模型模块、SDK 与研究工具，已剪去加载和生成等待。[功能图览](guides/zh-CN/features.md)提供截图、说明与视频章节位置；操作入口见[工作台指南](guides/zh-CN/workspace.md)。
+
+[![NarraLoom 参考前端：世界、动态 NPC 与玩家的故事](media/features/zh-CN/play.jpg)](guides/zh-CN/features.md)
 
 ## 从这里开始
 

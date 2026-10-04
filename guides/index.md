@@ -2,6 +2,8 @@
 
 [English](index.md) · [简体中文](zh-CN/index.md) · [日本語](ja/index.md)
 
+Explore the [illustrated feature tour](features.md) for screenshots, walkthroughs and links to each framework interface.
+
 Choose a path and continue into the shared API references when you need details.
 
 | Audience | Start | Continue |

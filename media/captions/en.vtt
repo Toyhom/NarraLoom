@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.000
+NarraLoom · A modular engine for story games
+
+00:00:04.000 --> 00:00:10.000
+Choose a local or API model using OpenAI, Responses or Anthropic protocols.
+
+00:00:10.000 --> 00:00:14.000
+Read the returned result before creating a world.
+
+00:00:14.000 --> 00:00:21.000
+Describe a world and its first story. Choose scale and content language.
+
+00:00:21.000 --> 00:00:27.000
+Optionally bind a prepared 2D NPC. This portrait came from an imported package.
+
+00:00:27.000 --> 00:00:34.000
+Generation → automatic checks → model playtests. Review the completed result.
+
+00:00:34.000 --> 00:00:39.000
+World settings and stories are separate versioned objects.
+
+00:00:39.000 --> 00:00:43.000
+Inspect places and their connections in the location editor.
+
+00:00:43.000 --> 00:00:48.000
+Edit NPC personality, goals, knowledge and optional portrait bindings.
+
+00:00:48.000 --> 00:00:53.000
+Story overview, acts, clues, challenges and systems have their own tabs.
+
+00:00:53.000 --> 00:00:58.000
+Describe the next story; generation time is cut.
+
+00:00:58.000 --> 00:01:03.000
+Both stories use the same world and retain their own test reports.
+
+00:01:03.000 --> 00:01:10.000
+Talk to an NPC; committed dialogue drives the optional 2D portrait.
+
+00:01:10.000 --> 00:01:14.000
+Read narration and state effects together after the action commits.
+
+00:01:14.000 --> 00:01:19.000
+Save personal notes and commitments alongside the story.
+
+00:01:19.000 --> 00:01:24.000
+Search known memories and inspect their source records.
+
+00:01:24.000 --> 00:01:29.000
+Fork at an earlier turn to explore another direction.
+
+00:01:29.000 --> 00:01:33.000
+Branches retain their own events and memories.
+
+00:01:33.000 --> 00:01:38.000
+Inspect structured item and rule definitions in the world editor.
+
+00:01:38.000 --> 00:01:42.000
+The Actions tab exposes legal operations and current resources.
+
+00:01:42.000 --> 00:01:47.000
+Committed rule changes and narration remain in the same event history.
+
+00:01:47.000 --> 00:01:51.000
+Open the map when you need routes and world context.
+
+00:01:51.000 --> 00:01:56.000
+A living-world example tracks offscreen characters and faction progress.
+
+00:01:56.000 --> 00:01:59.000
+Pause or resume world simulation from the player interface.
+
+00:01:59.000 --> 00:02:04.000
+Buy from a shop: inventory and coins change together in one committed action.
+
+00:02:04.000 --> 00:02:08.000
+Follow connected map routes to reach the encounter.
+
+00:02:08.000 --> 00:02:12.000
+Choose an attack and let the configured rule system resolve combat.
+
+00:02:12.000 --> 00:02:17.000
+Inspect the recorded dice, modifier, threshold and outcome. Replay keeps this result.
+
+00:02:17.000 --> 00:02:22.000
+Define variables, visibility, conditions, actions, triggers and authored test routes.
+
+00:02:22.000 --> 00:02:27.000
+Only player-visible values and available actions appear in the game view.
+
+00:02:27.000 --> 00:02:33.000
+A second browser joins as Alex with an independent character.
+
+00:02:33.000 --> 00:02:38.000
+Room tools group player views, notes, character control and trades.
+
+00:02:38.000 --> 00:02:43.000
+Room narration reflects the committed world version and participating characters.
+
+00:02:43.000 --> 00:02:48.000
+Choose a previous campaign as continuity for the next story.
+
+00:02:48.000 --> 00:02:53.000
+Package tested stories with creator credit, license and optional 2D assets.
+
+00:02:53.000 --> 00:02:58.000
+Download a portable native package from your community shelf.
+
+00:02:58.000 --> 00:03:03.000
+The copied world and both stories have their own automatic test results.
+
+00:03:03.000 --> 00:03:08.000
+The restored campaign keeps its branches and committed history.
+
+00:03:08.000 --> 00:03:14.000
+Assign a provider and model separately for each engine module.
+
+00:03:14.000 --> 00:03:19.000
+Module descriptions explain which model abilities each task needs.
+
+00:03:19.000 --> 00:03:25.000
+Optional System One/Jev adapter settings; service deployment is separate.
+
+00:03:25.000 --> 00:03:30.000
+Configure semantic memory retrieval with an embedding service. Configuration example.
+
+00:03:30.000 --> 00:03:35.000
+Inspect calls, reported tokens and optional price estimates by model.
+
+00:03:35.000 --> 00:03:41.000
+Use the same backend through Python or HTTP, with your own frontend.
+
+00:03:41.000 --> 00:03:47.000
+Python extension example: typed actions, scoped state and saved outcomes.
+
+00:03:47.000 --> 00:03:54.000
+Compare models on frozen tasks: correctness, latency and token usage.
+
+00:03:54.000 --> 00:04:00.000
+CLI example: resume story tests and check each character’s memory.
+
+00:04:00.000 --> 00:04:05.000
+Switch the interface language while authored world and story text stays intact.
+
+00:04:05.000 --> 00:04:10.000
+Explore every feature in the illustrated guide on GitHub.
