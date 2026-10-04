@@ -54,7 +54,7 @@ jobs:
       - name: Container frontend, API and persistent workspace
         run: |
           docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
-          curl --retry 20 --retry-connrefused --retry-delay 1 --fail http://127.0.0.1:18090/healthz
+          curl --retry 20 --retry-all-errors --retry-delay 1 --max-time 5 --fail http://127.0.0.1:18090/healthz
           curl --fail --silent --output /dev/null http://127.0.0.1:18090/
           curl --fail --silent --output /dev/null http://127.0.0.1:18090/docs
           docker exec narraloom python -c "import importlib.util; assert importlib.util.find_spec('torch') is None"
@@ -62,7 +62,7 @@ jobs:
           docker stop narraloom
           docker rm narraloom
           docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
-          curl --retry 20 --retry-connrefused --retry-delay 1 --fail http://127.0.0.1:18090/healthz
+          curl --retry 20 --retry-all-errors --retry-delay 1 --max-time 5 --fail http://127.0.0.1:18090/healthz
           docker exec narraloom sha256sum /workspace/data/writer-node.json > after.txt
           diff before.txt after.txt
       - if: failure()
