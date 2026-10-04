@@ -18,6 +18,12 @@
 
 より小さな対話モデルはコストを削減できます。それらの構造化出力とキャラクター挙動を、メインプランナーとは別に評価してください。一般的な小型モデルは、通常、ワールド生成と複雑なルールについてより多くのテストを必要とします。
 
+## OpenAI と Anthropic のネイティブ API
+
+モデル設定の **API プロトコル**で OpenAI Chat Completions、OpenAI Responses、Anthropic Messages を選択します。サービスのベース URL、アカウントで利用できるモデル ID、API キーを入力し、保存して接続をテストします。Responses は `https://api.openai.com/v1`、Messages は `https://api.anthropic.com/v1` を使います。名前付きプロバイダーにも同じ選択肢があり、創作・計画・対話を別々のサービスに割り当てられます。
+
+Anthropic の **JSON Schema** モードは指定ツールで構造化結果を返します。Object とプロンプトモードはプロンプトで JSON を要求します。モデルが既定のサンプリング設定を必要とする場合は、**モデルの既定の温度を使う**を有効にします。[設定例](../../configs/models.native.example.json)と[トランスポート仕様](../../docs/ENGINES.md#generation-protocols)に設定ファイルとプロバイダー固有のパラメーターを示しています。
+
 ## サーバー設定
 
 これを `configs/models.local.json` として保存し、`RPW_API_KEY` をシェルまたはサービス管理ツール内で非公開に設定してください：

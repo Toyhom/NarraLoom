@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "roleplay-world"
-version = "0.19.0"
+version = "0.20.0"
 description = "Modular story-game AI framework with an embeddable backend and deterministic world state"
 readme = "README.md"
 license = "MIT"

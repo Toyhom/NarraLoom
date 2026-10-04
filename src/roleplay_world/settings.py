@@ -44,6 +44,7 @@ class NamedProvider(Contract):
     clear_key: bool = False
     json_mode: Literal['object', 'schema', 'prompt'] = 'object'
     thinking_disabled: bool = False
+    omit_temperature: bool = False
     context_chars: Annotated[int, Field(ge=1000, le=1000000)] = 120000
     timeout_s: Annotated[float, Field(ge=1, le=120, allow_inf_nan=False)] = 90
     query_prefix: Annotated[str, Field(max_length=600)] = ''
@@ -73,14 +74,17 @@ def provider_config(value):
             'context_chars': value.get('context_chars', 120000), 'timeout_s': value.get('timeout_s', 90),
             'query_prefix': value.get('query_prefix', ''), 'document_prefix': value.get('document_prefix', ''),
             'json_object': value.get('json_mode') == 'object', 'json_schema': value.get('json_mode') == 'schema',
-            'extra_body': {'thinking': {'type': 'disabled'}} if value.get('thinking_disabled') else {}}
+            'generation': {'temperature': None} if value.get('omit_temperature') else {},
+            'extra_body': {'thinking': {'type': 'disabled'}} if value.get('thinking_disabled') and value.get('backend', 'openai') == 'openai' else {}}
 
 class ProviderSettings(Contract):
+    backend: Identifier = 'openai'
     url: Annotated[str, Field(min_length=8,max_length=300)]
     model: Annotated[str, Field(min_length=1,max_length=120)]
     api_key: Annotated[str, Field(max_length=500)] = ''
     json_mode: Literal['object','schema','prompt'] = 'object'
     thinking_disabled: bool = True
+    omit_temperature: bool = False
     context_chars: Annotated[int, Field(ge=10000,le=1000000)] = 120000
     roles: dict[str, Annotated[str,Field(min_length=1,max_length=120)]] = Field(default_factory=dict)
     input_price: Annotated[float,Field(ge=0,le=1000)] = 0
@@ -94,6 +98,8 @@ class ProviderSettings(Contract):
     @model_validator(mode='after')
     def check(self):
         validate_url(self.url)
+        if self.backend in {'systemone', 'openai_embedding'}:
+            raise ValueError('The default provider must support generation')
         if set(self.roles)-set(ROLES):raise ValueError('未知模型角色')
         if set(self.bindings) - set(ROLES + DECISION_ROLES + EMBEDDING_ROLES):
             raise ValueError('未知模块绑定')
@@ -101,7 +107,8 @@ class ProviderSettings(Contract):
             provider = self.providers.get(binding.provider)
             if provider is None:
                 raise ValueError('模块引用的服务商不存在')
-            supported = {'openai': 'generate', 'systemone': 'decide', 'openai_embedding': 'embed'}
+            supported = {'openai': 'generate', 'openai-responses': 'generate', 'anthropic': 'generate',
+                         'systemone': 'decide', 'openai_embedding': 'embed'}
             if provider.backend in supported and supported[provider.backend] != capability(role):
                 raise ValueError('Provider capability must match the bound module')
         if self.decision_policy.mode != 'off' and 'action_router' not in self.bindings:
@@ -126,10 +133,7 @@ class Settings:
     def effective(self, owner):
         value=self.values.get(owner)
         if not value:return deepcopy(self.default)
-        cfg={'default':{'url':value['url'].rstrip('/'),'model':value['model'],'api_key':value.get('api_key',''),
-                        'api_key_env':'RPW_NO_INHERITED_KEY','context_chars':value['context_chars'],
-                        'json_object':value['json_mode']=='object','json_schema':value['json_mode']=='schema',
-                        'extra_body':{'thinking':{'type':'disabled'}} if value['thinking_disabled'] else {}},'roles':{}}
+        cfg={'default':{**provider_config(value), 'model': value['model']},'roles':{}}
         for role in ROLES:
             budget=self.default.get('roles',{}).get(role,{})
             cfg['roles'][role]={k:budget[k] for k in ('max_tokens','output_chars') if k in budget}
@@ -143,14 +147,16 @@ class Settings:
     def public(self,owner):
         value=self.values.get(owner)
         if value:
-            return {'memory_policy': MemoryPolicy().model_dump(),
+            return {'memory_policy': MemoryPolicy().model_dump(), 'backend': 'openai', 'omit_temperature': False,
                     **{k:v for k,v in value.items() if k not in {'api_key', 'providers'}},
                     'providers': {name: {**{k: v for k, v in provider.items() if k != 'api_key'},
                                          'has_key': bool(provider.get('api_key'))}
                                   for name, provider in value.get('providers', {}).items()},
                     'has_key':bool(value.get('api_key')),'using_default':False}
         cfg=self.default.get('default',{})
-        return {'url':cfg.get('url',''),'model':cfg.get('model',''),'has_key':bool(cfg.get('api_key_file') or cfg.get('api_key_env')),
+        return {'backend': cfg.get('backend', 'openai'),
+                'omit_temperature': cfg.get('generation', {}).get('temperature', 'default') is None,
+                'url':cfg.get('url',''),'model':cfg.get('model',''),'has_key':bool(cfg.get('api_key') or cfg.get('api_key_file') or cfg.get('api_key_env')),
                 'json_mode':'object' if cfg.get('json_object') else 'schema' if cfg.get('json_schema') else 'prompt',
                 'thinking_disabled':bool(cfg.get('extra_body',{}).get('thinking')),'context_chars':cfg.get('context_chars',120000),
                 'roles':{},'using_default':True,'input_price':0,'output_price':0,'currency':'CNY',
@@ -161,7 +167,7 @@ class Settings:
         old=self.values.get(owner,{})
         value=payload.model_dump();value['url']=value['url'].rstrip('/')
         # A changed endpoint never receives a key from the previous provider or deployment default.
-        if not value['api_key'] and old.get('url')==value['url']:
+        if not value['api_key'] and old.get('url')==value['url'] and old.get('backend', 'openai') == value['backend']:
             value['api_key']=old.get('api_key','')
         for name, provider in value['providers'].items():
             provider['url'] = provider['url'].rstrip('/')

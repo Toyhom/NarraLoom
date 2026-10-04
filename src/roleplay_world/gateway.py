@@ -1,4 +1,4 @@
-"""OpenAI-compatible model gateway; cancellable SSE and strict bounded JSON.
+"""Modular model gateway; cancellable transports and bounded, validated JSON.
 
 SSE framing adapted from Roleplay Avatar agents.py (MIT), source 4e69b83.
 See NOTICE.md and licenses/roleplay-avatar-MIT.txt.
@@ -53,12 +53,16 @@ class ModelGateway:
         if role in {"action_router", "memory_embedding"}:
             return {}  # Auxiliary modules use an explicit provider binding.
         merged = {**default, **overrides}
-        if overrides.get("url", "").rstrip("/") and overrides["url"].rstrip("/") != default.get("url", "").rstrip("/"):
+        if (overrides.get("url", "").rstrip("/") and overrides["url"].rstrip("/") != default.get("url", "").rstrip("/")
+                or overrides.get('backend', default.get('backend', 'openai')) != default.get('backend', 'openai')):
             for key in ("api_key", "api_key_file", "api_key_env"):
                 merged.pop(key, None)
                 if key in overrides:
                     merged[key] = overrides[key]
             merged.setdefault("api_key_env", "RPW_NO_INHERITED_KEY")
+            for key in ('extra_body', 'generation'):
+                if key not in overrides:
+                    merged.pop(key, None)
         return merged
 
     def record_trace(self, action_id, budget, trace):
@@ -78,7 +82,8 @@ class ModelGateway:
     def configured(self, role):
         config = self.role_config(role)
         backend = config.get("backend", "systemone" if role == "action_router" else "openai")
-        return bool(config.get("model") and (config.get("url") or backend not in {"openai", "systemone", "openai_embedding"}))
+        return bool(config.get("model") and (config.get("url") or backend not in {
+            "openai", "openai-responses", "anthropic", "systemone", "openai_embedding"}))
 
     async def embed(self, role, texts, action_id, budget, *, configuration=None):
         config = self.role_config(role) if configuration is None else configuration
@@ -167,6 +172,8 @@ class ModelGateway:
                 key = path.read_text().strip()
             except OSError as exc:
                 raise DomainError("model_config", "无法读取模型密钥文件", 503) from exc
+        if config.get('backend') == 'anthropic':
+            return {'anthropic-version': '2023-06-01', **({'x-api-key': key} if key else {})}
         return {"Authorization": "Bearer " + key} if key else {}
 
     async def health(self):
@@ -188,6 +195,14 @@ class ModelGateway:
         if not self.configured(role):
             raise DomainError("model_unconfigured", "请先配置模型服务", 503)
         engine = self.registry.require(config.get("backend", "openai"), "generate")
+        extra = config.get('extra_body', {})
+        reserved = {'model', 'messages', 'stream', 'stream_options', 'max_tokens', 'max_output_tokens',
+                    'response_format', 'input', 'instructions', 'system', 'tools', 'tool_choice'}
+        if not isinstance(extra, dict) or reserved.intersection(extra):
+            raise DomainError('model_config', 'extra_body cannot replace generation routing or result contracts', 503)
+        generation = config.get('generation', {})
+        if not isinstance(generation, dict) or set(generation) - {'temperature', 'top_p', 'seed', 'frequency_penalty', 'presence_penalty'}:
+            raise DomainError('model_config', 'Unsupported generation option', 503)
         raw, validation_error = "", ""
         max_repairs = budget.get("max_repairs", 1)
         for attempt in range(max_repairs + 1):
@@ -209,8 +224,13 @@ class ModelGateway:
                      + json.dumps(schema.model_json_schema(), ensure_ascii=False)},
                     {"role": "user", "content": json.dumps(data, ensure_ascii=False)},
                 ],
-                **config.get("extra_body", {}),
+                **extra,
             }
+            for key, value in generation.items():
+                if value is None:
+                    payload.pop(key, None)
+                else:
+                    payload[key] = value
             if config.get("json_schema", False):
                 payload["response_format"] = {"type": "json_schema", "json_schema": {
                     "name": schema.__name__, "schema": schema.model_json_schema()}}
@@ -243,6 +263,15 @@ class ModelGateway:
             except (httpx.HTTPError, TimeoutError) as e:
                 trace["error"] = "model_unavailable"
                 raise DomainError("model_unavailable", "模型连接中断；世界没有改变，可以重试", 503) from e
+            except asyncio.CancelledError:
+                trace.update(status='cancelled', error='cancelled')
+                raise
+            except DomainError as exc:
+                trace['error'] = exc.code
+                raise
+            except (ValueError, KeyError, TypeError) as exc:
+                trace['error'] = 'model_protocol'
+                raise DomainError('model_protocol', 'The provider returned an invalid generation response', 502) from exc
             finally:
                 trace["duration_s"] = round(time.monotonic() - started, 3)
                 if not transport_finished:

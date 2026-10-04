@@ -1,5 +1,18 @@
 # Test the framework
 
+`tests/test_native_providers.py` exercises Responses and Messages wire formats,
+authentication, schema repairs, usage, stream completion, refusal, cancellation
+and rollback. Distribution verification runs the same tests against the installed
+wheel outside the source tree. These are protocol fixtures. Use module connection
+checks and model-backed playtests to evaluate a configured provider's real models.
+`python scripts/check_provider_browser.py --url http://localhost:18090 --output outputs/validation/provider-browser`
+checks the reference client's three languages, protocol settings, key reset and
+module bindings on a running test workspace using a fresh browser session.
+
+The published demonstration player uses MP4 and WebM sources. Its deployment runs
+`scripts/check_demo_browser.py` in Chromium to verify all three languages, decoded
+frames after seeking, desktop/mobile playback and layout before publishing.
+
 Install the development dependencies and frontend packages:
 
 ```bash

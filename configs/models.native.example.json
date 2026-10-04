@@ -1,0 +1,29 @@
+{
+  "default": {
+    "backend": "openai-responses",
+    "url": "https://api.openai.com/v1",
+    "model": "YOUR_OPENAI_MODEL_ID",
+    "api_key_env": "OPENAI_API_KEY",
+    "json_object": true,
+    "generation": {"temperature": null},
+    "timeout_s": 90
+  },
+  "providers": {
+    "claude": {
+      "backend": "anthropic",
+      "url": "https://api.anthropic.com/v1",
+      "api_key_env": "ANTHROPIC_API_KEY",
+      "json_schema": true,
+      "generation": {"temperature": null},
+      "timeout_s": 90
+    }
+  },
+  "bindings": {
+    "character_actor": {"provider": "claude", "model": "YOUR_ANTHROPIC_MODEL_ID"},
+    "narrator": {"provider": "claude", "model": "YOUR_ANTHROPIC_MODEL_ID"}
+  },
+  "roles": {
+    "world_builder": {"max_tokens": 6000},
+    "story_builder": {"max_tokens": 6000}
+  }
+}

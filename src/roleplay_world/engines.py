@@ -93,8 +93,12 @@ async def systemone_decide(config, payload, headers):
 
 
 def builtin_engines():
+    from .native_engines import messages_generate, responses_generate
+
     registry = EngineRegistry()
     registry.register(Engine("openai", frozenset({"generate"}), openai_generate, openai_probe))
+    registry.register(Engine("openai-responses", frozenset({"generate"}), responses_generate, openai_probe))
+    registry.register(Engine("anthropic", frozenset({"generate"}), messages_generate))
     registry.register(Engine("systemone", frozenset({"decide"}), systemone_decide))
     registry.register(Engine("openai_embedding", frozenset({"embed"}), openai_embed, openai_probe))
     return registry

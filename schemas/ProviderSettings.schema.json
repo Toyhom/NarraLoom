@@ -118,6 +118,11 @@
           "title": "Thinking Disabled",
           "type": "boolean"
         },
+        "omit_temperature": {
+          "default": false,
+          "title": "Omit Temperature",
+          "type": "boolean"
+        },
         "context_chars": {
           "default": 120000,
           "maximum": 1000000,
@@ -182,6 +187,12 @@
   },
   "additionalProperties": false,
   "properties": {
+    "backend": {
+      "default": "openai",
+      "pattern": "^[a-zA-Z0-9_-]{1,80}$",
+      "title": "Backend",
+      "type": "string"
+    },
     "url": {
       "maxLength": 300,
       "minLength": 8,
@@ -213,6 +224,11 @@
     "thinking_disabled": {
       "default": true,
       "title": "Thinking Disabled",
+      "type": "boolean"
+    },
+    "omit_temperature": {
+      "default": false,
+      "title": "Omit Temperature",
       "type": "boolean"
     },
     "context_chars": {

@@ -973,5 +973,10 @@
   "memory.hybrid": "关键词 + 语义向量",
   "memory.failure": "向量服务失败时",
   "memory.fallback": "使用关键词并记录回退",
-  "memory.error": "报告错误"
+  "memory.error": "报告错误",
+  "engine.responses": "OpenAI Responses",
+  "engine.anthropic": "Anthropic Messages",
+  "provider.protocol": "API 协议",
+  "provider.omit_temperature": "使用模型的默认温度",
+  "provider.anthropic_json": "Anthropic 的 JSON Schema 模式通过指定工具返回结构化结果；Object 和提示词模式通过提示词请求 JSON。"
 }

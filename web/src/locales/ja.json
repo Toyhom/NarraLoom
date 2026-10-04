@@ -973,5 +973,10 @@
   "memory.hybrid": "キーワード + 意味ベクトル",
   "memory.failure": "埋め込みサービスが失敗した場合",
   "memory.fallback": "キーワードを使い、切り替えを記録",
-  "memory.error": "エラーを報告"
+  "memory.error": "エラーを報告",
+  "engine.responses": "OpenAI Responses",
+  "engine.anthropic": "Anthropic Messages",
+  "provider.protocol": "API プロトコル",
+  "provider.omit_temperature": "モデルの既定の温度を使う",
+  "provider.anthropic_json": "Anthropic の JSON Schema モードは指定ツールで構造化結果を返します。Object とプロンプトモードはプロンプトで JSON を要求します。"
 }

@@ -139,6 +139,11 @@ def main():
             "p=pathlib.Path(roleplay_world.__file__).resolve(); "
             "assert p.is_relative_to(pathlib.Path(__import__('sys').argv[1])); print(p)"), str(target)])
         run("console-entry", [str(target / "bin/narraloom"), "--version"])
+        # Copy protocol tests outside the checkout so imports resolve to this wheel.
+        shutil.copyfile(ROOT / 'tests/test_native_providers.py', workspace / 'test_native_providers.py')
+        (workspace / 'pytest.ini').write_text('[pytest]\n')
+        run('native-provider-protocols', [sys.executable, '-m', 'pytest', '-q', '-c', str(workspace / 'pytest.ini'),
+                                        str(workspace / 'test_native_providers.py'), '--basetemp', str(folder / 'provider-tmp')])
         # Research tools use only the installed package and the host's optional
         # research dependency, with no backend process or game storage.
         for example in ('make_evaluation_cases', 'evaluation_adapter', 'check_engine', 'playtest_adapter', 'action_module'):

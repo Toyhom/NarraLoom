@@ -8,6 +8,28 @@
 
 Providers own their credentials. Use `api_key_env` or `api_key_file` inside `secrets_root`. In the browser, save before checking modules; a changed endpoint does not inherit a saved credential. The deployment-file JSON controls are `json_object` / `json_schema`; the settings API uses `json_mode: object|schema|prompt`.
 
+## Generation protocols
+
+Select a transport with `backend` on the default provider or a named provider:
+
+| Backend | Base URL example | Generation path | Authentication |
+| --- | --- | --- | --- |
+| `openai` | `https://api.deepseek.com/v1` | `/chat/completions` | Bearer key |
+| `openai-responses` | `https://api.openai.com/v1` | `/responses` | Bearer key |
+| `anthropic` | `https://api.anthropic.com/v1` | `/messages` | `x-api-key`, API version `2023-06-01` |
+
+Use the model ID available in your account or local service. All three transports support independent module bindings and the same validation/repair pipeline. The reference frontend offers the protocol selector for both the default model and named providers.
+
+Responses maps the system prompt to `instructions`, repair history to `input`, token limits to `max_output_tokens`, and JSON settings to `text.format`. Schema mode uses `strict: false` to retain application schemas with defaults, optional fields and dictionaries; the gateway validates the original schema after generation. The adapter requires a completed response and excludes reasoning and refusal blocks from generated content.
+
+Anthropic separates `system` from `messages`. Schema mode requests one forced `emit_result` tool with the application's full input schema and reads its JSON arguments. The adapter returns those arguments for validation. Object and prompt modes request JSON in the system prompt. The response must finish with `message_stop` and a matching stop reason. Token-limit stops, refusals and incomplete streams fail before world state commits. Reported usage retains cache counters and counts input, cache creation and cache reads in total prompt tokens.
+
+Set `generation: {"temperature": null}` to omit temperature for models that require their own sampling defaults. `generation` also supports `top_p`, `seed`, `frequency_penalty` and `presence_penalty` when the selected provider accepts them; a null value omits that parameter. The browser exposes **Use the model’s default temperature**. Provider-specific parameters such as Responses `reasoning` go in `extra_body`. Routing fields, messages, stream settings, token limits and result tools are owned by the gateway. DeepSeek's `thinking` option belongs to the Chat provider and is cleared when switching protocols in the reference frontend.
+
+Example configuration: [models.native.example.json](../configs/models.native.example.json). `POST /api/engines/{module}/check` exercises the configured protocol and model. Anthropic readiness is established by this generation check; its adapter does not enumerate account models.
+
+Protocol references: [Responses streaming](https://developers.openai.com/api/docs/guides/streaming-responses), [OpenAI structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Messages streaming](https://platform.claude.com/docs/en/build-with-claude/streaming), [Anthropic tool use](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview).
+
 ## Python adapters
 
 ```python

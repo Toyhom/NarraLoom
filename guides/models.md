@@ -18,6 +18,12 @@ The simplest setup uses one strong instruction model through an OpenAI-compatibl
 
 Smaller dialogue models can reduce cost. Evaluate their structured outputs and character behavior separately from the main planner. A general small model usually needs more testing for world generation and complex rules.
 
+## Native OpenAI and Anthropic APIs
+
+Choose **API protocol** in **Models & usage**: OpenAI Chat Completions, OpenAI Responses or Anthropic Messages. Enter the provider base URL, a model ID from your account and its API key, then save and test. Use `https://api.openai.com/v1` for Responses or `https://api.anthropic.com/v1` for Messages. Each named provider has the same protocol control, so creation, planning and dialogue can use different services.
+
+For Anthropic, choose **JSON Schema** to request structured results through a result tool; Object and prompt modes request JSON through the prompt. Enable **Use the model’s default temperature** when required by your model. [Native configuration example](../configs/models.native.example.json) and [transport reference](../docs/ENGINES.md#generation-protocols) cover file-based setup and provider options.
+
 ## Server configuration
 
 Save this as `configs/models.local.json`, and set `RPW_API_KEY` privately in your shell or service manager:

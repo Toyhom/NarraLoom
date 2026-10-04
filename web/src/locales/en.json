@@ -973,5 +973,10 @@
   "memory.hybrid": "Keywords + semantic vectors",
   "memory.failure": "On embedding failure",
   "memory.fallback": "Use keywords and record the fallback",
-  "memory.error": "Report the error"
+  "memory.error": "Report the error",
+  "engine.responses": "OpenAI Responses",
+  "engine.anthropic": "Anthropic Messages",
+  "provider.protocol": "API protocol",
+  "provider.omit_temperature": "Use the model’s default temperature",
+  "provider.anthropic_json": "For Anthropic, JSON Schema uses a forced result tool. Object and prompt modes request JSON through the prompt."
 }

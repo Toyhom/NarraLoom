@@ -18,6 +18,12 @@
 
 更小的对话模型可以降低成本。请将它们的结构化输出和角色行为与主规划器分开评估。通用小型模型通常需要针对世界生成和复杂规则进行更多测试。
 
+## OpenAI 与 Anthropic 原生 API
+
+在**模型与用量**中选择 **API 协议**：OpenAI Chat Completions、OpenAI Responses 或 Anthropic Messages。填写服务地址、账号可用的模型 ID 和 API 密钥，保存后测试。Responses 的服务地址为 `https://api.openai.com/v1`，Messages 为 `https://api.anthropic.com/v1`。命名服务商也支持此选项，可以分别为创作、规划和对话选择服务。
+
+Anthropic 的 **JSON Schema** 模式通过指定工具返回结构化结果；Object 和提示词模式通过提示词请求 JSON。模型要求使用默认采样设置时，勾选**使用模型的默认温度**。[原生协议配置示例](../../configs/models.native.example.json)和[接口说明](../../docs/ENGINES.md#generation-protocols)介绍配置文件和服务商参数。
+
 ## 服务器配置
 
 将其保存为 `configs/models.local.json`，并在你的 shell 或服务管理器中私下设置 `RPW_API_KEY`：
