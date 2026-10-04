@@ -11,15 +11,16 @@ My model choice: [provider API / existing local service / recommend for my hardw
 My environment and workspace directories: [choose paths or recommend new ones]
 My goal: [reference frontend / backend API / model comparison]
 My operating system / GPU: [Linux / Windows WSL2 / macOS; GPU model and VRAM]
-2D presentation: [finished assets / generate from reference images / text only]
+2D presentation: [text only (default) / finished assets / generate from reference images]
 
 Read README.md, guides/quickstart.md, guides/models.md, guides/developers.md
 and applicable workspace instructions. Inspect Python, Node, storage and any
 existing inference services. On shared hardware, use its established account
 and GPU scheduling workflow.
 
-1. Choose a dedicated environment and install the backend. Build the reference
-   frontend when requested. Keep caches and runtime files in the workspace.
+1. Choose a dedicated environment. For verification, install with
+   python -m pip install -e '.[dev]' and npm ci. Build the reference frontend
+   when requested. Keep caches and runtime files in the workspace.
 2. Configure the provider endpoint, exact model ID, JSON mode and private key
    source. Reuse compatible existing services. Explain the model role mapping.
 3. Start one backend writer. Check /healthz, /docs and the selected model module.

@@ -9,6 +9,7 @@ Creation jobs and actions are asynchronous. Poll their returned IDs. Action SSE 
 | Method | Route | Handler |
 | --- | --- | --- |
 | `GET` | `/` | `index` |
+| `GET` | `/api/action-modules` | `action_modules` |
 | `GET` | `/api/actions/{aid}` | `action_status` |
 | `POST` | `/api/actions/{aid}/cancel` | `cancel` |
 | `GET` | `/api/actions/{aid}/diagnostics` | `action_diagnostics` |
@@ -29,8 +30,10 @@ Creation jobs and actions are asynchronous. Poll their returned IDs. Action SSE 
 | `POST` | `/api/campaigns/{cid}/branches/{bid}/actions` | `action` |
 | `GET` | `/api/campaigns/{cid}/branches/{bid}/export` | `export` |
 | `GET` | `/api/campaigns/{cid}/branches/{bid}/memories` | `memories` |
+| `POST` | `/api/campaigns/{cid}/branches/{bid}/recall` | `recall` |
 | `GET` | `/api/campaigns/{cid}/branches/{bid}/view` | `view` |
 | `GET` | `/api/catalog` | `starter_catalog` |
+| `GET` | `/api/check-engines` | `check_engines` |
 | `GET` | `/api/community` | `community` |
 | `GET` | `/api/community/{pid}` | `community_package` |
 | `GET` | `/api/community/{pid}/download` | `download_package` |
@@ -49,6 +52,7 @@ Creation jobs and actions are asynchronous. Poll their returned IDs. Action SSE 
 | `POST` | `/api/rooms/{rid}/control` | `room_control` |
 | `GET` | `/api/rooms/{rid}/export` | `room_export` |
 | `GET` | `/api/rooms/{rid}/memories` | `room_memories` |
+| `POST` | `/api/rooms/{rid}/recall` | `room_recall` |
 | `POST` | `/api/session` | `session` |
 | `DELETE` | `/api/settings/provider` | `reset_provider` |
 | `GET` | `/api/settings/provider` | `provider` |

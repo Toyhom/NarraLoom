@@ -31,7 +31,7 @@ async def main():
                 await page.get_by_label('世界构想',exact=True).fill('晨雾海港的开放式调查世界。第一位角色为女性精灵守灯人林笺，绿衣棕发，温和坚定，在地点0码头迎接旅人。另有集市、灯塔和邮局，居民各有目标。')
                 await page.get_by_label('第一个故事（可选）').fill('玩家在码头遇到林笺，协助寻找一封寄错的信，调查三个线索后送还信件。')
                 await expand(page.locator('.creation-advanced'))
-                await page.locator('.initial-avatar-form summary').click()
+                await page.get_by_label('添加可动 2D 形象（可选）', exact=True).check()
                 await page.get_by_label('初始NPC参考图',exact=True).set_input_files(reference)
                 await page.get_by_label('重要NPC描述（可选）',exact=True).fill('林笺，成年女性精灵守灯人。绿衣棕发，温和坚定，善于倾听和讲述海港故事。保留参考图的风格和五官。')
                 async with page.expect_response(lambda r:r.url.endswith('/api/studio/worlds') and r.request.method=='POST',timeout=120000) as response:

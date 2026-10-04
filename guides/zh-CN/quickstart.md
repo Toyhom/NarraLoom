@@ -2,7 +2,7 @@
 
 [English](../quickstart.md) · [简体中文](quickstart.md) · [日本語](../ja/quickstart.md)
 
-世界、故事和**文字 NPC 人设**都可以通过模型 API 生成，框架后端用 CPU 即可。**从参考图创建新的可动 2D 形象**需要额外的本地模型与 CUDA 显卡；**导入成品形象**只需安装 `avatar` 扩展。完整步骤见 [2D 形象配置与模型下载](avatars.md)。
+默认创建文字角色，通过已配置的文本模型完成世界生成、对话与游玩。动态 2D 形象是可选增强，创建表单默认关闭，可以现在开启，也可以之后添加。需要导入或生成形象时，再看[可选形象配置](avatars.md)。
 
 ## 选择系统路线
 
@@ -23,7 +23,7 @@ git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[avatar]'
+python -m pip install -e .
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

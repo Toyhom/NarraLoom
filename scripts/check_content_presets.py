@@ -7,6 +7,7 @@ import re
 import uuid
 from pathlib import Path
 
+from browser_navigation import expand
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,6 +81,7 @@ async def main():
                 await page.get_by_label("创作规模", exact=True).select_option("scene")
                 await page.get_by_role("dialog").get_by_label("内容语言", exact=True).select_option("en")
                 await page.set_viewport_size({"width": 390, "height": 844})
+                await expand(page.locator(".creation-advanced"))
                 box = await page.get_by_label("自动设计主动世界", exact=True).bounding_box()
                 assert box and box["width"] <= 24 and box["height"] <= 24
                 assert await page.evaluate("document.documentElement.scrollWidth<=innerWidth+1")
@@ -94,6 +96,7 @@ async def main():
                 await page.get_by_label("第一个故事（可选）").fill("在画室里自由交流对雨天的印象，玩家自行决定如何回应。")
                 await page.set_viewport_size({"width": 390, "height": 844})
                 assert await page.evaluate("document.documentElement.scrollWidth<=innerWidth+1")
+                await expand(page.locator(".creation-advanced"))
                 box = await page.get_by_label("自动设计主动世界", exact=True).bounding_box()
                 assert box and box["width"] <= 24 and box["height"] <= 24
                 await page.screenshot(path=str(folder / "creation-mobile.png"))

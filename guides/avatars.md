@@ -2,6 +2,8 @@
 
 [English](avatars.md) · [简体中文](zh-CN/avatars.md) · [日本語](ja/avatars.md)
 
+This is an opt-in presentation module. Complete the [text-first quick start](quickstart.md) first; install the components below when adding a portrait.
+
 ## Choose what you need
 
 | Feature | Models and hardware |
@@ -10,7 +12,7 @@
 | Display an imported finished 2D character | `python -m pip install '.[avatar]'`, a CPU backend and a WebGL browser |
 | Create a new animated portrait from a reference image | The source worker, local weights below and an NVIDIA CUDA GPU on Linux / WSL2 |
 
-Import a native world package containing a finished portrait, then bind that portrait to a world character. For new assets, upload a reference in the world's character settings, follow the creation job and select the ready portrait. Text character generation works independently of portrait creation.
+Import a native world package containing a finished portrait, then select it in the world’s character editor. To generate a new portrait, enable **Add an animated 2D portrait (optional)** during world creation, or upload a reference under **Character assets** and bind the result later. Portrait generation runs in the background while text creation and play continue.
 
 ## Host requirements
 

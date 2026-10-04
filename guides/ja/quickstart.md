@@ -2,7 +2,7 @@
 
 [English](../quickstart.md) · [简体中文](../zh-CN/quickstart.md) · [日本語](quickstart.md)
 
-世界、物語、**テキストの NPC 設定**はモデル API で生成でき、バックエンドは CPU で動作します。**参照画像から動く 2D 立ち絵を新規作成**する場合は、別のローカルモデルと CUDA GPU が必要です。**完成した素材の読み込み**には `avatar` extra を使います。[2D 設定とモデルダウンロード](avatars.md)を参照してください。
+標準ではテキストのキャラクターを作成し、設定済みテキストモデルで世界生成・会話・プレイを進めます。動く 2D 立ち絵は任意の追加機能で、作成フォームでは初期状態でオフです。今でも後からでも追加できます。素材の読み込みや生成には[任意の立ち絵設定](avatars.md)を参照してください。
 
 ## OS ごとの実行方法
 
@@ -23,7 +23,7 @@ git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[avatar]'
+python -m pip install -e .
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

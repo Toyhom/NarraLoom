@@ -70,11 +70,11 @@
   "MemoryPanel.006": "Mark complete",
   "AvatarStudio.001": " 2D Character Studio",
   "AvatarStudio.002": "Optional presentation",
-  "AvatarStudio.003": "Upload a reference image and character description to automatically build a sprite, facial rig, and lip sync. Once complete, assign it to important NPCs in the World Editor.",
+  "AvatarStudio.003": "Add an optional animated portrait to a character. Upload a reference image and description, then bind the finished asset in the World Editor.",
   "AvatarStudio.004": "Create a 2D avatar",
   "AvatarStudio.005": "Character reference image",
   "AvatarStudio.006": "Character description",
-  "AvatarStudio.007": "The current deployment has not configured the avatar creation service; text worlds can still be played normally.",
+  "AvatarStudio.007": "Image generation is unavailable on this host. You can use text characters or select an existing portrait.",
   "AvatarStudio.008": "Cancel build",
   "AvatarStudio.009": "Continue building",
   "AvatarStudio.010": "Optional 2D avatar",
@@ -672,7 +672,7 @@
   "Studio.068": "Optional: give the first important NPC an animated 2D avatar",
   "Studio.069": "Or upload a new reference image. The avatar is built separately; the world and story can start first.",
   "Studio.070": "Initial NPC reference image",
-  "Studio.071": "Uploading a new image builds a new avatar and assigns it to the first NPC. The first load of a shared model may take a while; progress is saved. You can view, cancel, or resume in the 2D Character Studio.",
+  "Studio.071": "Generating a new portrait uses separately configured image models. Its job runs in the background; follow it in Character assets while the story continues.",
   "Studio.072": "After choosing rules, the system will also design equipment, supplies, shops, enemies, and companion characters; you can adjust them in the World Editor.",
   "Studio.073": "Auto-design state gameplay: progress, switches, conditions, and verifiable actions",
   "Studio.074": "Generation and a real test run may take a few minutes. Progress is saved, so you can leave the page and come back to check.",
@@ -1024,5 +1024,7 @@
   "provider.usage": "Usage & cost",
   "provider.generation": "Generation options",
   "provider.roleModels": "Model IDs on the default service",
-  "provider.modulesHint": "Start with the default model. Assign individual modules when your game needs different models or protocols."
+  "provider.modulesHint": "Start with the default model. Assign individual modules when your game needs different models or protocols.",
+  "avatar.enable": "Add an animated 2D portrait (optional)",
+  "avatar.optionalHint": "Create characters and play through text by default. Add a portrait now or later for expressions and animation."
 }

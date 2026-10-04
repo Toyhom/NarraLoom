@@ -49,7 +49,7 @@ git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[avatar]'
+python -m pip install -e .
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

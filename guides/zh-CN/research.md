@@ -2,7 +2,7 @@
 
 [English](../research.md) · [简体中文](research.md) · [日本語](../ja/research.md)
 
-NarraLoom 将模型职责分开暴露，因此你可以在保持故事游戏系统其余部分固定的情况下更改一个模块。有用的比较包括规划器准确性、NPC 声音、叙述一致性、内容生成质量和决策成本。
+NarraLoom 将模型职责分开暴露，因此你可以在保持故事游戏系统其余部分固定的情况下更改一个模块。有用的比较包括规划器准确性、NPC 的人物口吻、叙述一致性、内容生成质量和决策成本。
 
 ## 定义比较
 
@@ -37,7 +37,7 @@ narraloom compare outputs/evaluation/baseline/report.json \
 python scripts/evaluate_decisions.py   --url http://127.0.0.1:18110/v1   --model YOUR_DECISION_MODEL   --revision YOUR_REVISION   --output outputs/validation/decision-comparison
 ```
 
-包含的诊断集有 42 个编写的中文/英文案例，每个案例都以反转的退出顺序重复。报告包括有效响应、端到端准确性、Brier 分数、校准分箱、自动覆盖率/错误、顺序敏感性和延迟。为阈值选择创建一个单独的数据集，并为报告创建一个留出集。
+包含的诊断集有 42 个编写的中文/英文案例，每个案例都以反转的选项顺序重复。报告包括有效响应、端到端准确性、Brier 分数、校准分箱、自动覆盖率/错误、顺序敏感性和延迟。为阈值选择创建一个单独的数据集，并为报告创建一个留出集。
 
 `python scripts/evaluate_generation_router.py --output outputs/validation/generation-comparison` 将配置的生成模型应用于相同的路由输入。其分类结果支持准确性/延迟/token 比较；生成响应不提供校准概率。
 

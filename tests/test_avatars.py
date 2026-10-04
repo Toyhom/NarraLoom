@@ -109,3 +109,27 @@ def test_lost_gpuq_receipt_reconciles_same_exact_job(tmp_path,monkeypatch):
     assert store.recover_receipt(folder)
     assert module.read_json(folder/'runner.json')['ref']=='system-1:aaaaaaaaaaaa'
     assert module.read_json(folder/'status.json')['state']=='queued'
+
+
+@pytest.mark.parametrize('configuration', ['{invalid json', '[]', '{"enabled":true,"runner":"unknown"}',
+                                          '{"enabled":true,"runner":"local"}'])
+def test_optional_creator_setup_failure_keeps_text_backend_available(tmp_path, monkeypatch, configuration):
+    from test_api import FakeGateway, setup, wait
+
+    from roleplay_world.config import AppConfig
+    folder = tmp_path / 'configs'
+    folder.mkdir()
+    (folder / 'avatar.local.json').write_text(configuration)
+    def missing_creator(name):
+        raise ImportError('Optional creator dependencies are not installed')
+    monkeypatch.setattr('roleplay_world.avatars.vendor_module', missing_creator)
+    app = create_app(config=AppConfig(workspace_root=tmp_path), gateway=FakeGateway())
+    with TestClient(app) as client:
+        assert client.get('/healthz').status_code == 200
+        assert client.get('/api/avatars/capabilities').json()['available'] is False
+        _, base = setup(client)
+        assert client.post('/api/avatars', json=request().model_dump()).status_code == 503
+        response = client.post(base + '/actions', json={'action_id':'creator_offline',
+            'expected_world_version':0,'text':'Offer the tools to the captain.'})
+        assert wait(client,response.json()['id'])['status'] == 'committed'
+        assert client.get(base+'/view').json()['world_version'] == 1

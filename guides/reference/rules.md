@@ -19,8 +19,8 @@ Content validation checks references, trade conservation, equipment, consumables
 
 ```bash
 python -m pytest -q tests/test_rulepacks.py
-python scripts/check_rules_browser.py --system d20 --output outputs/validation/rules-d20
-python scripts/check_rules_browser.py --system d100 --output outputs/validation/rules-d100
+python scripts/check_rules_browser.py --url http://localhost:18090 --system d20 --output outputs/validation/rules-d20
+python scripts/check_rules_browser.py --url http://localhost:18090 --system d100 --output outputs/validation/rules-d100
 ```
 
 Browser checks generate a world through the form, then exercise editing, equipment, shops, companionship, travel, combat, consumables, rest, branching, refresh and mobile layout against the real API. Inspect failed reports when generated values cannot support the chosen route.

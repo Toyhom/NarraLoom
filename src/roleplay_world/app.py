@@ -18,7 +18,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response, StreamingRes
 from fastapi.staticfiles import StaticFiles
 
 from . import __version__
-from .avatars import MAX_AVATAR_UPLOAD, AvatarCreate, AvatarService
+from .avatars import MAX_AVATAR_UPLOAD, AvatarCreate, optional_service
 from .backups import MAX_BACKUP, export_campaign, preview_backup, restore_campaign
 from .catalog import get_pack, install, load_catalog, public_pack
 from .config import AppConfig
@@ -109,7 +109,7 @@ def create_app(data_root=None, gateway=None, *, config: AppConfig | None = None,
             app.state.studio = Studio(store, model, config.output_root / "content-tests")
             resources.push_async_callback(app.state.studio.close)
             app.state.avatars = (avatar_factory(store) if avatar_factory is not None else
-                                 AvatarService(store, workspace_root=config.workspace_root))
+                                 optional_service(store, workspace_root=config.workspace_root))
             app.state.rooms = Rooms(store)
             yield
 

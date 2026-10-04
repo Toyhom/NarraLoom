@@ -9,7 +9,9 @@ checks and model-backed playtests to evaluate a configured provider's real model
 checks the reference client's three languages, protocol settings, key reset and
 module bindings on a running test workspace using a fresh browser session.
 
-`python scripts/check_workspace_browser.py --url http://localhost:18090 --output outputs/validation/workspace` checks keyboard navigation, section isolation, retained files and drafts, three-language mobile layouts, and configured providers without model-list probes. It uses a fresh session and no model calls. This suite and provider settings checks run in CI.
+`python scripts/check_workspace_browser.py --url http://localhost:18090 --output outputs/validation/workspace` checks keyboard navigation, section isolation, retained files and drafts, three-language mobile layouts, and configured providers without model-list probes. It uses a fresh session and no model calls. Workspace, provider settings and optional portrait checks run in CI.
+
+`python scripts/check_optional_avatar_browser.py --url http://localhost:18090 --output outputs/validation/optional-avatar` checks the creation form in all three languages: text-only defaults, existing portraits without a creator, opt-in uploads, cancelled image drafts and continuing as text after a creator error. It uses explicit API fixtures and submits no model or GPU jobs. Backend tests exercise world creation, a second story and committed NPC dialogue while image/model dependency imports are blocked, plus startup with broken optional-creator configuration.
 
 Install the development dependencies and frontend packages:
 
@@ -87,4 +89,4 @@ Contract fixtures validate software behavior independently of model intelligence
 
 ## CI and documentation
 
-GitHub Actions runs the CPU suite, lint, catalog checks, frontend build, distribution checks and local documentation links. It requires no provider credentials. Schemas should be regenerated from their Python types when contracts change. See [CONTRIBUTING](../../CONTRIBUTING.md).
+GitHub Actions runs the CPU suite, lint, catalog checks, frontend build, distribution checks and public documentation contracts (local links and section anchors, translated pages, API route coverage, script paths and Python/JSON example syntax). It requires no provider credentials. Schemas should be regenerated from their Python types when contracts change. See [CONTRIBUTING](../../CONTRIBUTING.md).

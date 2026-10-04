@@ -7,6 +7,7 @@ import importlib
 import importlib.util
 import io
 import json
+import logging
 import re
 import subprocess
 import sys
@@ -20,6 +21,15 @@ from .contracts import Contract, DomainError, Identifier
 
 ROOT=Path(__file__).resolve().parents[2]
 MAX_AVATAR_UPLOAD=14_100_000
+
+
+def optional_service(store, *, workspace_root):
+    """Keep text roleplay available when an optional creator is misconfigured."""
+    try:
+        return AvatarService(store, workspace_root=workspace_root)
+    except (OSError, ImportError, ValueError, TypeError):
+        logging.getLogger(__name__).exception('Optional Avatar creator could not start; creation is disabled')
+        return AvatarService(store, config={'enabled': False}, workspace_root=workspace_root)
 
 
 class AvatarCreate(Contract):
@@ -43,6 +53,8 @@ class AvatarService:
         self.root=Path(workspace_root or ROOT).resolve()
         path=self.root/'configs/avatar.local.json'
         self.config=config if config is not None else (json.loads(path.read_text()) if path.exists() else {})
+        if not isinstance(self.config, dict):
+            raise TypeError('Avatar configuration must be an object')
         self.store=store;self.lock=asyncio.Lock();self.executor=executor
         self.enabled=bool(self.config.get('enabled'))
         if self.enabled and not executor:

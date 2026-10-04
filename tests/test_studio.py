@@ -648,3 +648,39 @@ def test_generated_endings_cannot_omit_a_reachable_nondice_route(world_blueprint
     data["challenges"][1]["skill"] = "agility"
     with pytest.raises(ValidationError):
         schema.model_validate(data)
+
+
+def test_text_creation_dialogue_and_second_story_without_avatar_dependencies(
+    tmp_path, monkeypatch, world_blueprint, story_blueprint
+):
+    import builtins
+
+    from roleplay_world.config import AppConfig
+    original_import = builtins.__import__
+    def text_only(name, *args, **kwargs):
+        if name.split('.')[0] in {'PIL', 'torch', 'transformers', 'huggingface_hub', 'roleplay_avatar'}:
+            raise AssertionError('Text workflow imported an optional image/model dependency: ' + name)
+        return original_import(name, *args, **kwargs)
+    monkeypatch.setattr(builtins, '__import__', text_only)
+    app = create_app(config=AppConfig(workspace_root=tmp_path), gateway=CreativeFixture(world_blueprint, story_blueprint))
+    with TestClient(app) as client:
+        session(client)
+        assert client.get('/api/avatars/capabilities').json()['available'] is False
+        created = client.post('/api/studio/worlds', json={'prompt': 'Create a text-only orbital station world.'})
+        assert created.status_code == 202
+        job = wait_job(client, created.json()['id'])
+        assert job['status'] == 'ready', job
+        world = client.get('/api/studio').json()['worlds'][0]
+        assert all(not npc.get('avatar_id') for npc in world['content']['characters'])
+        campaign = client.post('/api/campaigns', json={'story_id':job['story_id'], 'player_name':'Visitor'}).json()
+        base = f"/api/campaigns/{campaign['id']}/branches/{campaign['branch_id']}"
+        response = client.post(base + '/actions', json={'action_id':'text_only_dialogue',
+            'expected_world_version':0, 'mode':'say', 'text':'Hello, what is happening here?'})
+        assert response.status_code == 202
+        from test_api import wait
+        action = wait(client, response.json()['id'])
+        assert action['status'] == 'committed', action
+        assert any(segment['kind'] == 'dialogue' for segment in action['result']['segments'])
+        next_story = client.post(f"/api/studio/worlds/{world['id']}/stories", json={'prompt':'Another day at the station.'})
+        assert wait_job(client, next_story.json()['id'])['status'] == 'ready'
+        assert client.get('/api/avatars').json() == []

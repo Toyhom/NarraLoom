@@ -16,6 +16,10 @@ The editor supports larger authored settings. Choose the content language indepe
 
 Describe the setting, recurring characters and tone. Add the first story idea or let the generator propose it. Optional toggles add game rules, custom state, a living world or an important NPC's 2D avatar. You can start with a small scene and add mechanics later.
 
+## Optional animated portraits
+
+Characters receive their personality, goals, knowledge and dialogue through the text model. In world creation, **Add an animated 2D portrait (optional)** starts unchecked. Leave it off for text play, or enable it to choose a finished portrait or submit a reference image. New image generation needs the separate [creator setup](avatars.md). You can also add or remove a portrait later in the world’s character editor.
+
 ## Edit and test
 
 Generation saves editable drafts. Check the opening, player identity, map connections, NPC knowledge and intended outcomes. The story's test report combines structural validation, deterministic rule routes, opening/mechanics review and model playtests in isolated saves.

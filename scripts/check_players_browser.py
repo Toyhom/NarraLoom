@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from playwright.async_api import async_playwright
+from playwright.async_api import async_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -166,6 +166,8 @@ async def main():
             assert fork['id'] != bid
             backup = await get(host, '/api/campaigns/'+cid+'/backup')
             await restored_host.goto(args.url)
+            # Let the frontend establish its cookie before the test uses that session.
+            await expect(restored_host.get_by_role('button', name='协作冒险', exact=True)).to_be_enabled()
             restored = await post(restored_host, '/api/backups/restore', backup)
             new_room = await post(restored_host, '/api/rooms', {'campaign_id': restored['id'], 'branch_id': restored['branch_id'], 'name': '新房主', 'mode': 'independent_characters'})
             await restored_host.evaluate('(id)=>localStorage.setItem("rpw-room",id)', new_room['id'])
@@ -175,7 +177,10 @@ async def main():
             member = restored_host.locator('.room-member').filter(has_text='恢复席位')
             await member.locator('summary').click()
             await member.get_by_label('分配给恢复席位', exact=True).select_option(pc)
-            await member.get_by_role('button', name='确认分配给恢复席位', exact=True).click()
+            async with restored_host.expect_response(lambda r: r.url.endswith('/control') and r.request.method == 'POST') as assignment:
+                await member.get_by_role('button', name='确认分配给恢复席位', exact=True).click()
+            assigned = await assignment.value
+            assert assigned.ok, await assigned.text()
             await restored_guest.locator(f'[data-player="{pc}"]').wait_for(timeout=15000)
             assert (await room(restored_guest, new_room['id']))['state'] == before['state']
             await restored_host.get_by_role('button', name='交给恢复席位', exact=True).click()
@@ -233,6 +238,9 @@ async def main():
         except Exception as exc:
             report.update(status='failed', failure=str(exc))
             await guest.screenshot(path=str(folder/'failure.png'), full_page=True)
+            for index, page in enumerate(pages):
+                await page.context.storage_state(path=str(folder/f'failure-session-{index}.local.json'))
+                await page.screenshot(path=str(folder/f'failure-page-{index}.png'), full_page=True)
             raise
         finally:
             (folder/'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n')

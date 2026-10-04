@@ -1,3 +1,3 @@
 """Roleplay World: world facts, character perspectives, and model-driven stories."""
 
-__version__ = "0.22.0"
+__version__ = "0.22.1"

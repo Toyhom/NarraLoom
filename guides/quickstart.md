@@ -2,7 +2,7 @@
 
 [English](quickstart.md) · [简体中文](zh-CN/quickstart.md) · [日本語](ja/quickstart.md)
 
-Worlds, stories and **textual NPCs** can all be generated through your model API on a CPU host. **Creating a new animated 2D portrait from an image** uses separate local models and a CUDA GPU; **importing a finished portrait** needs only the `avatar` extra. See [2D setup and model downloads](avatars.md).
+Start with text characters: world creation, dialogue and gameplay use your configured text model. Animated 2D portraits are an optional enhancement, disabled by default in the creation form. You can enable them now or add them later. See [optional portrait setup](avatars.md) when you want to import or generate a portrait.
 
 ## Choose your platform
 
@@ -23,7 +23,7 @@ git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[avatar]'
+python -m pip install -e .
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist
