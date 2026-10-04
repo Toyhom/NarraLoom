@@ -18,3 +18,5 @@
 通过[参考工作台](workspace.md)找到创作、游玩、模型配置与分享工具。
 
 [框架 API 与机制参考](../reference/index.md)
+
+[可选 2D 角色：模型依赖、Linux/WSL2 环境与镜像下载](avatars.md)

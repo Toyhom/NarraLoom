@@ -53,3 +53,11 @@ dist/
 
 # Optional generated Avatar packages
 characters/
+
+# Optional local Avatar installation
+/models/
+/.venvs/
+
+# Pinned upstream model catalog is code data, not generated user data.
+!vendor/avatar_worker/src/roleplay_avatar/data/
+!vendor/avatar_worker/src/roleplay_avatar/data/models.json

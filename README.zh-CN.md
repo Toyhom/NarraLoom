@@ -42,14 +42,14 @@ https://github.com/user-attachments/assets/5ae7ff20-89c3-4f7e-bf2c-70475e98be9f
 
 ## 安装
 
-需要 Python 3.11+；参考前端还需 Node.js 20+。
+Linux / Windows WSL2 使用 Python 3.11+ 和 Node.js 20+。macOS 与 Docker Desktop 用户见[容器快速开始](guides/zh-CN/quickstart.md)。文字 NPC 可通过模型 API 生成；从图片生成可动形象另需[本地模型与创建环境](guides/zh-CN/avatars.md)，提供国内镜像下载命令。
 
 ```bash
 git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[avatar]'
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

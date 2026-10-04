@@ -42,14 +42,14 @@ https://github.com/user-attachments/assets/fbe1185d-3d95-4df1-9db8-337ab7a2a19e
 
 ## インストール
 
-Python 3.11 以降が必要です。リファレンスフロントエンドには Node.js 20 以降も使用します。
+Linux / Windows WSL2 は Python 3.11+ と Node.js 20+ を使用します。macOS と Docker Desktop は[コンテナー手順](guides/ja/quickstart.md)を参照してください。テキスト NPC はモデル API で生成し、画像から動く立ち絵を作る場合は[ローカルモデルと作成環境](guides/ja/avatars.md)を使います。ミラー取得コマンドも用意しています。
 
 ```bash
 git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[avatar]'
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

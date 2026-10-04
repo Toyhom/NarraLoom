@@ -2,24 +2,59 @@
 
 [English](quickstart.md) · [简体中文](zh-CN/quickstart.md) · [日本語](ja/quickstart.md)
 
-An API-backed setup runs the framework on a CPU machine. A local-model setup connects the same backend to your inference server. Start with one capable instruction model for every generation role; split roles after your first working story.
+Worlds, stories and **textual NPCs** can all be generated through your model API on a CPU host. **Creating a new animated 2D portrait from an image** uses separate local models and a CUDA GPU; **importing a finished portrait** needs only the `avatar` extra. See [2D setup and model downloads](avatars.md).
 
-## Install
+## Choose your platform
 
-Use Python 3.11+ and, for the reference frontend, Node.js 20+:
+| Computer | Run the backend | Create new 2D portraits |
+| --- | --- | --- |
+| Linux | Python installation below, or a Linux container | NVIDIA CUDA, x86-64 host and the [creator setup](avatars.md) |
+| Windows | WSL2 Ubuntu, or Docker Desktop with Linux containers | WSL2 with an NVIDIA GPU; run creator commands inside WSL |
+| macOS, Intel or Apple Silicon | Docker Desktop Linux container, or a remote Linux host | Use a Linux NVIDIA host; finished assets display in the Mac browser |
+
+The current backend uses Linux writer locks. On Windows, install WSL with `wsl --install -d Ubuntu-24.04`, restart if requested, then run the Linux instructions in the Ubuntu terminal. A browser can run on any of these systems.
+
+## Linux / WSL2 installation
+
+Use Python 3.11+ and Node.js 20+. From a Linux shell:
 
 ```bash
 git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[avatar]'
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist
 ```
 
-On Windows, activate with `.venv\Scripts\Activate.ps1` in PowerShell. Open **http://localhost:18090**. The language selector offers English, Simplified Chinese and Japanese.
+Open **http://localhost:18090**. Select English, Simplified Chinese or Japanese. Stop the foreground service with **Ctrl+C**; run the same `narraloom serve` command to start it again. Contributors can install `.[dev]` for tests.
+
+## macOS / Docker Desktop
+
+Install Git and Docker Desktop, start Docker, then run these commands in Terminal. The same commands work in Windows PowerShell with Linux containers:
+
+```bash
+git clone https://github.com/Toyhom/NarraLoom.git
+cd NarraLoom
+docker build -t narraloom .
+docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
+```
+
+Open **http://localhost:18090** and configure your API through the UI. The image includes the backend, built frontend and finished-portrait support. It uses a persistent named volume for saves and settings. Keep one container per volume and retain its hostname when recreating it. Use `docker stop narraloom`, `docker start narraloom` and `docker logs --tail 80 narraloom` to manage it. Initial image building downloads Python/Node packages. GPU creation is configured separately on its Linux/WSL2 host.
+
+To reach a model service on the Docker Desktop host, use `http://host.docker.internal:<port>/v1`. Inside a container, `127.0.0.1` refers to the container. On Linux Docker, add `--add-host host.docker.internal:host-gateway` to `docker run` and make the model service reachable from that interface.
+
+## Use a remote Linux host
+
+Install and start on the server, then run this on your Windows, Mac or Linux computer:
+
+```bash
+ssh -N -L 18090:127.0.0.1:18090 user@your-server
+```
+
+Open **http://localhost:18090**. Keep the tunnel running; Ctrl+C closes the tunnel while the server continues to run.
 
 ## Connect a model
 

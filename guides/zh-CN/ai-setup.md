@@ -2,7 +2,7 @@
 
 [English](../ai-setup.md) · [简体中文](ai-setup.md) · [日本語](../ja/ai-setup.md)
 
-在你的编码助手中打开该仓库，并调整此任务的前四行：
+在你的编码助手中打开该仓库，并调整此任务的环境与需求字段：
 
 ```text
 设置 NarraLoom 并验证一个可运行的故事游戏框架。
@@ -10,6 +10,8 @@
 我的模型选择：[提供商 API / 现有本地服务 / 为我的硬件推荐]
 我的环境和工作区目录：[选择路径或推荐新路径]
 我的目标：[参考前端 / 后端 API / 模型对比]
+我的系统 / 显卡：[Linux / Windows WSL2 / macOS；显卡型号和显存]
+2D 形象：[导入成品 / 从参考图生成 / 仅文字角色]
 
 阅读 README.md、guides/quickstart.md、guides/models.md、guides/developers.md
 以及适用的工作区说明。检查 Python、Node、存储以及任何
@@ -32,6 +34,13 @@
 
 如果我带来一个研究模型，请使用 guides/research.md 更改一个模块，并
 记录其实际响应模型、失败、延迟和用量。
+开启图片创建前阅读 guides/zh-CN/avatars.md，按 quickstart 选择系统路线，
+检查空间，先运行 narraloom models download 的 --dry-run，再选择官方站或 --mirror。
+按需安装独立创建环境，保留已有配置和主机调度流程，运行 models check，
+完成一次真实角色创建之后再确认创建器可用。
+
 ```
 
 可选的 2D 创作有其自己的执行器和模型依赖。在选择时进行配置；参见 [Avatar](../reference/avatars.md)。
+
+[可选 2D 角色：模型依赖、Linux/WSL2 环境与镜像下载](avatars.md)

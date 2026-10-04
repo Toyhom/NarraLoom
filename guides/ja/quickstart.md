@@ -2,24 +2,59 @@
 
 [English](../quickstart.md) · [简体中文](../zh-CN/quickstart.md) · [日本語](quickstart.md)
 
-API ベースのセットアップでは、フレームワークを CPU マシン上で実行します。ローカルモデルのセットアップでは、同じバックエンドを推論サーバーに接続します。まずはすべての生成ロールに対して 1 つの高性能な指示モデルから始め、最初のストーリーが動作した後にロールを分割してください。
+世界、物語、**テキストの NPC 設定**はモデル API で生成でき、バックエンドは CPU で動作します。**参照画像から動く 2D 立ち絵を新規作成**する場合は、別のローカルモデルと CUDA GPU が必要です。**完成した素材の読み込み**には `avatar` extra を使います。[2D 設定とモデルダウンロード](avatars.md)を参照してください。
 
-## インストール
+## OS ごとの実行方法
 
-Python 3.11+ を使用し、リファレンスフロントエンドには Node.js 20+ を使用します：
+| コンピューター | バックエンド | 新しい 2D 立ち絵の作成 |
+| --- | --- | --- |
+| Linux | 下記 Python 手順、または Linux コンテナー | x86-64 ホスト、NVIDIA CUDA、[作成環境](avatars.md) |
+| Windows | WSL2 Ubuntu、または Docker Desktop の Linux コンテナー | NVIDIA GPU 対応の WSL2 内で作成環境を導入 |
+| macOS、Intel / Apple Silicon | Docker Desktop の Linux コンテナー、またはリモート Linux | Linux NVIDIA ホストを利用。Mac ブラウザーで完成素材を表示可能 |
+
+現在のバックエンドは Linux の書き込みロックを使用します。Windows は `wsl --install -d Ubuntu-24.04` を実行し、必要に応じて再起動してから Ubuntu 端末で Linux 手順を実行します。ブラウザーはいずれの OS でも利用できます。
+
+## Linux / WSL2 のインストール
+
+Python 3.11+ と Node.js 20+ を使用し、Linux シェルで実行します：
 
 ```bash
 git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[avatar]'
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist
 ```
 
-Windows では、PowerShell で `.venv\Scripts\Activate.ps1` を使用してアクティベートします。**http://localhost:18090** を開いてください。言語セレクターでは英語、簡体字中国語、日本語を選択できます。
+**http://localhost:18090** を開き、英語、簡体字中国語、日本語を選びます。**Ctrl+C** で前景のサービスを停止し、同じ `narraloom serve` コマンドで再起動します。開発時は `.[dev]` でテストツールを導入できます。
+
+## macOS / Docker Desktop
+
+Git と Docker Desktop を導入し、Docker を起動して Terminal で実行します。Linux コンテナーを有効にした Windows PowerShell でも同じコマンドを使用できます：
+
+```bash
+git clone https://github.com/Toyhom/NarraLoom.git
+cd NarraLoom
+docker build -t narraloom .
+docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
+```
+
+**http://localhost:18090** を開いて UI から API を設定します。イメージにはバックエンド、ビルド済みフロントエンド、完成素材の表示機能が含まれます。名前付きボリュームにセーブと設定を保存します。1 ボリュームにつき 1 コンテナーを使い、再作成時も hostname を維持してください。停止は `docker stop narraloom`、再開は `docker start narraloom`、ログは `docker logs --tail 80 narraloom` です。初回ビルドでは Python/Node の依存関係を取得します。GPU 作成機能は Linux/WSL2 ホストで別途設定します。
+
+Docker Desktop ホスト上のモデルには `http://host.docker.internal:<port>/v1` を使います。コンテナー内の `127.0.0.1` はコンテナー自身です。Linux Docker は `docker run` に `--add-host host.docker.internal:host-gateway` を加え、そのインターフェースからモデルサービスへ接続できるようにします。
+
+## リモート Linux ホストを使う
+
+サーバーで導入・起動してから、手元の Windows、Mac、Linux で実行します：
+
+```bash
+ssh -N -L 18090:127.0.0.1:18090 user@your-server
+```
+
+**http://localhost:18090** を開きます。転送端末は起動したままにしてください。Ctrl+C はトンネルだけを閉じ、サーバーは動作を続けます。
 
 ## モデルの接続
 

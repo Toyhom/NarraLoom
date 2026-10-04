@@ -15,6 +15,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="NarraLoom story-game framework backend")
     parser.add_argument("--version", action="version", version=__version__)
     commands = parser.add_subparsers(dest="command", required=True)
+    from . import model_assets
+    model_assets.add_parser(commands)
     serve = commands.add_parser("serve", help="Run one backend writer; API only unless --web-dist is supplied")
     serve.add_argument("--workspace", type=Path, help="Base for relative paths (default: current directory)")
     serve.add_argument("--data-root", type=Path)
@@ -46,6 +48,12 @@ def main(argv=None):
     playtest.add_argument('--retry-failed', action='store_true')
     playtest.add_argument('--max-steps', type=int)
     args = parser.parse_args(argv)
+    if args.command == 'models':
+        try:
+            model_assets.run(args)
+            return
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            parser.error(str(exc))
     if args.command == 'playtest':
         from . import playtesting
         try:

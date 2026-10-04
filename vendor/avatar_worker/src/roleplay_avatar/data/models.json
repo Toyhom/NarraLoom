@@ -1,0 +1,351 @@
+{
+  "version": 1,
+  "models": {
+    "qwen3-0.6b": {
+      "repo": "Qwen/Qwen3-0.6B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 3,
+      "status": "adapter-compatible",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-1.7b": {
+      "repo": "Qwen/Qwen3-1.7B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 5,
+      "status": "adapter-compatible",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-4b": {
+      "repo": "Qwen/Qwen3-4B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 10,
+      "status": "adapter-compatible",
+      "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-14b": {
+      "repo": "Qwen/Qwen3-14B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 34,
+      "status": "adapter-compatible",
+      "revision": "40c069824f4251a91eefaf281ebe4c544efd3e18",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-32b": {
+      "repo": "Qwen/Qwen3-32B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 74,
+      "status": "adapter-compatible",
+      "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-30b-a3b": {
+      "repo": "Qwen/Qwen3-30B-A3B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 70,
+      "status": "adapter-compatible",
+      "revision": "ad44e777bcd18fa416d9da3bd8f70d33ebb85d39",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-235b-a22b": {
+      "repo": "Qwen/Qwen3-235B-A22B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 510,
+      "status": "adapter-compatible",
+      "revision": "8efa61729e24bd65b1d152b5ab5409052aa80e65",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-2b": {
+      "repo": "Qwen/Qwen3-VL-2B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 7,
+      "status": "adapter-compatible",
+      "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-4b": {
+      "repo": "Qwen/Qwen3-VL-4B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 12,
+      "status": "tested",
+      "revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-8b": {
+      "repo": "Qwen/Qwen3-VL-8B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 24,
+      "status": "adapter-compatible",
+      "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-32b": {
+      "repo": "Qwen/Qwen3-VL-32B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 76,
+      "status": "tested",
+      "revision": "0cfaf48183f594c314753d30a4c4974bc75f3ccb",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-30b-a3b": {
+      "repo": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 72,
+      "status": "adapter-compatible",
+      "revision": "9c4b90e1e4ba969fd3b5378b57d966d725f1b86c",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen3-vl-235b-a22b": {
+      "repo": "Qwen/Qwen3-VL-235B-A22B-Instruct",
+      "role": "vision",
+      "adapter": "transformers-image-text",
+      "vram_gib": 530,
+      "status": "adapter-compatible",
+      "revision": "710c13861be6c466e66de3f484069440b8f31389",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "coser-8b": {
+      "repo": "Neph0s/CoSER-Llama-3.1-8B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 20,
+      "status": "tested",
+      "output_mode": "actor_director",
+      "revision": "80d5c88072599026bd0b0e2eb4369a87e6a5c960",
+      "license": "mit",
+      "gated": false
+    },
+    "coser-70b": {
+      "repo": "Neph0s/CoSER-Llama-3.1-70B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 152,
+      "status": "tested",
+      "output_mode": "actor_director",
+      "revision": "b9e3202fab591550852221188372e672f3a3d2d2",
+      "license": "mit",
+      "gated": false
+    },
+    "whisper-tiny": {
+      "repo": "openai/whisper-tiny",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 1,
+      "status": "adapter-compatible",
+      "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "whisper-small": {
+      "repo": "openai/whisper-small",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 2,
+      "status": "tested",
+      "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "whisper-medium": {
+      "repo": "openai/whisper-medium",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 4,
+      "status": "adapter-compatible",
+      "revision": "abdf7c39ab9d0397620ccaea8974cc764cd0953e",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "whisper-large-v3": {
+      "repo": "openai/whisper-large-v3",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 7,
+      "status": "adapter-compatible",
+      "revision": "06f233fe06e710322aca913c1bc4249a0d71fce1",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "whisper-large-v3-turbo": {
+      "repo": "openai/whisper-large-v3-turbo",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 4,
+      "status": "tested",
+      "revision": "41f01f3fe87f28c78e2fbf8b568835947dd65ed9",
+      "license": "mit",
+      "gated": false
+    },
+    "flux2-klein-4b": {
+      "repo": "black-forest-labs/FLUX.2-klein-4B",
+      "role": "image",
+      "adapter": "flux2-klein",
+      "vram_gib": 18,
+      "status": "tested",
+      "layout": "diffusers",
+      "revision": "e7b7dc27f91deacad38e78976d1f2b499d76a294",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "flux2-klein-9b": {
+      "repo": "black-forest-labs/FLUX.2-klein-9B",
+      "role": "image",
+      "adapter": "flux2-klein",
+      "vram_gib": 32,
+      "status": "adapter-compatible",
+      "layout": "diffusers",
+      "revision": "92196c8e11f7b6cf2b7493e037d8c5345c559216",
+      "license": "other",
+      "gated": true
+    },
+    "qwen-image-edit-2511": {
+      "repo": "Qwen/Qwen-Image-Edit-2511",
+      "role": "image_edit",
+      "adapter": "qwen-image-edit-plus",
+      "vram_gib": 48,
+      "status": "tested",
+      "layout": "diffusers",
+      "revision": "6f3ccc0b56e431dc6a0c2b2039706d7d26f22cb9",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen-voice-design": {
+      "repo": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+      "role": "voice_design",
+      "adapter": "qwen-voice-design",
+      "vram_gib": 8,
+      "status": "tested",
+      "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen-tts-0.6b-base": {
+      "repo": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+      "role": "tts",
+      "adapter": "qwen-tts",
+      "vram_gib": 4,
+      "status": "adapter-compatible",
+      "revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen-tts-0.6b-customvoice": {
+      "repo": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+      "role": "tts",
+      "adapter": "qwen-tts",
+      "vram_gib": 4,
+      "status": "adapter-compatible",
+      "revision": "85e237c12c027371202489a0ec509ded67b5e4b5",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen-tts-1.7b-base": {
+      "repo": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+      "role": "tts",
+      "adapter": "qwen-tts",
+      "vram_gib": 8,
+      "status": "tested",
+      "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "qwen-tts-1.7b-customvoice": {
+      "repo": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+      "role": "tts",
+      "adapter": "qwen-tts",
+      "vram_gib": 8,
+      "status": "adapter-compatible",
+      "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "cosyvoice3": {
+      "repo": "FunAudioLLM/Fun-CosyVoice3-0.5B-2512",
+      "role": "tts",
+      "adapter": "cosyvoice3",
+      "vram_gib": 6,
+      "status": "tested",
+      "revision": "29e01c4e8d000f4bcd70751be16fa94bf3d85a18",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "cosyvoice2": {
+      "repo": "FunAudioLLM/CosyVoice2-0.5B",
+      "role": "tts",
+      "adapter": "cosyvoice-auto",
+      "vram_gib": 6,
+      "status": "adapter-compatible",
+      "revision": "eec1ae6c79877dbd9379285cf8789c9e0879293d",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "cosyvoice1": {
+      "repo": "FunAudioLLM/CosyVoice-300M",
+      "role": "tts",
+      "adapter": "cosyvoice-auto",
+      "vram_gib": 4,
+      "status": "adapter-compatible",
+      "revision": "24c40509c3c5ea6fe06b5f8790ff99e3714a6bee",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "anigen": {
+      "repo": "VAST-AI/AniGen",
+      "role": "mesh",
+      "adapter": "anigen",
+      "vram_gib": 45,
+      "status": "tested",
+      "layout": "anigen-inference",
+      "revision": "53af954e283b42fcd8d3739a43514196f8093d10",
+      "license": "mit",
+      "gated": false
+    },
+    "qwen3-8b": {
+      "repo": "Qwen/Qwen3-8B",
+      "role": "roleplay",
+      "adapter": "transformers-causal",
+      "vram_gib": 20,
+      "status": "tested",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "license": "apache-2.0",
+      "gated": false
+    },
+    "whisper-base": {
+      "repo": "openai/whisper-base",
+      "role": "asr",
+      "adapter": "whisper",
+      "vram_gib": 1,
+      "status": "adapter-compatible",
+      "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+      "license": "apache-2.0",
+      "gated": false
+    }
+  }
+}

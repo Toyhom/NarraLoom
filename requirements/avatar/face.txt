@@ -1,0 +1,14 @@
+# MediaPipe is installed separately with --no-deps to select headless OpenCV.
+Pillow==11.3.0
+numpy==1.26.4
+scipy==1.17.1
+opencv-contrib-python-headless==4.11.0.86
+jax==0.4.35
+jaxlib==0.4.35
+absl-py>=2,<3
+attrs>=19.1
+flatbuffers>=2
+matplotlib>=3.8
+protobuf>=4.25.3,<5
+sounddevice>=0.4.4
+sentencepiece>=0.2,<0.3

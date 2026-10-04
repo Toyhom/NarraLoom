@@ -1,0 +1,4 @@
+qwen-tts @ git+https://github.com/QwenLM/Qwen3-TTS.git@022e286b98fbec7e1e916cb940cdf532cd9f488e
+gradio==5.49.1
+librosa==0.11.0
+onnxruntime==1.23.2

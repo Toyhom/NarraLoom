@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "roleplay-world"
-version = "0.21.1"
+version = "0.22.0"
 description = "Modular story-game AI framework with an embeddable backend and deterministic world state"
 readme = "README.md"
 license = "MIT"
@@ -24,6 +24,7 @@ narraloom = "roleplay_world.cli:main"
 embedding = ["torch>=2.6,<3", "transformers>=4.51,<6"]
 jev = ["torch==2.14.0", "transformers==5.17.0", "tokenizers==0.23.2", "numpy>=1.26,<2.6"]
 avatar = ["Pillow>=10,<13"]
+download = ["huggingface_hub>=0.34,<2"]
 research = ["jsonschema>=4.25,<5"]
 dev = ["pytest>=8,<10", "ruff>=0.11,<1", "playwright>=1.55,<2", "Pillow>=10,<13", "setuptools>=77", "wheel", "jsonschema>=4.25,<5"]
 

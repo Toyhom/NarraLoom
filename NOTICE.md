@@ -14,6 +14,6 @@ Original NarraLoom code is [MIT](LICENSE). The following sources retain their up
 
 [Starter notes](guides/reference/community-content.md) describe the playable adaptations. The apartment dinner storyline and Fogharbor are original NarraLoom content. Original resource notices are included in portable starter exports.
 
-The optional Jev runtime is downloaded separately at the pinned [source revision](resources/jev-style-source-pin.json). Model weights and inference services retain their own source/model-card terms. Optional Avatar model/resource dependencies follow [Roleplay Avatar's resource documentation](https://github.com/Toyhom/RoleplayAvatar).
+The optional Jev runtime is downloaded separately at the pinned [source revision](resources/jev-style-source-pin.json). Model weights and inference services retain their own source/model-card terms. Optional Avatar weights are downloaded separately: Qwen3-VL, FLUX.2-klein-4B, Qwen3-TTS and MediaPipe use Apache-2.0; BiRefNet uses MIT. The [download catalog](src/roleplay_world/model_assets.py) records fixed revisions and resource hashes. The creator environment installer adapts Roleplay Avatar’s MIT setup recipe and installs Qwen3-TTS from its pinned Apache-2.0 source. See [Avatar setup](guides/avatars.md) for their roles.
 
 The [Avatar adapter](vendor/avatar_worker/ADAPTER.md) documents the host interface. Upstream source hashes identify inputs; NarraLoom-specific adaptations support scoped assets, stable creation requests and renderer lifecycle management.

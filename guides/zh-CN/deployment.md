@@ -39,3 +39,5 @@ narraloom serve --workspace /path/to/my-game   --models-config /path/to/models.l
 | 可选 Avatar 创建不可用 | 配置执行器及其模型依赖项；可导入便携式成品资产 |
 
 有关安装检查，请参阅[测试](../reference/testing.md)；有关可选展示，请参阅 [Avatar 设置](../reference/avatars.md)。
+
+[可选 2D 角色：模型依赖、Linux/WSL2 环境与镜像下载](avatars.md)

@@ -139,6 +139,9 @@ def main():
             "p=pathlib.Path(roleplay_world.__file__).resolve(); "
             "assert p.is_relative_to(pathlib.Path(__import__('sys').argv[1])); print(p)"), str(target)])
         run("console-entry", [str(target / "bin/narraloom"), "--version"])
+        run("model-download-plan", [str(target / "bin/narraloom"), "models", "download", "avatar-2d",
+                                    "--model-root", str(workspace / "weights"), "--mirror", "--dry-run"])
+        assert not (workspace / "weights").exists()
         # Copy protocol tests outside the checkout so imports resolve to this wheel.
         shutil.copyfile(ROOT / 'tests/test_native_providers.py', workspace / 'test_native_providers.py')
         (workspace / 'pytest.ini').write_text('[pytest]\n')

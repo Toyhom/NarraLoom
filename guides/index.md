@@ -18,3 +18,5 @@ Choose a path and continue into the shared API references when you need details.
 Use the [reference workspace](workspace.md) to find creation, play, model configuration and sharing tools.
 
 [Framework API reference](reference/index.md)
+
+[Optional 2D characters: model requirements, Linux/WSL2 environments and mirror downloads](avatars.md)

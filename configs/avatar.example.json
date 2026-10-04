@@ -1,13 +1,13 @@
 {
   "enabled": false,
-  "runner": "gpuq",
+  "runner": "local",
   "python": "/absolute/path/to/project-runtime/bin/python",
   "env": {
     "AVATAR_MODEL_ROOT": "/absolute/path/to/shared-models",
     "AVATAR_VISION_PYTHON": "/absolute/path/to/vision-runtime/bin/python",
     "AVATAR_FACE_PYTHON": "/absolute/path/to/face-runtime/bin/python",
-    "AVATAR_ASSET_PYTHON": "/absolute/path/to/asset-runtime/bin/python",
-    "AVATAR_PORTRAIT_PYTHON": "/absolute/path/to/asset-runtime/bin/python",
+    "AVATAR_ASSET_PYTHON": "/absolute/path/to/portrait-runtime/bin/python",
+    "AVATAR_PORTRAIT_PYTHON": "/absolute/path/to/portrait-runtime/bin/python",
     "AVATAR_QWEN_PYTHON": "/absolute/path/to/tts-runtime/bin/python",
     "AVATAR_IMAGE_BACKEND": "flux2"
   }

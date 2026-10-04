@@ -55,3 +55,5 @@ System One handles typed `choice`, `noul` and `score` questions. The bundled ada
 Routing defaults to **off**. **Shadow** records classifications while the main planner still handles the turn. **Auto** can route an explicit single movement when probability and margin thresholds pass. Start in shadow mode and evaluate negation, ambiguity, multi-step actions and language variation before enabling auto. Thresholds are model outputs; measure actual errors on held-out cases.
 
 Local model memory depends on weights, context, quantization and concurrency. Run optional inference in a separate environment, share endpoints between roles using the same weights, and follow your host's GPU scheduler. The regular API backend needs no GPU or Torch. Pinned Jev setup commands are in [ENGINES](reference/engines.md).
+
+[Optional 2D characters: model requirements, Linux/WSL2 environments and mirror downloads](avatars.md)

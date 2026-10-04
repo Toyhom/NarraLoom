@@ -42,14 +42,14 @@ A 4-minute 10-second tour of creation and automatic tests, NPC interaction, rule
 
 ## Install
 
-Requires Python 3.11+. The reference frontend also uses Node.js 20+.
+Linux / Windows WSL2: Python 3.11+ and Node.js 20+. macOS and Docker Desktop users can follow the [container quick start](guides/quickstart.md). Textual NPC creation uses your model API; generating a new animated portrait needs the separate [local model setup](guides/avatars.md), including mirror downloads.
 
 ```bash
 git clone https://github.com/Toyhom/NarraLoom.git
 cd NarraLoom
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[avatar]'
 npm ci
 npm run build
 narraloom serve --workspace . --web-dist web/dist

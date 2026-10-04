@@ -39,3 +39,5 @@ Avoid sharing a live data directory between backend processes. The journal lock 
 | Optional Avatar creation unavailable | Configure an executor and its model dependencies; portable finished assets can be imported |
 
 See [tests](reference/testing.md) for installation checks and [Avatar setup](reference/avatars.md) for optional presentation.
+
+[Optional 2D characters: model requirements, Linux/WSL2 environments and mirror downloads](avatars.md)

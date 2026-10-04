@@ -46,7 +46,12 @@ class AvatarService:
         self.store=store;self.lock=asyncio.Lock();self.executor=executor
         self.enabled=bool(self.config.get('enabled'))
         if self.enabled and not executor:
-            self.executor=vendor_module('creation').CreationStore(self.root,runner='gpuq')
+            runner=self.config.get('runner','gpuq')
+            if runner not in {'gpuq','local'}:
+                raise ValueError('Avatar runner must be gpuq or local')
+            if sys.platform != 'linux':
+                raise ValueError('The bundled Avatar creator requires Linux or WSL2 with NVIDIA CUDA')
+            self.executor=vendor_module('creation').CreationStore(self.root,runner=runner)
 
     def public(self,value):
         return {k:value[k] for k in ('id','description','state','stage','progress','error','created_at','character_id','name') if k in value}

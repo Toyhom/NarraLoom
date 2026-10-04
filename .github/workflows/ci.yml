@@ -32,3 +32,38 @@ jobs:
         with:
           name: check-reports
           path: outputs/validation/**/report.json
+  model-tools:
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install .
+      - run: narraloom models list
+      - run: narraloom models download avatar-2d --model-root ./model-plan --mirror --dry-run
+      - run: python -c "from pathlib import Path; assert not Path('model-plan').exists()"
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t narraloom .
+      - name: Container frontend, API and persistent workspace
+        run: |
+          docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
+          curl --retry 20 --retry-connrefused --retry-delay 1 --fail http://127.0.0.1:18090/healthz
+          curl --fail --silent --output /dev/null http://127.0.0.1:18090/
+          curl --fail --silent --output /dev/null http://127.0.0.1:18090/docs
+          docker exec narraloom python -c "import importlib.util; assert importlib.util.find_spec('torch') is None"
+          docker exec narraloom sha256sum /workspace/data/writer-node.json > before.txt
+          docker stop narraloom
+          docker rm narraloom
+          docker run -d --name narraloom --hostname narraloom -p 127.0.0.1:18090:18090 -v narraloom-workspace:/workspace narraloom
+          curl --retry 20 --retry-connrefused --retry-delay 1 --fail http://127.0.0.1:18090/healthz
+          docker exec narraloom sha256sum /workspace/data/writer-node.json > after.txt
+          diff before.txt after.txt
+      - if: failure()
+        run: docker logs narraloom

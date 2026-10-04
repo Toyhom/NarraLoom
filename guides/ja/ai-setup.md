@@ -2,7 +2,7 @@
 
 [English](../ai-setup.md) · [简体中文](../zh-CN/ai-setup.md) · [日本語](ai-setup.md)
 
-コーディングアシスタントでリポジトリを開き、このタスクの最初の4行を適応させてください：
+コーディングアシスタントでリポジトリを開き、このタスクの環境と目的の項目を適応させてください：
 
 ```text
 NarraLoom をセットアップし、動作するストーリーゲームフレームワークを検証する。
@@ -10,6 +10,8 @@ NarraLoom をセットアップし、動作するストーリーゲームフレ�
 モデルの選択：[プロバイダー API / 既存のローカルサービス / 私のハードウェアに合わせて推奨]
 環境とワークスペースディレクトリ：[パスを選択するか、新しいパスを推奨]
 目標：[リファレンスフロントエンド / バックエンド API / モデル比較]
+OS / GPU：[Linux / Windows WSL2 / macOS、GPU 名と VRAM]
+2D 表示：[完成素材 / 参照画像から作成 / テキストのみ]
 
 README.md、guides/quickstart.md、guides/models.md、guides/developers.md
 および該当するワークスペースの指示を読む。Python、Node、ストレージ、および
@@ -35,6 +37,13 @@ README.md、guides/quickstart.md、guides/models.md、guides/developers.md
 
 研究用モデルを持ち込む場合は、guides/research.md を使用して1つのモジュールを
 変更し、その実際の応答モデル、失敗、レイテンシ、使用状況を記録する。
+画像からの作成を有効にする前に guides/ja/avatars.md を読む。quickstart の OS
+手順を選び、容量を調べ、narraloom models download の --dry-run の後に取得先や
+--mirror を選ぶ。必要な専用環境を導入し、既存設定とホストのスケジューラーを
+保持する。models check と実際の 1 体の作成で動作を確認する。
+
 ```
 
 オプションの 2D 作成には独自のエグゼキューターとモデル依存関係があります。選択時に設定してください。[Avatar](../reference/avatars.md) を参照してください。
+
+[オプションの 2D キャラクター：モデル要件、Linux/WSL2 環境、ミラー取得](avatars.md)

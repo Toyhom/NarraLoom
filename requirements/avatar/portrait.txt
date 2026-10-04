@@ -1,0 +1,5 @@
+# CPU packaging/foreground extraction for 2D creation; no 3D CUDA extensions.
+numpy==1.26.4
+Pillow==11.3.0
+rembg==2.0.67
+onnxruntime==1.23.2

@@ -11,7 +11,7 @@ Downstream modifications:
   character directories. Code and models remain separately configured.
 - `CreationStore.create` accepts a stable validated job ID and returns an
   existing job without submitting twice. Owner/request checks live in the host.
-- The host wrapper launches through GPUQ and supplies explicit environment paths.
+- The host wrapper selects the configured Linux local runner or GPUQ and supplies explicit environment paths.
 - `web/src/avatar/puppet.js` uses the host-scoped asset base and disposes its RAF
   loop/WebGL context when unmounted. Actions and shaders retain the upstream math.
 
