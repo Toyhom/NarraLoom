@@ -12,6 +12,8 @@ NarraLoom 是模块化的故事游戏 AI 框架。描述一个设定，即可生
 
 **观看演示：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
+约 15 分钟，包含 13 个章节与可点击字幕，完整展示世界创作与自动测试、动态 NPC、规则玩法、多人互动、分享恢复、引擎配置，以及 SDK 与研究工具。参考前端的入口说明见[工作台指南](guides/zh-CN/workspace.md)。
+
 ## 从这里开始
 
 | 你的目标 | 文档 |

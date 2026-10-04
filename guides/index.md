@@ -12,3 +12,5 @@ Choose a path and continue into the shared API references when you need details.
 | Researchers | [Model replacement and evaluation](research.md) | [Engine interfaces](../docs/ENGINES.md), [tests](../docs/TESTING.md) |
 
 [AI-assisted setup](ai-setup.md) provides a copyable task for a coding assistant. [Localization](../docs/I18N.md) describes interface contributions.
+
+Use the [reference workspace](workspace.md) to find creation, play, model configuration and sharing tools.

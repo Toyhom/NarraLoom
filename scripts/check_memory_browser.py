@@ -5,6 +5,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import module, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,10 +26,12 @@ async def run(args):
             await page.get_by_role('button', name=catalogs['en']['ProviderPanel.032'], exact=True).click()
             await page.get_by_label(catalogs['en']['ProviderPanel.028'], exact=True).fill('http://127.0.0.1:9/v1')
             await page.get_by_label(catalogs['en']['ProviderPanel.004'], exact=True).fill('generation-configured-separately')
+            await tab(page, 'provider', 'modules')
             await page.locator('.engine-bindings > summary').click()
             await page.get_by_role('button', name=catalogs['en']['EngineBindings.017'], exact=True).click()
             await page.get_by_label('provider_1 backend', exact=True).select_option('openai_embedding')
             await page.get_by_label('provider_1 URL', exact=True).fill(args.embedding_url)
+            await module(page, 'memory_embedding')
             await page.get_by_label('memory_embedding provider', exact=True).select_option('provider_1')
             await page.get_by_label('memory_embedding model', exact=True).fill(args.embedding_model)
             await page.get_by_label('Memory retrieval mode', exact=True).select_option('hybrid')
@@ -48,7 +51,7 @@ async def run(args):
                 await page.get_by_role('button', name=catalogs['en']['ProviderPanel.010'], exact=True).click()
             saved = await (await response.value).json()
             assert saved['memory_policy']['mode'] == 'hybrid'
-            section = page.locator('fieldset').filter(has=page.get_by_label('memory_embedding model', exact=True))
+            section = page.locator('.module-binding').filter(has=page.get_by_label('memory_embedding model', exact=True))
             async with page.expect_response(lambda response: response.url.endswith('/api/engines/memory_embedding/check'), timeout=120000) as response:
                 await section.get_by_role('button', name=catalogs['en']['EngineBindings.010'], exact=True).click()
             report['diagnostic'] = await (await response.value).json()
@@ -56,6 +59,7 @@ async def run(args):
             report['checks'].append('saved_provider_real_embedding_protocol_check')
             await page.reload()
             await page.get_by_role('button', name=catalogs['en']['ProviderPanel.032'], exact=True).click()
+            await tab(page, 'provider', 'modules')
             await page.locator('.engine-bindings > summary').click()
             assert await page.get_by_label('Memory retrieval mode', exact=True).input_value() == 'hybrid'
             await page.get_by_label('provider_1 backend', exact=True).select_option('openai')

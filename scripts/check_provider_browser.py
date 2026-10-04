@@ -8,6 +8,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import module, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +34,7 @@ async def main():
             await dialog.get_by_label(catalogs['en']['ProviderPanel.028'], exact=True).fill('https://provider.invalid/v1')
             await dialog.get_by_label(catalogs['en']['ProviderPanel.004'], exact=True).fill('fixture-model')
             await dialog.get_by_label(catalogs['en']['ProviderPanel.005'], exact=True).fill('test-browser-key')
-            await dialog.locator('summary').filter(has_text=catalogs['en']['ProviderPanel.006']).click()
+            await dialog.locator('summary').filter(has_text=catalogs['en']['provider.generation']).click()
             await dialog.get_by_label(catalogs['en']['provider.omit_temperature'], exact=True).check()
             for locale, catalog in catalogs.items():
                 await dialog.get_by_label('界面语言 / Interface language', exact=True).select_option(locale)
@@ -58,9 +59,11 @@ async def main():
             await dialog.get_by_label(catalogs['en']['provider.protocol'], exact=True).select_option('openai-responses')
             value = await save()
             assert value['backend'] == 'openai-responses' and not value['has_key']
+            await tab(page, 'provider', 'modules')
             await dialog.locator('.engine-bindings > summary').click()
             await dialog.get_by_role('button', name=catalogs['en']['EngineBindings.017'], exact=True).click()
             await dialog.get_by_label('provider_1 backend').select_option('anthropic')
+            await module(page, 'narrator')
             await dialog.get_by_label('narrator provider').select_option('provider_1')
             await dialog.get_by_label('narrator model', exact=True).fill('fixture-narrator')
             assert await dialog.get_by_label('action_router provider').locator('option[value="provider_1"]').count() == 0

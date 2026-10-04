@@ -12,6 +12,8 @@ Python バックエンドを単独で動かす、自分のアプリに組み込�
 
 **デモを見る：** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
+約 15 分、13 チャプターとクリックできる字幕で紹介します。世界の作成と自動テスト、動く NPC、ルールとマルチプレイ、共有と復元、エンジン設定、SDK と研究ツールを実際の操作で確認できます。画面の使い方は[ワークスペースガイド](guides/ja/workspace.md)をご覧ください。
+
 ## はじめに
 
 | 目的 | ガイド |

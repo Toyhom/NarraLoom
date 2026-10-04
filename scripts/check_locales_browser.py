@@ -6,6 +6,7 @@ import base64
 import json
 from pathlib import Path
 
+from browser_navigation import tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -74,6 +75,7 @@ async def main():
                 await picture('creator-mobile-' + locale, True)
             await page.set_viewport_size({'width': 1440, 'height': 1000})
             await dialog.locator('.modal-close').click()
+            await tab(page, 'workspace', 'avatars')
             await page.locator('.avatar-studio > details > summary').click()
             await page.get_by_label(label('2D人物描述', 'ja'), exact=True).fill(draft)
             png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aT1cAAAAASUVORK5CYII=')

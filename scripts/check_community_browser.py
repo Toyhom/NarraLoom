@@ -4,6 +4,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -97,6 +98,7 @@ async def main():
             await creator.storage_state(path=str(out / 'creator-session.local.json'))
             report['checks'].append('Two stories automatically generated and tested in one world with real models')
             await page.goto(args.url);await page.locator('.studio-world-card').first.wait_for()
+            await page.locator('.studio-world-card').filter(has=page.get_by_role('heading', name=original['world']['title'], exact=True)).click()
             await page.get_by_role('button', name=LABELS['en']['community.create'], exact=True).click()
             modal = page.get_by_role('dialog');await modal.get_by_label(LABELS['en']['community.field.slug'], exact=True).fill('art-studio')
             await modal.get_by_label(LABELS['en']['community.field.author'], exact=True).fill('Acceptance Creator')
@@ -150,6 +152,7 @@ async def main():
                 assert (await creator.request.get(args.url + f'/api/avatars/{aid}/files/puppet/portrait.png')).status == 404
             report['checks'].append('Independent recipient installs one world/two stories; both retest with recipient models; repeat installation deduplicates; asset ownership remapped')
 
+            assert not await other.evaluate("new URLSearchParams(location.search).has('package')")
             await other.reload();card = other.locator(f'[data-story-id="{install["story_id"]}"]');await card.wait_for()
             await card.get_by_role('button', name=LABELS['en']['Studio.137'], exact=True).click()
             await other.locator('.adventure').wait_for()
@@ -178,6 +181,7 @@ async def main():
             assert (await reader.request.get(args.url + f'/api/community/{pid}/download')).status == 404
             assert (await api(reader, f"/api/campaigns/{active['cid']}/branches/{active['bid']}/view"))['world_version'] == 1
             await file_page.goto(args.url)
+            await tab(file_page, 'workspace', 'community')
             await file_page.get_by_label(LABELS['zh-CN']['community.upload'], exact=True).set_input_files(path)
             local = file_page.locator(f'[data-package-id="{pack["sha256"]}"]');await local.wait_for()
             await local.locator('input[type=checkbox]').nth(1).uncheck()

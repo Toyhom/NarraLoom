@@ -7,6 +7,7 @@ import uuid
 from collections import deque
 from pathlib import Path
 
+from browser_navigation import expand, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,7 @@ async def main():
     parser.add_argument('--url', default='http://127.0.0.1:18091')
     parser.add_argument('--system', choices=['d20', 'd100'], default='d20')
     parser.add_argument('--output', default='outputs/validation/rules-browser')
+    parser.add_argument('--reuse-creation', type=Path, help='Reuse a completed creation and its saved browser session')
     args = parser.parse_args()
     folder = (ROOT / args.output).resolve()
     if not folder.is_relative_to(ROOT / 'outputs/validation'):
@@ -25,23 +27,30 @@ async def main():
     report = {'status': 'running', 'mode': 'live_models', 'errors': [], 'actions': []}
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True, args=['--no-sandbox'])
-        page = await browser.new_page(locale='zh-CN', viewport={'width': 1440, 'height': 1080})
+        context = await browser.new_context(locale='zh-CN', viewport={'width': 1440, 'height': 1080},
+            **({'storage_state': str(args.reuse_creation / 'browser-session.local.json')} if args.reuse_creation else {}))
+        page = await context.new_page()
         page.on('pageerror', lambda e: report['errors'].append(str(e)))
         try:
             await page.goto(args.url)
-            await page.get_by_role('button', name='创建我的世界', exact=True).click()
-            await page.get_by_label('世界构想', exact=True).fill(
-                '温暖奇幻风格的苔灯镇，旅人可以邀请守灯人同行、从杂货店购买补给，探索旧矿洞并击败弱小的训练傀儡。'
-                '地点0是安全的镇口，有商店和愿意接受旅行邀请的守灯人。装备是灯杖和披风，初始有灯杖与恢复药。')
-            await page.get_by_label('第一个故事（可选）').fill('从地点0的镇口开始。寻找熄灭路灯的原因，调查三处线索后修复灯芯。')
-            await page.get_by_label('冒险规则', exact=True).select_option(args.system)
-            await page.screenshot(path=str(folder / 'create.png'))
-            async with page.expect_response(lambda r: r.url.endswith('/api/studio/worlds') and r.request.method == 'POST') as response:
-                await page.get_by_role('button', name='生成世界与第一个故事', exact=True).click()
-            response = await response.value
-            assert response.status == 202, await response.text()
-            job = await response.json()
-            await page.context.storage_state(path=str(folder / 'browser-session.local.json'))
+            if args.reuse_creation:
+                job = json.loads((args.reuse_creation / 'job.json').read_text())
+                report['reused_creation'] = str(args.reuse_creation)
+            else:
+                await page.get_by_role('button', name='创建我的世界', exact=True).click()
+                await page.get_by_label('世界构想', exact=True).fill(
+                    '温暖奇幻风格的苔灯镇，旅人可以邀请守灯人同行、从杂货店购买补给，探索旧矿洞并击败弱小的训练傀儡。'
+                    '地点0是安全的镇口，有商店和愿意接受旅行邀请的守灯人。装备是灯杖和披风，初始有灯杖与恢复药。')
+                await page.get_by_label('第一个故事（可选）').fill('从地点0的镇口开始。寻找熄灭路灯的原因，调查三处线索后修复灯芯。')
+                await expand(page.locator('.creation-advanced'))
+                await page.get_by_label('冒险规则', exact=True).select_option(args.system)
+                await page.screenshot(path=str(folder / 'create.png'))
+                async with page.expect_response(lambda r: r.url.endswith('/api/studio/worlds') and r.request.method == 'POST') as response:
+                    await page.get_by_role('button', name='生成世界与第一个故事', exact=True).click()
+                response = await response.value
+                assert response.status == 202, await response.text()
+                job = await response.json()
+                await page.context.storage_state(path=str(folder / 'browser-session.local.json'))
             previous = None
             for _ in range(600):
                 job = await (await page.request.get(args.url + '/api/studio/jobs/' + job['id'])).json()
@@ -61,13 +70,15 @@ async def main():
             assert rules['system'] == args.system and rules['shops'] and rules['enemies']
             await page.reload()
             await page.get_by_role('button', name='编辑世界', exact=True).click()
-            await page.locator('.rules-editor').wait_for()
-            await page.locator('.rules-editor').screenshot(path=str(folder / 'rules-editor.png'))
+            await tab(page, 'editor', 'systems')
+            await page.locator('.rules-editor:not(.simulation-editor)').wait_for()
+            await page.locator('.rules-editor:not(.simulation-editor)').screenshot(path=str(folder / 'rules-editor.png'))
             await page.get_by_role('button', name='退出编辑', exact=True).click()
             story = page.locator('[data-story-id="'+job['story_id']+'"]')
             async with page.expect_response(lambda r: r.url.endswith('/api/campaigns') and r.request.method == 'POST') as response:
                 await story.get_by_role('button', name='开始这个故事', exact=True).click()
             campaign = await (await response.value).json()
+            await tab(page, 'inspector', 'actions')
             root = args.url + '/api/campaigns/' + campaign['id'] + '/branches/' + campaign['branch_id']
             session = await (await page.request.post(args.url + '/api/session')).json()
             headers = {'X-CSRF-Token': session['csrf_token']}
@@ -172,6 +183,7 @@ async def main():
             base = await (await page.request.get(root.rsplit('/',1)[0]+'/'+fork['id']+'/view')).json()
             assert base['resources']['coins'] == rules['coins'] and base['resources']['xp'] == 0
             await page.reload()
+            await tab(page, 'inspector', 'actions')
             await page.locator('.game-panel').wait_for()
             await page.screenshot(path=str(folder / 'adventure.png'))
             await page.set_viewport_size({'width':390,'height':844})

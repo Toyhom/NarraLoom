@@ -12,6 +12,8 @@ Use the Python backend on its own, embed it in an application, or explore it thr
 
 **Watch the tour:** [English](https://toyhom.github.io/NarraLoom/?lang=en) · [简体中文](https://toyhom.github.io/NarraLoom/?lang=zh-CN) · [日本語](https://toyhom.github.io/NarraLoom/?lang=ja)
 
+About 15 minutes, with 13 chapters and clickable transcripts: create and test worlds, play with animated NPCs, explore rules and multiplayer, share and restore content, configure engines, and use the SDK and research tools. See the [workspace guide](guides/workspace.md) for the reference frontend's navigation.
+
 ## Start here
 
 | Your goal | Guide |

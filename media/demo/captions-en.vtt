@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:12.000
+A reference workspace for creators, players and developers.
+
+00:00:12.000 --> 00:00:24.000
+Five sections keep worlds, saves, community, avatars and transfers together.
+
+00:00:24.000 --> 00:00:36.000
+Choose a local or API model using OpenAI, Responses or Anthropic protocols.
+
+00:00:36.000 --> 00:00:48.000
+Adjust structured output, temperature compatibility and context budget.
+
+00:00:48.000 --> 00:01:00.000
+Test the saved connection with an actual model request. Waiting is shortened.
+
+00:01:00.000 --> 00:01:12.000
+Read the returned result before creating a world.
+
+00:01:12.000 --> 00:01:24.000
+Describe a world and its first story. Choose scale and content language.
+
+00:01:24.000 --> 00:01:36.000
+Optionally bind a prepared 2D NPC. This portrait came from an imported package.
+
+00:01:36.000 --> 00:01:48.000
+The engine creates content and automatically playtests it. Waiting is shortened.
+
+00:01:48.000 --> 00:02:04.000
+Each tested revision reports structure, mechanics, model play and content review.
+
+00:02:04.000 --> 00:02:16.000
+Edit, retest, request AI text repair or export a native story.
+
+00:02:16.000 --> 00:02:28.000
+World settings and stories are separate versioned objects.
+
+00:02:28.000 --> 00:02:40.000
+Inspect places and their connections in the location editor.
+
+00:02:40.000 --> 00:02:52.000
+Edit NPC personality, goals, knowledge and optional portrait bindings.
+
+00:02:52.000 --> 00:03:04.000
+Story overview, acts, clues, challenges and systems have their own tabs.
+
+00:03:04.000 --> 00:03:16.000
+Create another story in the same world from a new idea.
+
+00:03:16.000 --> 00:03:31.000
+Both stories use the same world and retain their own test reports.
+
+00:03:31.000 --> 00:03:43.000
+Start a tested story with your own player character.
+
+00:03:43.000 --> 00:03:55.000
+Write a natural-language action or dialogue. Model waiting is shortened.
+
+00:03:55.000 --> 00:04:15.000
+The 2D NPC performs committed dialogue with expression and motion.
+
+00:04:15.000 --> 00:04:31.000
+Read narration and state effects together after the action commits.
+
+00:04:31.000 --> 00:04:43.000
+Record a personal note or commitment without advancing world time.
+
+00:04:43.000 --> 00:04:55.000
+Search known memories and inspect their source records.
+
+00:04:55.000 --> 00:05:07.000
+Fork at an earlier turn to explore another direction.
+
+00:05:07.000 --> 00:05:19.000
+Branches retain their own events and memories.
+
+00:05:19.000 --> 00:05:35.000
+This imported revision failed content review. Inspect the reported claim before repair.
+
+00:05:35.000 --> 00:05:51.000
+AI text repair creates a new revision and reruns the automatic checks.
+
+00:05:51.000 --> 00:06:03.000
+An imported RPG example adds equipment, commerce and combat rules.
+
+00:06:03.000 --> 00:06:15.000
+Inspect structured item and rule definitions in the world editor.
+
+00:06:15.000 --> 00:06:30.000
+The Actions tab exposes legal operations and current resources.
+
+00:06:30.000 --> 00:06:42.000
+Select a rule action directly; the engine validates its preconditions.
+
+00:06:42.000 --> 00:06:57.000
+Committed rule changes and narration remain in the same event history.
+
+00:06:57.000 --> 00:07:09.000
+Open the map when you need routes and world context.
+
+00:07:09.000 --> 00:07:25.000
+A living-world example tracks offscreen characters and faction progress.
+
+00:07:25.000 --> 00:07:37.000
+Pause or resume world simulation from the player interface.
+
+00:07:37.000 --> 00:07:53.000
+Buy from a shop: inventory and coins change together in one committed action.
+
+00:07:53.000 --> 00:08:09.000
+Follow connected map routes to reach the encounter.
+
+00:08:09.000 --> 00:08:25.000
+Choose an attack and let the configured rule system resolve combat.
+
+00:08:25.000 --> 00:08:41.000
+Inspect the recorded dice, modifier, threshold and outcome. Replay keeps this result.
+
+00:08:41.000 --> 00:08:57.000
+Define variables, visibility, conditions, actions, triggers and authored test routes.
+
+00:08:57.000 --> 00:09:12.000
+Only player-visible values and available actions appear in the game view.
+
+00:09:12.000 --> 00:09:24.000
+Create a shared-character or independent-character multiplayer room.
+
+00:09:24.000 --> 00:09:40.000
+A second browser joins as Alex with an independent character.
+
+00:09:40.000 --> 00:09:56.000
+Room tools group player views, notes, character control and trades.
+
+00:09:56.000 --> 00:10:08.000
+The host submits a conversation in the shared room. Model waiting is shortened.
+
+00:10:08.000 --> 00:10:24.000
+Room narration reflects the committed world version and participating characters.
+
+00:10:24.000 --> 00:10:36.000
+Choose a previous campaign as continuity for the next story.
+
+00:10:36.000 --> 00:10:48.000
+Package tested stories with creator credit, license and optional 2D assets.
+
+00:10:48.000 --> 00:11:00.000
+Download a portable native package from your community shelf.
+
+00:11:00.000 --> 00:11:12.000
+Inspect included stories before installing and automatically testing a copy.
+
+00:11:12.000 --> 00:11:24.000
+Export the full campaign, including its branches and event history.
+
+00:11:24.000 --> 00:11:36.000
+Preview a backup before restoring it as an independent adventure.
+
+00:11:36.000 --> 00:11:48.000
+Install the exported package as an editable copy. Waiting for testing is shortened.
+
+00:11:48.000 --> 00:12:04.000
+The copied world and both stories have their own automatic test results.
+
+00:12:04.000 --> 00:12:16.000
+Restore the validated backup into a new campaign.
+
+00:12:16.000 --> 00:12:32.000
+The restored campaign keeps its branches and committed history.
+
+00:12:32.000 --> 00:12:44.000
+Assign a provider and model separately for each engine module.
+
+00:12:44.000 --> 00:12:56.000
+Module descriptions explain which model abilities each task needs.
+
+00:12:56.000 --> 00:13:08.000
+Configuration example: a System One decision model in shadow mode; unsaved.
+
+00:13:08.000 --> 00:13:20.000
+Configuration example: a separate embedding model for hybrid memory; unsaved.
+
+00:13:20.000 --> 00:13:32.000
+Inspect calls, reported tokens and optional price estimates by model.
+
+00:13:32.000 --> 00:13:52.000
+Actual SDK result: access the same world library without the reference UI.
+
+00:13:52.000 --> 00:14:12.000
+Executed fixture example: custom action modules, replay, forks and restoration.
+
+00:14:12.000 --> 00:14:32.000
+Actual model evaluation: frozen tasks, assertions, latency and token accounting.
+
+00:14:32.000 --> 00:14:52.000
+Executed fixture example: checkpointed trajectories, resume and recall checks.
+
+00:14:52.000 --> 00:15:07.000
+Switch the interface language while authored world and story text stays intact.
+
+00:15:07.000 --> 00:15:21.000
+Build with the backend, SDK, reference UI and guides at github.com/Toyhom/NarraLoom.

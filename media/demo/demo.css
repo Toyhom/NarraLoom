@@ -14,3 +14,14 @@ video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #e6eadf; 
 footer { margin-top: 24px; }
 #status:empty { display: none; }
 @media (max-width: 480px) { main { padding: 24px 16px; } header { margin-bottom: 28px; } nav { gap: 16px; } }
+
+h2 { margin-top: 28px; font-size: 18px; }
+#chapters { padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 8px; }
+#chapters button, .transcript button { font: inherit; color: #295841; border: 1px solid #d8e2d5; background: #f8faf4; border-radius: 6px; padding: 10px 12px; cursor: pointer; text-align: left; line-height: 1.5; }
+#chapters button { width: 100%; height: 100%; }
+#chapters button:hover, #chapters button[aria-current] { background: #e6eee2; border-color: #7f9b78; }
+button:focus-visible, video:focus-visible { outline: 2px solid #527b64; outline-offset: 3px; }
+.transcript { margin: 24px 0; line-height: 1.8; }
+.transcript summary { cursor: pointer; }
+.transcript p { margin: 14px 0; font-size: 14px; }
+.transcript button { padding: 2px 6px; }

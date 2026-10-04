@@ -5,6 +5,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import story_tools, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,6 +74,7 @@ async def main():
         field = page.get_by_label("世界名称", exact=True)
         title = await field.input_value()
         await field.fill(title + "·新篇")
+        await tab(page, 'editor', 'locations')
         places = page.locator(".editor-block").filter(has=page.locator(".checkboxes"))
         first_place = places.nth(0)
         third_place = places.nth(2)
@@ -101,8 +103,10 @@ async def main():
         await page.wait_for_function('document.querySelectorAll(".studio-story-card").length===2')
         await page.screenshot(path=str(folder / "two-stories.png"), full_page=True)
         card = page.locator(f'[data-story-id="{job["story_id"]}"]')
+        await story_tools(card)
         await card.get_by_role("button", name="编辑故事", exact=False).click()
         await page.get_by_label("故事名称", exact=True).fill("树影里的新方向")
+        await tab(page, 'editor', 'outline')
         await page.get_by_label("第 1 幕", exact=True).fill(
             "抵达小镇后听取居民的不同意见，玩家自行决定先调查哪里。"
         )
@@ -116,6 +120,7 @@ async def main():
         card = page.locator(f'[data-story-id="{job["story_id"]}"]')
         await card.locator(".quality-report summary").click()
         await card.get_by_text("真实模型端到端", exact=False).wait_for()
+        await story_tools(card)
         async with page.expect_download() as downloaded:
             await card.get_by_role("link", name="导出故事", exact=False).click()
         download = await downloaded.value

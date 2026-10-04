@@ -4,6 +4,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import story_tools, tab
 from check_opening_review import baseline
 from playwright.async_api import async_playwright
 
@@ -80,6 +81,7 @@ async def main():
                 await page.set_viewport_size({'width': 1440, 'height': 1000})
 
         async def repair(card, sid):
+            await story_tools(card)
             async with page.expect_response(lambda r: r.url.endswith(f'/stories/{sid}/repair') and r.request.method == 'POST') as pending:
                 await card.get_by_role('button', name='AI repair and retest:', exact=False).click()
             response = await pending.value
@@ -92,6 +94,7 @@ async def main():
             csrf = (await call('/api/session', {}, 'POST'))['csrf_token']
             await context.storage_state(path=str(folder / 'session.local.json'))
             await page.get_by_label(SWITCH, exact=True).select_option('en')
+            await tab(page, 'workspace', 'tools')
             async with page.expect_response(lambda r: '/api/studio/imports?filename=' in r.url) as uploaded:
                 await page.get_by_label(LABELS['en']['ImportStudio.014'], exact=True).set_input_files(
                     {'name': 'opening-source.json', 'mimeType': 'application/json', 'buffer': raw})

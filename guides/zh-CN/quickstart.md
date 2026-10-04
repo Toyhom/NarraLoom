@@ -23,7 +23,7 @@ narraloom serve --workspace . --web-dist web/dist
 
 ## 连接模型
 
-打开 **模型与用量**，输入兼容 OpenAI 的基础 URL、提供商的准确模型 ID 和你的密钥。本地未认证端点可将密钥留空。选择支持的 JSON 模式，保存，然后测试连接。[模型选择](models.md) 说明了各模块绑定和提供商示例。
+打开 **模型设置 → 基础连接**，输入兼容 OpenAI 的基础 URL、提供商的准确模型 ID 和你的密钥。本地未认证端点可将密钥留空。选择支持的 JSON 模式，保存，然后测试连接。[模型选择](models.md) 说明了各模块绑定和提供商示例。
 
 浏览器的设置属于其会话。对于服务器范围的默认值，将 `configs/models.example.json` 复制为 `configs/models.local.json`，编辑其端点/模型，并在启动后端之前设置由 `api_key_env` 命名的环境变量。重启以重新加载文件设置。当你的提供商要求时，保留基础 URL 的 `/v1`。
 
@@ -46,3 +46,5 @@ narraloom serve --workspace /path/to/my-game --models-config /path/to/models.loc
 打开 **http://localhost:18090/docs** 查看 API，或从项目目录运行 `python examples/headless.py --world 'A quiet reading room' --preset scene --language en`。该示例保存其会话和待处理请求；`--resume` 继续它们。参见[开发者指南](developers.md)。
 
 对于连接失败，检查端点、模型 ID、认证和 JSON 模式。对于故事测试失败，打开作业报告；成功连接仅确认模型协议。[部署指南](deployment.md) 涵盖恢复和备份。
+
+[参考工作台](workspace.md)

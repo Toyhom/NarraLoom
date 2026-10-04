@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 
+from browser_navigation import expand
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -29,6 +30,7 @@ async def main():
                 await page.goto(args.url);await page.get_by_role('button',name='创建我的世界',exact=True).click()
                 await page.get_by_label('世界构想',exact=True).fill('晨雾海港的开放式调查世界。第一位角色为女性精灵守灯人林笺，绿衣棕发，温和坚定，在地点0码头迎接旅人。另有集市、灯塔和邮局，居民各有目标。')
                 await page.get_by_label('第一个故事（可选）').fill('玩家在码头遇到林笺，协助寻找一封寄错的信，调查三个线索后送还信件。')
+                await expand(page.locator('.creation-advanced'))
                 await page.locator('.initial-avatar-form summary').click()
                 await page.get_by_label('初始NPC参考图',exact=True).set_input_files(reference)
                 await page.get_by_label('重要NPC描述（可选）',exact=True).fill('林笺，成年女性精灵守灯人。绿衣棕发，温和坚定，善于倾听和讲述海港故事。保留参考图的风格和五官。')
@@ -61,6 +63,7 @@ async def main():
             await page.wait_for_timeout(1000)
             report['motion']=await page.locator('.npc-theater canvas').evaluate('(c)=>({...c.dataset})')
             report['committed_view']=await get(f"/api/campaigns/{campaign['id']}/branches/{campaign['branch_id']}/view")
+            await expand(page.locator('.world-explorer'))
             assert await page.locator('.world-map h3>svg').evaluate('(e)=>e.getBoundingClientRect().width')<=20
             await page.screenshot(path=str(folder/'desktop.png'),full_page=True)
             await page.get_by_role('button',name='收起2D人物',exact=True).click();assert await page.locator('.npc-theater canvas').count()==0

@@ -6,6 +6,7 @@ import json
 import uuid
 from pathlib import Path
 
+from browser_navigation import story_tools, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -74,7 +75,9 @@ async def main():
                 edited_job = await wait_job({"id": previous_report["edited_job"]})
             else:
                 await page.reload()
+                await story_tools(page.locator(f'[data-story-id="{job["story_id"]}"]'))
                 await page.get_by_role("button", name="编辑故事 "+exported["story"]["title"], exact=True).click()
+                await tab(page, 'editor', 'systems')
                 await page.get_by_role("button", name="展开状态编辑器", exact=False).click()
                 secret_index = next((i for i, v in enumerate(pack["variables"]) if v["name"] == "主持秘密验收值"), None)
                 if secret_index is None:
@@ -118,6 +121,7 @@ async def main():
                 assert action["status"] == "committed", action.get("error")
                 if refresh:
                     await page.reload()
+                    await tab(page, "inspector", "actions")
                 version = (await view())["world_version"]
                 await page.locator(f'.turn[data-version="{version}"]').wait_for(timeout=15000)
                 report["actions"].append({"id": action["id"], "version": version, "effects": action["result"]["effects"]})
@@ -128,6 +132,7 @@ async def main():
             headers = {"X-CSRF-Token": session["csrf_token"]}
             initial = await view()
             assert "主持秘密验收值" not in json.dumps(initial, ensure_ascii=False)
+            await tab(page, "inspector", "actions")
             for i, step in enumerate(pack["tests"][0]["steps"]):
                 if step["kind"] == "state_action":
                     name = next(a["name"] for a in pack["actions"] if a["id"] == step["target_id"])
@@ -159,6 +164,7 @@ async def main():
             report["visible_assertions"] = visible_assertions
             assert "主持秘密验收值" not in json.dumps(final, ensure_ascii=False)
             await page.reload()
+            await tab(page, 'inspector', 'actions')
             await page.locator(".custom-state-panel").wait_for()
             assert (await view())["custom_state"] == final["custom_state"]
             await page.screenshot(path=str(folder/"state-play.png"), full_page=True)

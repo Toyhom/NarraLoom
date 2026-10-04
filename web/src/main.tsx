@@ -1,3 +1,4 @@
+import { SectionTabs, TabPanel } from './SectionTabs';
 import { getLocale, uiText, useLocale } from './i18n';
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -5,6 +6,7 @@ import { ArrowLeft, ArrowRight, Backpack, BookOpen, Check, ChevronDown, Compass,
   Feather, Flag, GitBranch, MapPin, Menu, MessageCircle, Send, Sparkles, Square, Waves, X,
   Clock3, RotateCcw, Anchor, Footprints, Dices, NotebookPen, Plus, Settings2, Users } from 'lucide-react';
 import './style.css';
+import './workspace.css';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { Studio } from './Studio';
 import { StatePanel, CustomState } from './StateEditor';
@@ -81,6 +83,9 @@ function App() {
   const [action, setAction] = useState<Action | null>(null);
   const [pendingText, setPendingText] = useState('');
   const [error, setError] = useState('');
+  const [inspector,setInspector]=useState('character');
+  const [modelConfigured,setModelConfigured]=useState(false);
+  function applyStatus(status:{ready:boolean|null;configured?:boolean}){setReady(status.ready);setModelConfigured(status.configured??status.ready===true);}
   const [ready, setReady] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -92,6 +97,7 @@ function App() {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const current = useRef<View | null>(null);
   const busy = active(action) || creating;
+  const canGenerate=ready===true||(ready===null&&modelConfigured);
 
   async function api(path: string, options: RequestInit = {}, token = csrf) {
     const r = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': token, ...options.headers } });
@@ -137,7 +143,7 @@ function App() {
         const session = await api('/api/session', { method: 'POST' }, '');
         if (!mounted) return; setCsrf(session.csrf_token);
         const [ws, cs, status] = await Promise.all([api('/api/worlds'), api('/api/campaigns'), api('/api/status')]);
-        if (!mounted) return; setWorld(ws[0]); setCampaigns(cs); setReady(status.ready);
+        if (!mounted) return; setWorld(ws[0]); setCampaigns(cs); applyStatus(status);
         const saved = localStorage.getItem('rpw-active');
         if (saved && !new URLSearchParams(location.search).has('package')) {
           const { cid, bid } = JSON.parse(saved);
@@ -190,17 +196,17 @@ function App() {
     <header className="topbar"><LocaleSwitcher/>
       <button className="brand" onClick={library} aria-label={uiText("main.064")}><Compass size={27}/><span>{uiText("main.001")}<small>{uiText("brand.subtitle")}</small></span></button>
       <div className="top-title">{view ? <><span className="muted">{uiText("main.002")}</span><span className="slash">/</span>{view.title}</> : uiText("main.063")}</div>
-      <div className={`connection ${ready ? 'online' : ''}`}><i/>{ready === null ? uiText("main.062") : ready ? uiText("main.061") : uiText("main.060")}</div>
-      <button className="icon-button" aria-label={uiText("RoomPanel.089")} disabled={!csrf} onClick={()=>setRoomEntry(true)}><Users size={19}/></button>
-      <button className="icon-button" aria-label={uiText("ProviderPanel.032")} disabled={!csrf} onClick={()=>setSettingsOpen(true)}><Settings2 size={19}/></button>
+      <div className={`connection ${ready ? 'online' : ''}`}><i/>{ready === null ? modelConfigured?uiText("workspace.modelConfigured"):uiText("main.062") : ready ? uiText("main.061") : uiText("main.060")}</div>
+      <button className="header-action" aria-label={uiText("RoomPanel.089")} disabled={!csrf} onClick={()=>setRoomEntry(true)}><Users size={18}/><span>{uiText("workspace.rooms")}</span></button>
+      <button className="header-action" aria-label={uiText("ProviderPanel.032")} disabled={!csrf} onClick={()=>setSettingsOpen(true)}><Settings2 size={18}/><span>{uiText("workspace.models")}</span></button>
       {view && <button className="icon-button mobile-only" onClick={() => setPanel(panel ? null : 'world')} aria-label={uiText("main.059")}><Menu size={20}/></button>}
     </header>
 
     {roomEntry&&<RoomEntry api={api} campaign={view?{cid:view.campaign_id,bid:view.branch_id}:undefined} onOpen={openRoom} onClose={()=>setRoomEntry(false)}/>}
-    {settingsOpen&&<ProviderPanel api={api} onClose={()=>setSettingsOpen(false)} onChanged={()=>void api("/api/status").then(s=>setReady(s.ready))}/>}
+    {settingsOpen&&<ProviderPanel api={api} onClose={()=>setSettingsOpen(false)} onChanged={()=>void api("/api/status").then(applyStatus)}/>}
     {!view && error && <div className="notice error" role="alert">{error}</div>}
     {roomId&&!loading?<RoomPanel api={api} id={roomId} onClose={closeRoom}/>:loading ? <div className="loading-screen"><Compass className="spin-slow" size={40}/><p>{uiText("main.003")}</p></div> : !view ?
-    <Studio api={api} ready={ready} campaigns={campaigns} onOpen={(cid,bid) => { void openCampaign(cid,bid).catch(e=>setError(String(e))); }} onDemo={create} onStart={async (sid,playerName,source)=>{
+    <Studio onSettings={()=>setSettingsOpen(true)} api={api} ready={canGenerate} campaigns={campaigns} onOpen={(cid,bid) => { void openCampaign(cid,bid).catch(e=>setError(String(e))); }} onDemo={create} onStart={async (sid,playerName,source)=>{
       const c = await api('/api/campaigns', {method:'POST', body:JSON.stringify({story_id:sid,player_name:playerName||uiText("Studio.159"),...(source?{source_campaign_id:source.id,source_branch_id:source.main_branch,source_world_version:source.world_version}:{})})});
       setCampaigns(await api('/api/campaigns')); await openCampaign(c.id,c.branch_id);
     }}/> : <main className="adventure">
@@ -209,11 +215,11 @@ function App() {
         <div className="sidebar-heading"><span className="eyebrow">{uiText("brand.world")}</span><button className="icon-button mobile-only" onClick={() => setPanel(null)} aria-label={uiText("main.057")}><X size={18}/></button></div>
         <div className="mini-scene">{view.world_title.includes("雾港") ? <Harbor compact/> : <div className="generic-scene"><Compass size={58} strokeWidth={1}/><span>{view.world_title}</span></div>}<span><MapPin size={13}/>{view.location.name}</span></div>
         <div className="location-heading"><h2>{view.location.name}</h2><span><Clock3 size={13}/>{timeLabel(view.game_time_s)}</span></div><p className="location-description">{view.location.description}</p>
-        {view.exits.length>0&&<section className="sidebar-section"><h3><Footprints size={15}/>{uiText("main.004")}</h3><div className="route-list">{view.exits.map(x => <button key={x.id} disabled={busy || !ready} onClick={() => { void send(uiText("RoomPanel.069", {p0: (x.name)}), 'act'); setPanel(null); }}><MapPin size={14}/><span>{x.name}<small>{uiText("main.005", {p0: (Math.ceil(x.travel_time_s / 60))})}</small></span><ArrowRight size={15}/></button>)}</div></section>}
+        {view.exits.length>0&&<section className="sidebar-section"><h3><Footprints size={15}/>{uiText("main.004")}</h3><div className="route-list">{view.exits.map(x => <button key={x.id} disabled={busy || !canGenerate} onClick={() => { void send(uiText("RoomPanel.069", {p0: (x.name)}), 'act'); setPanel(null); }}><MapPin size={14}/><span>{x.name}<small>{uiText("main.005", {p0: (Math.ceil(x.travel_time_s / 60))})}</small></span><ArrowRight size={15}/></button>)}</div></section>}
         {view.visible_clocks.length>0&&<section className="sidebar-section"><h3><Waves size={15}/>{uiText("main.006")}</h3>{view.visible_clocks.map(c => <div className="clock-meter" key={c.id}><div><span>{c.name}</span><small>{c.value} / {c.threshold}</small></div><div className={`clock-segments ${c.value === c.threshold ? 'full' : ''}`}>{Array.from({ length: c.threshold }, (_, i) => <i key={i} className={i < c.value ? 'filled' : ''}/>)}</div></div>)}<p className="tiny-muted">{uiText("main.007")}</p></section>}
         {view.quests.length>0&&<section className="sidebar-section"><h3><Flag size={15}/>{uiText("main.008")}</h3>{view.quests.map(q => <div className={`quest ${q.status === 'completed' ? 'complete' : ''}`} key={q.id}>{q.status === 'completed' ? <Check size={15}/> : <span className="quest-dot"/>}<span>{q.name}<small>{q.status === 'completed' ? uiText("main.056") : q.description || uiText("main.055")}</small></span></div>)}</section>}
-        {!!view.opportunities?.length && <section className="sidebar-section"><h3><Sparkles size={15}/>{uiText("main.009")}</h3>{view.opportunities.map(o=><button key={o.id} className="opportunity-button" disabled={busy||!ready||!o.ready} onClick={()=>void send(uiText("main.054", {p0: (o.name), p1: (o.description)}),'act')}><strong>{o.name}</strong><small>{o.ready?uiText("main.053"):uiText("main.052")}</small></button>)}</section>}
-        <WorldPanel map={view.map||[]} location={view.location.id} simulation={view.simulation} busy={busy} onMove={(text,op)=>void send(text,'act',op)} onControl={control=>void send(control==='pause'?uiText("WorldPanel.005"):uiText("WorldPanel.006"),'ooc',undefined,undefined,control)}/><button className="quiet-button back-library" onClick={library}><ArrowLeft size={15}/>{uiText("main.010")}</button>
+        {!!view.opportunities?.length && <section className="sidebar-section"><h3><Sparkles size={15}/>{uiText("main.009")}</h3>{view.opportunities.map(o=><button key={o.id} className="opportunity-button" disabled={busy||!canGenerate||!o.ready} onClick={()=>void send(uiText("main.054", {p0: (o.name), p1: (o.description)}),'act')}><strong>{o.name}</strong><small>{o.ready?uiText("main.053"):uiText("main.052")}</small></button>)}</section>}
+        <details className="world-explorer"><summary>{uiText("inspector.world")}</summary><WorldPanel map={view.map||[]} location={view.location.id} simulation={view.simulation} busy={busy} onMove={(text,op)=>void send(text,'act',op)} onControl={control=>void send(control==='pause'?uiText("WorldPanel.005"):uiText("WorldPanel.006"),'ooc',undefined,undefined,control)}/></details><button className="quiet-button back-library" onClick={library}><ArrowLeft size={15}/>{uiText("main.010")}</button>
       </aside>
 
       <section className="story-column">
@@ -236,11 +242,11 @@ function App() {
           <div ref={bottom}/>
         </div>
         <div className="composer-wrap">
-          {!busy && <div className="suggestions">{(view.history.at(-1)?.suggestions || view.opening_suggestions).map((s, i) => <button key={i} onClick={() => void send(s, 'act')} disabled={!ready}>{s}<ArrowRight size={12}/></button>)}</div>}
+          {!busy && <div className="suggestions">{(view.history.at(-1)?.suggestions || view.opening_suggestions).map((s, i) => <button key={i} onClick={() => void send(s, 'act')} disabled={!canGenerate}>{s}<ArrowRight size={12}/></button>)}</div>}
           <form className={`composer ${busy ? 'is-busy' : ''}`} onSubmit={e => { e.preventDefault(); void send(); }}>
             <div className="composer-tabs">{[{ id: 'act', text: uiText("RoomPanel.040"), icon: Footprints }, { id: 'say', text: uiText("RoomPanel.041"), icon: MessageCircle }, { id: 'ooc', text: uiText("main.045"), icon: BookOpen }].map(m => <button key={m.id} type="button" className={mode === m.id ? 'selected' : ''} onClick={() => setMode(m.id)}><m.icon size={13}/>{m.text}</button>)}<span>{uiText("main.018")}</span></div>
             <textarea ref={textarea} aria-label={uiText("main.044")} value={draft} onChange={e => setDraft(e.target.value)} placeholder={busy ? uiText("main.043") : mode === 'say' ? uiText("main.042") : uiText("main.041")} maxLength={1800} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }}/>
-            <div className="composer-bottom"><span><Check size={12}/> {busy ? uiText("main.040") : uiText("main.039", {p0: (view.world_version)})}<small>{uiText("main.019")}</small></span>{busy ? <button className="stop-button" type="button" onClick={cancel} disabled={!action}><Square size={13}/>{uiText("main.020")}</button> : <button className="send-button" type="submit" disabled={!draft.trim() || !ready}><span>{uiText("main.021")}</span><Send size={17}/></button>}</div>
+            <div className="composer-bottom"><span><Check size={12}/> {busy ? uiText("main.040") : uiText("main.039", {p0: (view.world_version)})}<small>{uiText("main.019")}</small></span>{busy ? <button className="stop-button" type="button" onClick={cancel} disabled={!action}><Square size={13}/>{uiText("main.020")}</button> : <button className="send-button" type="submit" disabled={!draft.trim() || !canGenerate}><span>{uiText("main.021")}</span><Send size={17}/></button>}</div>
           </form>
           <div className="mobile-panel-buttons"><button onClick={() => setPanel('world')}><MapPin size={14}/>{uiText("main.022")}</button><button onClick={() => setPanel('player')}><Backpack size={14}/>{uiText("main.023")}</button></div>
         </div>
@@ -248,12 +254,19 @@ function App() {
 
       <aside className={`sidebar player-sidebar ${panel === 'player' ? 'opened' : ''}`}>
         <div className="sidebar-heading"><span className="eyebrow">{uiText("brand.story")}</span><button className="icon-button mobile-only" onClick={() => setPanel(null)} aria-label={uiText("main.038")}><X size={18}/></button></div>
+        <SectionTabs name="inspector" label={uiText("inspector.label")} value={inspector} onChange={setInspector} items={[
+          {id:'character',label:uiText("inspector.character")},{id:'actions',label:uiText("inspector.actions")},{id:'memory',label:uiText("inspector.memory")},
+        ]}/>
+        <TabPanel name="inspector" id="character" active={inspector}>
         <div className="player-profile"><div className="profile-seal"><Compass size={30}/></div><h2>{view.player_name}</h2><span>{view.player_role}</span></div>
-        {('vitality' in view.resources||'coins' in view.resources)&&<div className="resources"><div><span>{uiText("RoomPanel.066")}</span><strong>{view.resources.vitality}</strong></div><i/><div><span>{uiText("RoomPanel.065")}</span><strong>{view.resources.coins}</strong></div></div>}
-        <StatePanel value={view.custom_state} busy={busy||!ready} onAction={(text,id)=>void send(text,'act',{kind:'state_action',target_id:id})}/><GamePanel view={view} busy={busy||!ready} onAction={(text,op)=>void send(text,'act',op)}/>{(view.creation_preset!=='scene'||view.inventory.length>0)&&<section className="sidebar-section"><h3><Backpack size={15}/>{uiText("main.024")}<span>{view.inventory.length}</span></h3>{view.inventory.length ? view.inventory.map(i => <div className="inventory-item" key={i.id}><div><Anchor size={17}/></div><span>{i.name}</span><small>×{i.quantity}</small></div>) : <div className="empty-inventory"><Backpack size={24}/><p>{uiText("main.025")}</p><small>{uiText("main.026")}</small></div>}</section>}
+        {(!view.rule_system&&('vitality' in view.resources||'coins' in view.resources))&&<div className="resources"><div><span>{uiText("RoomPanel.066")}</span><strong>{view.resources.vitality}</strong></div><i/><div><span>{uiText("RoomPanel.065")}</span><strong>{view.resources.coins}</strong></div></div>}
+{(view.creation_preset!=='scene'||view.inventory.length>0)&&<section className="sidebar-section"><h3><Backpack size={15}/>{uiText("main.024")}<span>{view.inventory.length}</span></h3>{view.inventory.length ? view.inventory.map(i => <div className="inventory-item" key={i.id}><div><Anchor size={17}/></div><span>{i.name}</span><small>×{i.quantity}</small></div>) : <div className="empty-inventory"><Backpack size={24}/><p>{uiText("main.025")}</p><small>{uiText("main.026")}</small></div>}</section>}
         <section className="sidebar-section"><h3><MessageCircle size={15}/>{uiText("main.027")}</h3>{view.present_actors.filter(a => a.control !== 'player').map(a => <button className="npc-card" key={a.id} onClick={() => { setDraft(uiText("main.037", {p0: (a.name)})); setMode('say'); setPanel(null); textarea.current?.focus(); }}><div className={`avatar ${a.id}`}><span>{a.initial}</span></div><div><strong>{a.name}</strong><small>{a.description}</small></div></button>)}{view.present_actors.length === 1 && <p className="tiny-muted">{uiText("main.028")}</p>}</section>
+        </TabPanel><TabPanel name="inspector" id="actions" active={inspector}>
+<StatePanel value={view.custom_state} busy={busy||!canGenerate} onAction={(text,id)=>void send(text,'act',{kind:'state_action',target_id:id})}/><GamePanel view={view} busy={busy||!canGenerate} onAction={(text,op)=>void send(text,'act',op)}/>{!view.rule_system&&!view.custom_state&&<p className="tiny-muted">{uiText("inspector.simple")}</p>}
+        </TabPanel><TabPanel name="inspector" id="memory" active={inspector}>
         <section className="sidebar-section knowledge"><h3><BookOpen size={15}/>{uiText("main.029")}</h3>{view.known_facts.map(f => <p key={f.id}><span/>{f.text}</p>)}</section>
-        <MemoryPanel api={api} campaign={view.campaign_id} branch={view.branch_id} version={view.world_version} notes={view.notes||[]} busy={busy} onRecord={note=>void send(note.text,'ooc',undefined,note)}/><div className="sidebar-note"><Feather size={17}/><p>{uiText("main.030")}<br/>{uiText("main.031")}</p></div>
+        <MemoryPanel api={api} campaign={view.campaign_id} branch={view.branch_id} version={view.world_version} notes={view.notes||[]} busy={busy} onRecord={note=>void send(note.text,'ooc',undefined,note)}/></TabPanel><div className="sidebar-note"><Feather size={17}/><p>{uiText("main.030")}<br/>{uiText("main.031")}</p></div>
       </aside>
     </main>}
 

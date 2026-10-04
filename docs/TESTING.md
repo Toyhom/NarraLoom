@@ -9,6 +9,8 @@ checks and model-backed playtests to evaluate a configured provider's real model
 checks the reference client's three languages, protocol settings, key reset and
 module bindings on a running test workspace using a fresh browser session.
 
+`python scripts/check_workspace_browser.py --url http://localhost:18090 --output outputs/validation/workspace` checks keyboard navigation, section isolation, retained files and drafts, three-language mobile layouts, and configured providers without model-list probes. It uses a fresh session and no model calls. This suite and provider settings checks run in CI.
+
 The published demonstration player uses MP4 and WebM sources. Its deployment runs
 `scripts/check_demo_browser.py` in Chromium to verify all three languages, decoded
 frames after seeking, desktop/mobile playback and layout before publishing.

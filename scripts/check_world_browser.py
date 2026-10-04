@@ -6,6 +6,7 @@ import json
 import uuid
 from pathlib import Path
 
+from browser_navigation import expand, tab
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -15,14 +16,15 @@ async def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--url',default='http://127.0.0.1:18091')
     p.add_argument('--output',default='outputs/validation/world-browser')
-    args=p.parse_args();folder=(ROOT/args.output).resolve()
+    p.add_argument('--reuse-creation', type=Path);args=p.parse_args();folder=(ROOT/args.output).resolve()
     if not folder.is_relative_to(ROOT/'outputs/validation'):
         raise ValueError('Output outside validation folder')
     folder.mkdir(parents=True,exist_ok=False)
     report={'status':'running','mode':'live_models','errors':[],'actions':[]}
     async with async_playwright() as pw:
         browser=await pw.chromium.launch(headless=True,args=['--no-sandbox'])
-        page=await browser.new_page(locale='zh-CN', viewport={'width':1440,'height':1080})
+        page=await browser.new_page(locale='zh-CN', viewport={'width':1440,'height':1080},
+            **({'storage_state':str(args.reuse_creation/'session.local.json')} if args.reuse_creation else {}))
         page.on('pageerror',lambda e:report['errors'].append(str(e)))
         async def get(path):
             response=await page.request.get(args.url+path);assert response.ok,await response.text()
@@ -48,15 +50,21 @@ async def main():
             await page.locator(f'.turn[data-version="{version}"]').wait_for(timeout=185000)
         try:
             await page.goto(args.url)
+            await page.locator('.studio-hero').wait_for()
             session=await (await page.request.post(args.url+'/api/session')).json()
             headers={'X-CSRF-Token':session['csrf_token']}
-            await page.get_by_role('button',name='创建我的世界',exact=True).click()
-            await page.get_by_label('世界构想',exact=True).fill('晨湾镇的开放沙盒。地点0码头，其他地点集市、旧灯塔、山坡。守灯人、商贩、园艺师各有目标。园艺公会经过两次十分钟准备公开屋顶花园，花园中会出现新的联络员小禾。至少两名NPC不在玩家起点。')
-            await page.get_by_label('第一个故事（可选）').fill('从码头寻找被送错的邮袋，调查线索后完成交接，有可达的结局。')
-            await page.get_by_label('自动设计主动世界').check()
-            async with page.expect_response(lambda r:r.url.endswith('/api/studio/worlds') and r.request.method=='POST') as response:
-                await page.get_by_role('button',name='生成世界与第一个故事',exact=True).click()
-            job=await job_wait(await (await response.value).json(),'world')
+            if args.reuse_creation:
+                job=await job_wait(json.loads((args.reuse_creation/'world.json').read_text()),'world')
+                report['reused_creation']=str(args.reuse_creation)
+            else:
+                await page.get_by_role('button',name='创建我的世界',exact=True).click()
+                await page.get_by_label('世界构想',exact=True).fill('晨湾镇的开放沙盒。地点0码头，其他地点集市、旧灯塔、山坡。守灯人、商贩、园艺师各有目标。园艺公会经过两次十分钟准备公开屋顶花园，花园中会出现新的联络员小禾。至少两名NPC不在玩家起点。')
+                await page.get_by_label('第一个故事（可选）').fill('从码头寻找被送错的邮袋，调查线索后完成交接，有可达的结局。')
+                await expand(page.locator('.creation-advanced'))
+                await page.get_by_label('自动设计主动世界').check()
+                async with page.expect_response(lambda r:r.url.endswith('/api/studio/worlds') and r.request.method=='POST') as response:
+                    await page.get_by_role('button',name='生成世界与第一个故事',exact=True).click()
+                job=await job_wait(await (await response.value).json(),'world')
             await page.context.storage_state(path=str(folder/'session.local.json'))
             exported=await get('/api/studio/stories/'+job['story_id']+'/export')
             (folder/'story.json').write_text(json.dumps(exported,ensure_ascii=False,indent=2))
@@ -78,6 +86,7 @@ async def main():
                 assert a['status']=='committed',a
                 report['actions'].append(a['result']);print('action',a['result']['version'],text,flush=True)
                 return await get(base+'/view')
+            await tab(page, 'inspector', 'memory')
             await page.locator('.note-editor summary').click()
             await page.get_by_label('手记类型').select_option('commitment')
             await page.get_by_label('手记内容').fill('以后要去花园寻找青瓷风铃，先记录线索，不替居民承诺。')
@@ -92,10 +101,11 @@ async def main():
             await page.get_by_role('button',name='搜索往事',exact=True).click()
             await page.locator('.memory-result').first.wait_for()
             assert '个人手记' in await page.locator('.memory-panel').inner_text() or '待办与约定' in await page.locator('.memory-panel').inner_text()
+            await expand(page.locator('.world-explorer'))
             await page.get_by_role('button',name='暂停世界主动运行',exact=True).click();await wait_version(4)
             view=await act('我在这里等待十分钟。')
             assert view['simulation']['paused'] and view['simulation']['elapsed_s']==0
-            await page.reload();await page.get_by_role('button',name='恢复世界主动运行',exact=True).click();await wait_version(6)
+            await page.reload();await expand(page.locator('.world-explorer'));await page.get_by_role('button',name='恢复世界主动运行',exact=True).click();await wait_version(6)
             threshold=max(f['interval_s']*f['threshold'] for f in sim['factions'])
             for _ in range((threshold+1799)//1800):
                 view=await act('我在这里等待三十分钟。')

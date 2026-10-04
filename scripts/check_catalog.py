@@ -5,6 +5,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,11 +28,13 @@ async def main():
         page.on('pageerror', lambda error: report['page_errors'].append(str(error)))
         try:
             await page.goto(args.url)
+            await tab(page, 'workspace', 'community')
             await page.locator('[data-catalog-id]').first.wait_for()
             catalog = await (await page.request.get(args.url + '/api/catalog')).json()
             assert len(catalog) >= 3
             await page.locator('.catalog-section').screenshot(path=str(folder / 'catalog-desktop.png'))
             for pack in catalog:
+                await tab(page, 'workspace', 'community')
                 item = page.locator(f'[data-catalog-id="{pack["id"]}"]')
                 await item.get_by_text('阅读改编说明', exact=True).click()
                 assert await item.get_by_role('link').get_attribute('href') == pack['source']['url']
@@ -56,6 +59,7 @@ async def main():
                 story = next(s for s in library['stories'] if s['id'] == job['story_id'])
                 assert story['test_report']['mode'] == 'live_models'
                 assert story['origin']['id'] == pack['id']
+                await tab(page, 'workspace', 'community')
                 # A repeat click retrieves the same copy; it must not erase edits or duplicate worlds.
                 async with page.expect_response(lambda r: r.url.endswith('/install') and r.request.method == 'POST') as info:
                     await item.get_by_role('button', name='加入我的世界并测试', exact=True).click()
@@ -70,7 +74,9 @@ async def main():
             await page.locator('.studio-world-card').nth(len(catalog)-1).wait_for()
             assert await page.locator('.studio-world-card').count() == len(catalog)
             await page.set_viewport_size({'width': 390, 'height': 844})
+            await tab(page, 'workspace', 'community')
             await page.locator('.catalog-section').screenshot(path=str(folder / 'catalog-mobile.png'))
+            await tab(page, 'workspace', 'worlds')
             assert await page.evaluate('document.documentElement.scrollWidth <= innerWidth')
             await page.set_viewport_size({'width': 1440, 'height': 1080})
             await page.locator('.studio-world-card').last.click()

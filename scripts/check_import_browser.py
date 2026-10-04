@@ -5,6 +5,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import story_tools, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +28,7 @@ async def main():
         page.on('pageerror', lambda e: report['errors'].append(str(e)))
         try:
             await page.goto(args.url)
+            await tab(page, 'workspace', 'tools')
             await page.get_by_label('导入角色卡或世界书').set_input_files(str(ROOT / args.source))
             await page.get_by_role('button', name='还原并自动测试', exact=True).wait_for()
             await page.locator('.import-studio').screenshot(path=str(folder / 'preview.png'))
@@ -50,8 +52,11 @@ async def main():
             assert await story.locator('.conversion-row').count() > 0
             await page.set_viewport_size({'width': 390, 'height': 844})
             assert await page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+            await tab(page, 'workspace', 'tools')
             await page.locator('.import-studio').screenshot(path=str(folder / 'mobile.png'))
+            await tab(page, 'workspace', 'worlds')
             await page.set_viewport_size({'width': 1440, 'height': 1080})
+            await story_tools(story)
             async with page.expect_download() as download:
                 await story.get_by_role('link', name='导出故事', exact=False).click()
             await (await download.value).save_as(str(folder / 'export.json'))

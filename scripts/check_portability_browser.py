@@ -4,6 +4,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import tab
 from playwright.async_api import async_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -26,11 +27,12 @@ async def main():
             async with page.expect_response(lambda r:r.url.endswith('/api/settings/provider/check'),timeout=120000) as response:
                 await page.get_by_role('button',name='测试已保存连接',exact=True).click()
             diagnostic=await (await response.value).json();assert diagnostic['generation_passed'];report['diagnostic']=diagnostic
-            await page.locator('summary',has_text='调用用量与费用估算').click();await page.screenshot(path=str(folder/'provider-desktop.png'),full_page=True)
+            await tab(page, 'provider', 'usage');await page.screenshot(path=str(folder/'provider-desktop.png'),full_page=True)
             await page.get_by_role('button',name='关闭模型设置').click()
             async with page.expect_response(lambda r:r.url.endswith('/api/campaigns') and r.request.method=='POST') as response:
                 await page.get_by_role('button',name='体验内置雾港故事',exact=False).click()
             campaign=await (await response.value).json();report['original']=campaign
+            await tab(page, 'inspector', 'memory')
             await page.locator('.note-editor summary').click();await page.get_by_label('手记内容').fill('备份之后仍记得：青瓷风铃留在码头。');await page.get_by_role('button',name='保存手记',exact=True).click()
             await page.locator('.turn[data-version="1"]').wait_for(timeout=30000)
             async with page.expect_download() as download:
@@ -38,6 +40,7 @@ async def main():
             path=folder/'campaign.rpw.json';await (await download.value).save_as(path)
             backup=json.loads(path.read_text());assert backup['branches'][0]['commits'][0]['version']==1
             other=await browser.new_page(locale='zh-CN', viewport={'width':1440,'height':1000});other.on('pageerror',lambda e:report['errors'].append(str(e)));await other.goto(args.url)
+            await tab(other, 'workspace', 'tools')
             await other.locator('summary',has_text='恢复冒险备份').click();await other.get_by_label('选择冒险备份',exact=True).set_input_files(path)
             await other.get_by_role('button',name='恢复为独立冒险',exact=True).wait_for()
             assert '第1幕' in await other.locator('.backup-preview').inner_text()

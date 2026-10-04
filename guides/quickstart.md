@@ -46,3 +46,5 @@ narraloom serve --workspace /path/to/my-game --models-config /path/to/models.loc
 Open **http://localhost:18090/docs** for the API, or run `python examples/headless.py --world 'A quiet reading room' --preset scene --language en` from the checkout. The example saves its session and pending requests; `--resume` continues them. See the [developer guide](developers.md).
 
 For a failed connection, check the endpoint, model ID, authentication and JSON mode. For a failed story test, open the job report; a successful connection only confirms the model protocol. [Deployment](deployment.md) covers recovery and backups.
+
+[Reference workspace](workspace.md)

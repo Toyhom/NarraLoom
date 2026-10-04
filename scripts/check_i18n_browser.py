@@ -6,6 +6,7 @@ import json
 import re
 from pathlib import Path
 
+from browser_navigation import story_tools, tab
 from playwright.async_api import async_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -153,6 +154,7 @@ async def main():
             before_library = await call('/api/studio')
             await page.get_by_role('button', name='Edit world', exact=True).click()
             await page.get_by_label('World name', exact=True).fill('手写设定 <em>Keep me</em> 日本語')
+            await tab(page, 'editor', 'systems')
             # Exercise previously collapsed controls, without saving any synthetic edits.
             for text in ['加入可运行的进度示例']:
                 button = page.get_by_role('button', name=label(text), exact=True)
@@ -176,6 +178,7 @@ async def main():
             report['checks'].append('world/state/rule/simulation editor drafts preserved; no canonical edits')
 
             card = page.locator(f'[data-story-id="{job["story_id"]}"]')
+            await story_tools(card)
             await card.get_by_role('button', name='Edit story ' + content['story']['title'], exact=True).click()
             await page.get_by_label('Story opening', exact=True).fill('A hand-written opening. 保留原文。')
             opening_draft = await drafts('.editor input,.editor textarea,.editor select')
@@ -186,6 +189,7 @@ async def main():
             assert await call('/api/studio/stories/' + job['story_id'] + '/export') == content
             report['checks'].append('story draft and native export unchanged by locale switches')
 
+            await tab(page, 'workspace', 'tools')
             await page.get_by_label(label('导入角色卡或世界书'), exact=True).set_input_files({
                 'name': 'my-scene.json', 'mimeType': 'application/json', 'buffer': json.dumps(content, ensure_ascii=False).encode()})
             await page.locator('.import-preview').wait_for()
@@ -207,6 +211,7 @@ async def main():
             await page.get_by_role('button', name='Models and usage', exact=True).click()
             dialog = page.get_by_role('dialog')
             await dialog.get_by_label('Default model', exact=True).fill('unsaved-model-choice')
+            await tab(page, 'provider', 'modules')
             await page.locator('.engine-bindings > summary').click()
             await dialog.get_by_role('button', name='Add provider', exact=True).click()
             await dialog.get_by_label('provider_1 URL', exact=True).fill('http://127.0.0.1:9876/v1')
@@ -228,6 +233,7 @@ async def main():
             await switch('en')
             report['checks'].append('provider drafts and diagnostic status update without resubmitting requests')
 
+            await tab(page, 'workspace', 'avatars')
             await page.locator('.avatar-studio > details > summary').click()
             await page.get_by_label('2D character description', exact=True).fill('Original character description 原文。')
             png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aT1cAAAAASUVORK5CYII=')
@@ -238,6 +244,7 @@ async def main():
             await switch('en')
             report['checks'].append('optional Avatar input and selected file preserved; no GPU job submitted')
 
+            await tab(page, 'workspace', 'worlds')
             # Start the exact tested scene, then switch languages during an actual model action.
             await page.locator('.studio-world-card').filter(has_text=content['world']['title']).first.click()
             card = page.locator(f'[data-story-id="{job["story_id"]}"]')

@@ -25,6 +25,7 @@ jobs:
           python -c "import uvicorn; from starlette.staticfiles import StaticFiles; uvicorn.run(StaticFiles(directory='outputs/demo-site', html=True), host='127.0.0.1', port=18990)" &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
+          curl --retry 15 --retry-connrefused --retry-delay 1 --silent --fail --output /dev/null http://127.0.0.1:18990/
           python scripts/check_demo_browser.py --url http://127.0.0.1:18990 --output outputs/demo-check
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

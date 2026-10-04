@@ -4,6 +4,7 @@ import asyncio
 import json
 from pathlib import Path
 
+from browser_navigation import module, tab
 from playwright.async_api import async_playwright
 
 from roleplay_world.gateway import ModelGateway
@@ -36,16 +37,19 @@ async def main():
             await page.get_by_label('模型服务地址').fill(cfg['url'])
             await page.get_by_label('默认模型', exact=True).fill(cfg['model'])
             await page.get_by_label('API密钥', exact=True).fill(key)
+            await tab(page, 'provider', 'modules')
             await page.locator('.engine-bindings > summary').click()
             await page.get_by_role('dialog').get_by_label('界面语言 / Interface language').select_option('en')
             await page.get_by_role('button', name='Add provider', exact=True).click()
             await page.get_by_label('provider_1 URL').fill(cfg['url'])
             await page.get_by_label('provider_1 API key').fill(key)
+            await module(page, 'narrator')
             await page.get_by_label('narrator provider').select_option('provider_1')
             await page.get_by_label('narrator model', exact=True).fill(cfg['model'])
             await page.get_by_role('button', name='Add provider', exact=True).click()
             await page.get_by_label('provider_2 backend').select_option('systemone')
             await page.get_by_label('provider_2 URL').fill(args.decision_url)
+            await module(page, 'action_router')
             await page.get_by_label('action_router provider').select_option('provider_2')
             await page.get_by_label('action_router model', exact=True).fill(args.decision_model)
             await page.get_by_label('Decision routing mode').select_option('shadow')
@@ -56,7 +60,7 @@ async def main():
             assert key not in json.dumps(config) and config['providers']['provider_1']['has_key']
             assert not config['providers']['provider_2']['has_key']
             for role in ('narrator', 'action_router'):
-                section = page.locator('fieldset').filter(has=page.get_by_label(role+' model', exact=True))
+                section = page.locator('.module-binding').filter(has=page.get_by_label(role+' model', exact=True))
                 async with page.expect_response(lambda r, module=role: r.url.endswith('/api/engines/'+module+'/check'), timeout=120000) as response:
                     await section.get_by_role('button', name='Test saved module', exact=True).click()
                 result = await (await response.value).json()
@@ -108,6 +112,7 @@ async def main():
             assert other_config['using_default']
             await page.reload(); await page.locator('.turn[data-version="2"]').wait_for()
             await page.get_by_role('button', name='Models and usage', exact=True).click()
+            await tab(page, 'provider', 'modules')
             await page.locator('.engine-bindings > summary').click()
             assert await page.get_by_role('dialog').get_by_label('界面语言 / Interface language').input_value() == 'en'
             assert await page.get_by_label('provider_1 API key').input_value() == ''

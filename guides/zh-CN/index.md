@@ -12,3 +12,5 @@
 | 研究人员 | [模型替换和评估](research.md) | [引擎接口](../../docs/ENGINES.md)、[测试](../../docs/TESTING.md) |
 
 [AI 辅助设置](ai-setup.md) 提供了一个可复制给编码助手的任务。[本地化](../../docs/I18N.md) 描述了界面贡献。
+
+通过[参考工作台](workspace.md)找到创作、游玩、模型配置与分享工具。

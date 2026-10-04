@@ -13,17 +13,23 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--assets-dir', type=Path, help='Use local final assets with the same pinned checksums')
     args = parser.parse_args()
     folder = args.output.resolve()
     folder.mkdir(parents=True, exist_ok=False)
     source = ROOT / 'media/demo'
-    for name in ('index.html', 'demo.js', 'demo.css'):
+    for name in ('index.html', 'demo.js', 'demo.css', 'tour.json'):
         shutil.copyfile(source / name, folder / name)
+    for caption in source.glob('*.vtt'):
+        shutil.copyfile(caption, folder / caption.name)
     for locale in ('en', 'zh-CN', 'ja'):
         shutil.copyfile(ROOT / f'media/poster-{locale}.jpg', folder / f'poster-{locale}.jpg')
     for asset in json.loads((source / 'assets.json').read_text()):
-        with urllib.request.urlopen(asset['url'], timeout=60) as response:
-            data = response.read()
+        if args.assets_dir:
+            data = (args.assets_dir / asset['file']).read_bytes()
+        else:
+            with urllib.request.urlopen(asset['url'], timeout=60) as response:
+                data = response.read()
         if hashlib.sha256(data).hexdigest() != asset['sha256']:
             raise ValueError(f"Media checksum mismatch: {asset['file']}")
         (folder / asset['file']).write_bytes(data)
