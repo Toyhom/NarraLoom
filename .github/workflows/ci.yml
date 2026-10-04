@@ -18,7 +18,7 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - name: Reference workspace navigation
         run: |
-          python -m roleplay_world serve --workspace outputs/browser-host --web-dist outputs/validation/ci/web --port 18991 > outputs/browser-host.log 2>&1 &
+          python -m roleplay_world serve --workspace "$PWD/outputs/browser-host" --web-dist "$PWD/outputs/validation/ci/web" --port 18991 > outputs/browser-host.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
           curl --retry 15 --retry-connrefused --retry-delay 1 --silent --fail --output /dev/null http://127.0.0.1:18991/
