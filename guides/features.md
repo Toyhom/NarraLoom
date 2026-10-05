@@ -2,9 +2,9 @@
 
 [English](features.md) · [简体中文](zh-CN/features.md) · [日本語](ja/features.md)
 
-Build a small conversation scene, an interactive story or a tabletop-style adventure with the same modular backend. This tour follows the reference frontend from a world idea to play, sharing and model research. Open any screenshot to see its full size.
+Build a small conversation scene, an interactive story or a tabletop-style adventure with the same modular backend.
 
-| Explore | In the 4:10 video |
+| Explore | Video chapter |
 | --- | --- |
 | [Connect a model](#connect) · [Create and test](#create) | 0:04 · 0:14 |
 | [Worlds and stories](#worlds) · [Editing](#author) | 0:34 |
@@ -54,7 +54,7 @@ Use generated content as a starting point, then develop the setting at your own 
 <a id="play"></a>
 ## Play through conversation and action
 
-Enter an action or speak to an NPC. The engine commits the resulting events and shows dialogue, narration and state changes together. Important characters can have a 2D portrait whose expressions and motion follow committed dialogue. This scene uses an existing portrait included in an imported native package; [Avatar integration](reference/avatars.md) also covers configuring the optional creation worker.
+Enter an action or speak to an NPC. The engine commits the resulting events and shows dialogue, narration and state changes together. Important characters can have a 2D portrait whose expressions and motion follow committed dialogue. [Avatar integration](reference/avatars.md) covers portrait setup and the optional creation worker.
 
 ![A player speaking to an NPC, with its 2D portrait and committed story consequences](../media/features/en/play.jpg)
 
@@ -101,7 +101,7 @@ Python action modules can add richer typed actions, shared state and character-s
 
 Create a room, invite another player and choose independent characters or shared control. The room tracks whose turn it is, character assignment, private conversation and player trades. Each player receives the information visible to their character. Trades use an explicit offer and confirmation.
 
-![Two room members, turn controls and player trading; the invite code is masked](../media/features/en/multiplayer.jpg)
+![Two room members, turn controls and player trading](../media/features/en/multiplayer.jpg)
 
 [Room operations](reference/api.md) · [Player projections](reference/contracts.md).
 
@@ -121,7 +121,7 @@ Bind world creation, story creation, planning, NPC dialogue, narration, content 
 
 ![Separate model bindings for creation, planning, dialogue and narration](../media/features/en/engines.jpg)
 
-Optional System One/Jev decision adapters and embedding services have their own configuration and deployment requirements. The video shows their configuration forms. Use task evaluations to choose routing thresholds and compare models. [Model recommendations](models.md) · [Engine interfaces](reference/engines.md).
+Optional System One/Jev decision adapters and embedding services have their own configuration and deployment requirements. Use task evaluations to choose routing thresholds and compare models. [Model recommendations](models.md) · [Engine interfaces](reference/engines.md).
 
 <a id="build"></a>
 ## Build a frontend, extend the engine, compare models
@@ -143,4 +143,4 @@ Researchers can freeze tasks, replace one module, evaluate assertions, latency a
 
 [Backend integration](developers.md) · [SDK example](reference/client.md) · [Evaluation](research.md) · [Campaign playtesting](reference/playtesting.md).
 
-[Start your first world](quickstart.md) · [All guides](index.md) · [Watch the 4:10 tour](../README.md)
+[Start your first world](quickstart.md) · [All guides](index.md) · [Watch the demo](../README.md)

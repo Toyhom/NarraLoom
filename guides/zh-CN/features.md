@@ -2,9 +2,9 @@
 
 [English](../features.md) · [简体中文](features.md) · [日本語](../ja/features.md)
 
-用同一套模块化后端构建单场景对话、互动故事和跑团冒险。这份图览通过参考前端，展示从世界构想到游玩、分享和模型研究的完整路径。点击截图可查看大图。
+用同一套模块化后端构建单场景对话、互动故事和跑团冒险。
 
-| 想了解的功能 | 4:10 视频中的位置 |
+| 想了解的功能 | 视频章节 |
 | --- | --- |
 | [连接模型](#connect) · [创建与自动测试](#create) | 0:04 · 0:14 |
 | [一个世界，多个故事](#worlds) · [编辑内容](#author) | 0:34 |
@@ -54,7 +54,7 @@
 <a id="play"></a>
 ## 通过对话与行动推动故事
 
-输入行动或与 NPC 交谈，引擎提交事件后一起展示对白、叙述和状态变化。重要人物可绑定 2D 形象，由已提交的对白驱动表情与动作。图中的人物使用原生分享包携带的已有形象；[Avatar 接口](../reference/avatars.md)也介绍了可选角色创建服务的配置。
+输入行动或与 NPC 交谈，引擎提交事件后一起展示对白、叙述和状态变化。重要人物可绑定 2D 形象，由已提交的对白驱动表情与动作。形象接入与可选创建服务的配置见 [Avatar 接口](../reference/avatars.md)。
 
 ![玩家与 NPC 对话，2D 形象和已提交的故事后果同步呈现](../../media/features/zh-CN/play.jpg)
 
@@ -101,7 +101,7 @@ Python 玩法模块还能扩展更丰富的行动、共享状态与角色专属�
 
 创建房间并邀请伙伴，选择独立角色或共用角色。房间管理当前行动者、人物分配、私语和玩家交易；每位玩家只接收自身角色可见的信息。交易通过提出报价和对方确认完成。
 
-![两位房间成员、回合控制与玩家交易，邀请码已遮盖](../../media/features/zh-CN/multiplayer.jpg)
+![两位房间成员、回合控制与玩家交易](../../media/features/zh-CN/multiplayer.jpg)
 
 [房间操作](../reference/api.md) · [角色视角](../reference/contracts.md)。
 
@@ -121,7 +121,7 @@ Python 玩法模块还能扩展更丰富的行动、共享状态与角色专属�
 
 ![为创作、规划、对白和叙述分别设置模型](../../media/features/zh-CN/engines.jpg)
 
-可选的 System One/Jev 判断适配器和嵌入服务有独立的配置与部署要求；视频展示其配置界面。通过任务评测选择路由阈值并比较模型。[模型建议](models.md) · [引擎接口](../reference/engines.md)。
+可选的 System One/Jev 判断适配器和嵌入服务有独立的配置与部署要求。通过任务评测选择路由阈值并比较模型。[模型建议](models.md) · [引擎接口](../reference/engines.md)。
 
 <a id="build"></a>
 ## 开发前端、扩展玩法、比较模型
@@ -143,4 +143,4 @@ flowchart LR
 
 [后端集成](developers.md) · [SDK 示例](../reference/client.md) · [模型评测](research.md) · [连续冒险测试](../reference/playtesting.md)。
 
-[创建第一个世界](quickstart.md) · [全部指南](index.md) · [观看 4:10 演示](../../README.zh-CN.md)
+[创建第一个世界](quickstart.md) · [全部指南](index.md) · [观看演示](../../README.zh-CN.md)

@@ -12,10 +12,6 @@ Python バックエンドを単独で動かす、自分のアプリに組み込�
 
 https://github.com/user-attachments/assets/fbe1185d-3d95-4df1-9db8-337ab7a2a19e
 
-**デモを見る：** [English](README.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md)
-
-4 分 10 秒で、作成と自動テスト、NPC との対話、ルール、マルチプレイ、共有と復元、モデル設定、SDK と研究ツールを紹介します。読み込みと生成の待ち時間はカットしています。[図解ガイド](guides/ja/features.md)には画像、解説、動画の章の位置を掲載しています。操作方法は[ワークスペースガイド](guides/ja/workspace.md)をご覧ください。
-
 [![NarraLoom のリファレンス画面：世界、動く NPC、プレイヤーの物語](media/features/ja/play.jpg)](guides/ja/features.md)
 
 ## はじめに
